@@ -27,41 +27,6 @@ A professional portfolio website for Business Analyst Md. Wahiduzzaman Nayem, bu
 - Font Awesome Icons
 - Google Fonts (Inter)
 
-## Deployment to GitHub Pages
-
-### Step 1: Create a GitHub Repository
-
-1. Go to [GitHub](https://github.com) and sign in to your account
-2. Click the "+" icon in the top right corner and select "New repository"
-3. Name your repository `your-username.github.io` (replace `your-username` with your actual GitHub username)
-4. Make sure the repository is set to "Public"
-5. Initialize with a README (optional, as we already have one)
-6. Click "Create repository"
-
-### Step 2: Upload Files
-
-1. Click "uploading an existing file" or use Git commands
-2. Upload all files from this portfolio-website folder:
-   - `index.html`
-   - `styles.css`
-   - `script.js`
-   - `README.md`
-   - `assets/` folder (with images)
-
-### Step 3: Enable GitHub Pages
-
-1. Go to your repository settings
-2. Scroll down to "Pages" section
-3. Under "Source", select "Deploy from a branch"
-4. Choose "main" branch and "/ (root)" folder
-5. Click "Save"
-
-### Step 4: Access Your Website
-
-Your website will be available at: `https://your-username.github.io`
-
-It may take a few minutes for the site to become available after the first deployment.
-
 ## File Structure
 
 ```
@@ -75,21 +40,6 @@ portfolio-website/
         └── profile.jpg  # Profile image
 ```
 
-## Customization
-
-### Updating Content
-
-- **Personal Information**: Edit the content in `index.html`
-- **Styling**: Modify `styles.css` for design changes
-- **Functionality**: Update `script.js` for interactive features
-
-### Adding New Sections
-
-1. Add the HTML structure in `index.html`
-2. Add corresponding styles in `styles.css`
-3. Update navigation menu if needed
-4. Add any required JavaScript functionality
-
 ### Changing Colors
 
 The main color scheme uses:
@@ -98,8 +48,6 @@ The main color scheme uses:
 - Dark Text: `#1e293b`
 - Light Text: `#64748b`
 - Background: `#f8fafc`
-
-Update these values in `styles.css` to change the color scheme.
 
 ## Browser Support
 
@@ -126,5 +74,5 @@ For any questions or support regarding this portfolio website, please contact:
 
 ---
 
-© 2024 Md. Wahiduzzaman Nayem. All rights reserved.
+© 2025 Md. Wahiduzzaman Nayem. All rights reserved.
 
