@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Md. Wahiduzzaman Nayem | Business Analyst</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-green: #00d285;
+            --dark-black: #111111;
+            --text-grey: #555555;
+            --light-bg: #ffffff;
+            --card-bg: #f9f9f9;
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --shadow-soft: 0 10px 40px -10px rgba(0,0,0,0.08);
+            --shadow-green: 0 10px 30px -5px rgba(0, 210, 133, 0.4);
+        }
+
+        /* --- GLOBAL SCROLL FIX --- */
+        html {
+            scroll-behavior: smooth;
+            /* This prevents the navbar from covering section headings */
+            scroll-padding-top: 120px; 
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--light-bg);
+            color: var(--dark-black);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Global Animations --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Navbar --- */
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-radius: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        /* Logo Styling */
+        .logo {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--dark-black);
+            cursor: pointer;
+            flex-shrink: 0; 
+        }
+
+        /* Logo Animation */
+        .logo i {
+            color: var(--primary-green);
+            opacity: 0;
+            animation: iconPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation-delay: 0.2s;
+        }
+
+        .logo span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateX(-10px);
+            animation: letterSlide 0.4s ease-out forwards;
+        }
+
+        .logo span:nth-child(2) { animation-delay: 0.5s; }
+        .logo span:nth-child(3) { animation-delay: 0.6s; }
+        .logo span:nth-child(4) { animation-delay: 0.7s; }
+        .logo span:nth-child(5) { animation-delay: 0.8s; color: var(--primary-green); }
+
+        @keyframes iconPop {
+            0% { opacity: 0; transform: scale(0) rotate(-45deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        @keyframes letterSlide {
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Nav Links (Desktop) */
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a {
+            text-decoration: none; color: var(--dark-black); font-weight: 500; font-size: 0.95rem;
+            transition: color 0.3s; position: relative;
+        }
+        .nav-links a:hover { color: var(--primary-green); }
+
+        /* CTA Button (Desktop) */
+        .nav-cta {
+            background-color: var(--dark-black); color: #fff; padding: 10px 20px;
+            border-radius: 30px; text-decoration: none; font-weight: 600;
+            transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem;
+            white-space: nowrap; 
+        }
+        .nav-cta:hover {
+            transform: translateY(-2px); background-color: var(--primary-green); color: #000;
+            box-shadow: var(--shadow-green);
+        }
+
+        /* Hamburger (Mobile Only) */
+        .hamburger { 
+            display: none; 
+            font-size: 1.5rem; 
+            cursor: pointer; 
+            color: var(--dark-black); 
+            padding: 5px; 
+            margin-left: auto; 
+        }
+
+        /* --- Hero --- */
+        .hero {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            padding: 140px 5% 60px; position: relative; max-width: 1400px; margin: 0 auto;
+        }
+        .hero-content { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; width: 100%; }
+
+        .greeting-badge {
+            display: inline-block; border: 1px solid #ddd; padding: 8px 16px; border-radius: 8px;
+            font-size: 0.9rem; margin-bottom: 20px; position: relative; background: #fff;
+        }
+        .greeting-badge::before, .greeting-badge::after {
+            content: ''; position: absolute; width: 8px; height: 8px; background: var(--primary-green); border: 1px solid #fff;
+        }
+        .greeting-badge::before { top: -4px; left: -4px; }
+        .greeting-badge::after { bottom: -4px; right: -4px; }
+
+        h1 { font-family: var(--font-heading); font-size: 3.5rem; line-height: 1.1; margin-bottom: 25px; font-weight: 700; }
+        .hero-desc { color: var(--text-grey); font-size: 1.1rem; max-width: 500px; margin-bottom: 35px; }
+        
+        .hero-actions { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+
+        .cta-btn-main {
+            background-color: var(--dark-black); color: #fff; padding: 12px 25px; border-radius: 30px;
+            text-decoration: none; font-weight: 600; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .cta-btn-main:hover {
+            background-color: var(--primary-green); color: #000; transform: translateY(-3px); box-shadow: var(--shadow-green);
+        }
+
+        .download-cv { text-decoration: none; color: var(--dark-black); font-weight: 600; display: flex; align-items: center; gap: 5px; transition: color 0.3s; }
+        .download-cv:hover { color: var(--primary-green); }
+
+        .social-icons { margin-top: 40px; display: flex; gap: 15px; }
+        .social-btn {
+            width: 40px; height: 40px; border: 1px solid #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; color: var(--dark-black); transition: all 0.3s;
+        }
+        .social-btn:hover { background: var(--primary-green); border-color: var(--primary-green); color: #fff; transform: translateY(-3px); }
+
+        /* Hero Image */
+        .hero-img-container { position: relative; display: flex; justify-content: center; }
+        .hero-img-wrapper {
+            position: relative; z-index: 2; width: 350px; height: 450px; background: #f0f0f0;
+            border: 2px solid var(--dark-black); box-shadow: 10px 10px 0px var(--dark-black);
+            transition: transform 0.3s; overflow: hidden;
+        }
+        .hero-img-wrapper:hover { transform: translate(-5px, -5px); box-shadow: 15px 15px 0px var(--dark-black); }
+        .hero-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .shape-squiggly { position: absolute; top: -30px; left: -20px; width: 60px; height: 60px; z-index: 1; }
+        .shape-blob {
+            position: absolute; bottom: -40px; right: -20px; width: 150px; height: 150px;
+            background: var(--primary-green); border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            z-index: 0; animation: morph 8s ease-in-out infinite; opacity: 0.8;
+        }
+        @keyframes morph {
+            0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+            50% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; }
+            100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+        }
+
+        /* --- Strip Banner --- */
+        .strip-banner { background: var(--dark-black); color: #fff; padding: 30px 0; }
+        .strip-content { display: flex; justify-content: space-around; max-width: 1400px; margin: 0 auto; flex-wrap: wrap; gap: 20px; padding: 0 20px; }
+        .strip-item { display: flex; align-items: center; gap: 8px; font-family: var(--font-heading); font-size: 1rem; }
+        .strip-item i { color: var(--primary-green); }
+
+        /* --- Sections --- */
+        .section-padding { padding: 100px 5%; max-width: 1200px; margin: 0 auto; }
+        .section-title { font-family: var(--font-heading); font-size: 2.5rem; margin-bottom: 50px; }
+
+        /* --- Featured Projects --- */
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        .project-card {
+            background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid #eee;
+            transition: all 0.4s ease; box-shadow: var(--shadow-soft);
+        }
+        .project-card:hover { transform: translateY(-8px); border-color: var(--primary-green); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .project-content { padding: 30px; }
+        .project-category { color: var(--primary-green); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; display: block; }
+        .project-title { font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 15px; line-height: 1.3; }
+        .project-desc { color: var(--text-grey); font-size: 1rem; margin-bottom: 25px; }
+        .project-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; }
+        .tag { background: #f0f0f0; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; color: #555; }
+        .project-link { text-decoration: none; color: var(--dark-black); font-weight: 600; display: flex; align-items: center; gap: 5px; transition: 0.3s; }
+        .project-link:hover { gap: 10px; color: var(--primary-green); }
+
+        /* --- Skills --- */
+        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .skill-card { background: #fff; padding: 30px; border-radius: 16px; border: 1px solid #eee; transition: all 0.3s ease; }
+        .skill-card:hover { border-color: var(--primary-green); transform: translateY(-5px); box-shadow: var(--shadow-soft); }
+        .skill-icon {
+            width: 50px; height: 50px; background: #eefdf6; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+            color: var(--primary-green); font-size: 1.4rem;
+        }
+        .skill-card h3 { font-family: var(--font-heading); margin-bottom: 15px; font-size: 1.3rem; }
+        .skill-list { list-style: none; }
+        .skill-list li { margin-bottom: 10px; color: var(--text-grey); display: flex; align-items: center; gap: 10px; }
+        .skill-list li::before { content: "\f00c"; font-family: "Font Awesome 6 Free"; font-weight: 900; color: var(--primary-green); font-size: 0.8rem; }
+
+        /* --- Domain Tags --- */
+        .project-grid-tags { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; }
+        .domain-tag {
+            background: #fff; border: 1px solid #eee; color: var(--dark-black); padding: 20px;
+            border-radius: 12px; text-align: center; font-family: var(--font-heading); font-weight: 600;
+            transition: all 0.3s ease; cursor: default;
+        }
+        .domain-tag:hover {
+            background: var(--primary-green); border-color: var(--primary-green); color: #fff;
+            transform: translateY(-5px) scale(1.02); box-shadow: var(--shadow-green);
+        }
+
+        /* --- Experience --- */
+        .experience-card {
+            background: #fff; border: 1px solid #eee; border-radius: 16px; padding: 35px;
+            display: grid; grid-template-columns: 1fr 2fr; gap: 30px; transition: 0.3s; margin-bottom: 20px;
+        }
+        .experience-card:hover { border-color: var(--primary-green); box-shadow: var(--shadow-soft); transform: translateY(-5px); }
+        .exp-meta h4 { font-size: 1.4rem; font-family: var(--font-heading); margin-bottom: 5px; }
+        .exp-meta .company { color: var(--primary-green); font-weight: 700; display: block; margin-bottom: 10px; }
+        .exp-meta .date { background: #f0f0f0; padding: 5px 12px; border-radius: 20px; color: #666; font-size: 0.85rem; font-weight: 500; }
+        .exp-details ul { padding-left: 20px; color: var(--text-grey); }
+        .exp-details ul li { margin-bottom: 8px; }
+
+        /* --- Education & Awards --- */
+        .edu-flex { display: flex; flex-direction: column; gap: 20px; }
+        .edu-item {
+            display: flex; justify-content: space-between; align-items: center; background: #fff;
+            padding: 25px; border: 1px solid #eee; border-radius: 12px; flex-wrap: wrap; gap: 15px; transition: 0.3s;
+        }
+        .edu-item:hover { border-color: var(--primary-green); transform: translateY(-3px); }
+        
+        .award-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; min-width: 500px; }
+        .table-container { overflow-x: auto; margin-top: 20px; padding-bottom: 10px; }
+        .award-table tr { background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: 0.3s; }
+        .award-table tr:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .award-table td { padding: 20px; border: 1px solid #eee; border-width: 1px 0; }
+        .award-table td:first-child { border-left-width: 1px; border-radius: 12px 0 0 12px; }
+        .award-table td:last-child { border-right-width: 1px; border-radius: 0 12px 12px 0; font-weight: 600; color: var(--primary-green); }
+
+        /* --- Footer --- */
+        footer {
+            background: var(--dark-black);
+            color: white;
+            padding: 80px 5% 30px;
+            margin-top: 100px;
+            border-radius: 20px 20px 0 0;
+        }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.5fr 1fr; gap: 60px; }
+        
+        .footer-cta .greeting-badge { background: #fff; color: var(--dark-black); border-color: #fff; }
+        .footer-cta h2 { font-family: var(--font-heading); font-size: 2.5rem; margin-bottom: 25px; line-height: 1.2; }
+        .footer-info h3 { font-family: var(--font-heading); font-size: 1.3rem; margin-bottom: 20px; color: var(--primary-green); }
+        .footer-info p { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .copyright { text-align: center; margin-top: 60px; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); color: #999; }
+
+        .cta-btn-footer {
+            background-color: var(--primary-green); color: var(--dark-black); padding: 12px 30px;
+            border-radius: 30px; text-decoration: none; font-weight: 700; transition: 0.3s;
+            display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 10px 20px rgba(0, 210, 133, 0.3);
+        }
+        .cta-btn-footer:hover { transform: translateY(-3px); background-color: #fff; color: var(--dark-black); }
+
+        /* --- BACK TO TOP BUTTON --- */
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-green); /* Neon Green */
+            color: var(--dark-black);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 9999;
+            font-size: 1.2rem;
+            
+            /* Glowing Effect */
+            box-shadow: 0 0 15px rgba(0, 210, 133, 0.6);
+            
+            /* Animation States */
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+            
+            /* Flex for centering icon */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #backToTop.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        #backToTop:hover {
+            background-color: #fff;
+            color: var(--primary-green);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 210, 133, 0.4);
+        }
+
+        /* =========================================
+           MOBILE RESPONSIVE
+           ========================================= */
+        @media (max-width: 992px) {
+            /* 1. Navbar: Hide big button on mobile to prevent crowding */
+            nav { padding: 12px 20px; width: 95%; justify-content: space-between; }
+            .nav-cta { display: none; } /* THIS IS THE FIX FOR THE CROWDED NAV */
+            
+            /* 2. Enable Hamburger */
+            .hamburger { display: block; }
+            
+            /* 3. Floating Mobile Menu */
+            .nav-links {
+                position: absolute; top: 70px; left: 2.5%; width: 95%;
+                background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(20px);
+                padding: 20px; border-radius: 16px; flex-direction: column; align-items: center; gap: 10px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05);
+                opacity: 0; transform: translateY(-20px) scale(0.95); pointer-events: none;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .nav-links.active { opacity: 1; transform: translateY(0) scale(1); pointer-events: all; }
+            .nav-links a { width: 100%; text-align: center; padding: 15px; border-radius: 10px; font-size: 1.1rem; }
+            .nav-links a:hover, .nav-links a:active { background: #f0fdf6; color: var(--primary-green); }
+
+            /* 4. Fix Hero Section Layout */
+            .hero { flex-direction: column; padding-top: 120px; text-align: center; }
+            .hero-content { grid-template-columns: 1fr; }
+            .hero-img-container { order: -1; margin-bottom: 30px; }
+            
+            /* Make image smaller on mobile */
+            .hero-img-wrapper { width: 260px; height: 340px; }
+            
+            .hero-text h1 { font-size: 2.5rem; }
+            .hero-actions, .social-icons { justify-content: center; }
+            .section-padding { padding: 60px 5%; }
+            .experience-card { grid-template-columns: 1fr; }
+            .footer-content { grid-template-columns: 1fr; text-align: center; }
+            .footer-info { align-items: center; }
+            .footer-cta .cta-btn-main { margin: 0 auto; }
+            .social-icons { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <button id="backToTop" title="Go to top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <nav>
+        <a href="#home" class="logo" onclick="scrollToTop(event)">
+            <i class="fa-solid fa-chart-simple"></i>
+            <span>M</span><span>W</span><span>N</span><span>.</span>
+        </a>
+        
+        <div class="hamburger" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
+
+        <div class="nav-links" id="navLinks">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#projects">Projects</a>
+            <a href="#skills">Skills</a>
+            <a href="#experience">Experience</a>
+            <a href="#contact">Contact</a>
+        </div>
+        
+        <a href="mailto:nayemwahid05@gmail.com" class="nav-cta">
+            Get In Touch <i class="fa-solid fa-arrow-right"></i>
+        </a>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="hero-text reveal active">
+                <div class="greeting-badge">Hi everyone 👋, I'm Md. Wahiduzzaman Nayem</div>
+                <h1>Business Analyst <br>Based in Dhaka</h1>
+                <p class="hero-desc">
+                    I'm a Business Analyst passionate about translating business needs into functional specifications. Specialized in SRS, BRD, and Process Optimization.
+                </p>
+                <div class="hero-actions">
+                    <a href="#contact" class="cta-btn-main">Let's Talk <i class="fa-solid fa-arrow-right-long"></i></a>
+                    <a href="Assets\Md_Wahiduzzaman_Nayem_CV.pdf" class="download-cv">Download CV <i class="fa-solid fa-download"></i></a>
+                </div>
+                <div class="social-icons">
+                    <a href="https://www.linkedin.com/in/nayemwahid/" class="social-btn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="https://github.com/wahidalways" class="social-btn"><i class="fa-brands fa-github"></i></a>
+                    <a href="mailto:nayemwahid05@gmail.com" class="social-btn"><i class="fa-regular fa-envelope"></i></a>
+                    <!-- <a href="#" class="social-btn"><i class="fa-solid fa-globe"></i></a> -->
+                </div>
+            </div>
+            <div class="hero-img-container reveal">
+                <svg class="shape-squiggly" viewBox="0 0 100 100" fill="none" stroke="black" stroke-width="5">
+                    <path d="M10 50 Q 25 25 40 50 T 70 50 T 100 50" />
+                </svg>
+                <div class="hero-img-wrapper">
+                    <img src="Assets\image.jpg" alt="Md. Wahiduzzaman Nayem">
+                </div>
+                <div class="shape-blob"></div>
+            </div>
+        </div>
+    </section>
+
+    <div class="strip-banner">
+        <div class="strip-content">
+            <div class="strip-item"><i class="fa-solid fa-star"></i> Requirement Analysis</div>
+            <div class="strip-item"><i class="fa-solid fa-star"></i> Documentation (SRS/BRD)</div>
+            <div class="strip-item"><i class="fa-solid fa-star"></i> Stakeholder Management</div>
+        </div>
+    </div>
+
+    <section id="about" class="section-padding">
+        <h2 class="section-title reveal">Profile Overview</h2>
+        <div class="reveal">
+            <p style="font-size: 1.15rem; color: var(--text-grey); margin-bottom: 25px; line-height: 1.8;">
+                Business Analyst with nearly 2 years of experience in requirement analysis, documentation (SRS, BRD, PRD, FPD, CR, User Stories), and stakeholder management. Skilled in translating business needs into functional specifications and collaborating with cross-functional teams to deliver projects on time.
+            </p>
+            <p style="font-size: 1.15rem; color: var(--text-grey); line-height: 1.8;">
+                Contributed to e-commerce, HRIS, ERP, and logistics platforms, enabling faster UAT cycles, reducing documentation errors, and improving project clarity. Passionate about process optimization and delivering value-driven solutions.
+            </p>
+        </div>
+    </section>
+
+    <section id="projects" class="section-padding" style="background: #f0fcf6;">
+        <h2 class="section-title reveal">Featured Projects</h2>
+        <div class="projects-grid reveal">
+            <div class="project-card">
+                <div class="project-content">
+                    <span class="project-category">E-Commerce</span>
+                    <h3 class="project-title">CartUp - Multi-Vendor Platform</h3>
+                    <p class="project-desc">Led requirement gathering and SRS creation for a large-scale multi-vendor e-commerce platform.</p>
+                    <div class="project-tags">
+                        <span class="tag">SRS</span><span class="tag">Gap Analysis</span><span class="tag">JIRA</span>
+                    </div>
+                    <a href="#" class="project-link">View Case Study <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-content">
+                    <span class="project-category">Enterprise ERP</span>
+                    <h3 class="project-title">HRIS & Payroll Automation</h3>
+                    <p class="project-desc">Designed process flow diagrams and user stories for an automated payroll system.</p>
+                    <div class="project-tags">
+                        <span class="tag">Process Mapping</span><span class="tag">UAT</span><span class="tag">SQL</span>
+                    </div>
+                    <a href="#" class="project-link">View Case Study <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-content">
+                    <span class="project-category">Logistics</span>
+                    <h3 class="project-title">Foodi Delivery Optimization</h3>
+                    <p class="project-desc">Contributed to the optimization of last-mile delivery tracking features.</p>
+                    <div class="project-tags">
+                        <span class="tag">BRD</span><span class="tag">Wireframing</span><span class="tag">Agile</span>
+                    </div>
+                    <a href="#" class="project-link">View Case Study <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="section-padding">
+        <h2 class="section-title reveal">Skills & Expertise</h2>
+        <div class="skills-grid reveal">
+            <div class="skill-card">
+                <div class="skill-icon"><i class="fa-solid fa-briefcase"></i></div>
+                <h3>Business Analysis</h3>
+                <ul class="skill-list">
+                    <li>Requirement Analysis</li>
+                    <li>BRD, SRS, FRD, CR</li>
+                    <li>Process Flow Diagram</li>
+                    <li>Gap Analysis</li>
+                </ul>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon"><i class="fa-solid fa-laptop-code"></i></div>
+                <h3>Technical Tools</h3>
+                <ul class="skill-list">
+                    <li>MS Office, Google Suite</li>
+                    <li>Draw.io, Lucidchart</li>
+                    <li>Redmine, JIRA, Trello</li>
+                    <li>SQL (Basic)</li>
+                </ul>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon"><i class="fa-solid fa-users"></i></div>
+                <h3>Soft Skills</h3>
+                <ul class="skill-list">
+                    <li>Critical Thinking</li>
+                    <li>Documentation</li>
+                    <li>Team Leadership</li>
+                    <li>Adaptability</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding">
+        <h2 class="section-title reveal">Domain Knowledge</h2>
+        <div class="project-grid-tags reveal">
+            <div class="domain-tag">E-commerce</div>
+            <div class="domain-tag">CMS & ATS</div>
+            <div class="domain-tag">HRIS & Payroll</div>
+            <div class="domain-tag">CRM</div>
+            <div class="domain-tag">ERP & Logistics</div>
+        </div>
+    </section>
+
+    <section id="experience" class="section-padding" style="background-color: #fcfcfc;">
+        <h2 class="section-title reveal">Work Experience</h2>
+        <div class="experience-card reveal">
+            <div class="exp-meta">
+                <span class="company">TechnoNext Software Limited</span>
+                <h4>Junior Business Analyst</h4>
+                <span class="date"><i class="fa-regular fa-calendar"></i> Jun 2024 - Present</span>
+            </div>
+            <div class="exp-details">
+                <ul>
+                    <li>Collaborated with stakeholders to gather requirements, perform gap analysis, and design solutions that improved project clarity and reduced rework.</li>
+                    <li>Prepared SRS, CR, user stories, and process flow diagrams for projects including CartUp (E-commerce), ERP, Payroll & HRIS software.</li>
+                    <li>Reduced documentation rework through accurate SRS and CR preparation.</li>
+                    <li>Supported solution design, vendor management, UAT, and end-user training.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="experience-card reveal">
+            <div class="exp-meta">
+                <span class="company">TechnoNext Software Limited</span>
+                <h4>Intern Business Analyst</h4>
+                <span class="date"><i class="fa-regular fa-calendar"></i> Feb 2024 - May 2024</span>
+            </div>
+            <div class="exp-details">
+                <ul>
+                    <li>Assisted in requirement gathering and process analysis for Foodi (Food delivery) and Meditrip (Medical travel & accommodation) platforms.</li>
+                    <li>Contributed to documentation (SRS, CR, process flows), improving workflow clarity under senior supervision.</li>
+                    <li>Supported UAT and end-user training, ensuring smooth solution adoption.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding">
+        <h2 class="section-title reveal">Education</h2>
+        <div class="edu-flex reveal">
+            <div class="edu-item">
+                <div>
+                    <h3>MBA (Professional)</h3>
+                    <p style="color: var(--text-grey);">Bangladesh University of Professionals (BUP)</p>
+                </div>
+                <div>
+                    <span class="exp-meta"><span class="date" style="background: #eefdf6; color: var(--primary-green); font-weight: 600;">Sept 2025 - Ongoing</span></span>
+                </div>
+            </div>
+            <div class="edu-item">
+                <div>
+                    <h3>B.Sc. in Software Engineering</h3>
+                    <p style="color: var(--text-grey);">Daffodil International University (DIU)</p>
+                </div>
+                <div>
+                    <span class="exp-meta"><span class="date">2020 - 2024</span></span>
+                </div>
+            </div>
+            <div class="edu-item">
+                <div>
+                    <h3>Higher Secondary School Certificate (HSC)</h3>
+                    <p style="color: var(--text-grey);">Cumilla Shikkha Board Govt. Model College</p>
+                </div>
+                <div>
+                    <span class="exp-meta"><span class="date">2017 - 2019</span></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding" style="background-color: #fcfcfc;">
+        <h2 class="section-title reveal">Certifications & Awards</h2>
+        <div class="table-container reveal">
+            <table class="award-table">
+                <tbody>
+                    <tr>
+                        <td><strong>NASA Space Apps Challenge</strong></td>
+                        <td>Global Finalist</td>
+                        <td>2023</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NASA Space Apps Challenge</strong></td>
+                        <td>Regional Champion</td>
+                        <td>2022</td>
+                    </tr>
+                    <tr>
+                        <td><strong>USAID</strong></td>
+                        <td>Youth Social Leadership Program</td>
+                        <td>2020</td>
+                    </tr>
+                     <tr>
+                        <td><strong>HRDI</strong></td>
+                        <td>Conflict management and Charismatic feedback</td>
+                        <td>2020</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-cta">
+                <div class="greeting-badge">Have an idea?</div>
+                <h2>Let's build something<br>great together.</h2>
+                <a href="mailto:nayemwahid05@gmail.com" class="cta-btn-footer">
+                    Send Email <i class="fa-regular fa-paper-plane"></i>
+                </a>
+            </div>
+            <div class="footer-info">
+                <h3>Contact Info</h3>
+                <p><i class="fa-solid fa-envelope"></i> nayemwahid05@gmail.com</p>
+                <p><i class="fa-solid fa-location-dot"></i> Dania, Jatrabari, Dhaka</p>
+                <div class="social-icons" style="margin-top: 30px; justify-content: start;">
+                    <a href="https://www.linkedin.com/in/nayemwahid/" class="social-btn" style="background: rgba(255,255,255,0.1); color: #fff; border: none;"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="https://github.com/wahidalways" class="social-btn" style="background: rgba(255,255,255,0.1); color: #fff; border: none;"><i class="fa-brands fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 Md. Wahiduzzaman Nayem. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Scroll Reveal Animation
+        window.addEventListener('scroll', reveal);
+        function reveal() {
+            var reveals = document.querySelectorAll('.reveal');
+            for(var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var revealTop = reveals[i].getBoundingClientRect().top;
+                var revealPoint = 100;
+                if(revealTop < windowHeight - revealPoint) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+        reveal();
+
+        // Mobile Menu Logic
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            const hamburgerIcon = document.querySelector('.hamburger i');
+            navLinks.classList.toggle('active');
+            
+            if(navLinks.classList.contains('active')) {
+                hamburgerIcon.classList.remove('fa-bars');
+                hamburgerIcon.classList.add('fa-xmark');
+            } else {
+                hamburgerIcon.classList.remove('fa-xmark');
+                hamburgerIcon.classList.add('fa-bars');
+            }
+        }
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('navLinks').classList.remove('active');
+                document.querySelector('.hamburger i').classList.remove('fa-xmark');
+                document.querySelector('.hamburger i').classList.add('fa-bars');
+            });
+        });
+
+        // Back to Top Button Logic
+        const backToTopBtn = document.getElementById("backToTop");
+        
+        window.onscroll = function() {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                backToTopBtn.classList.add("show");
+            } else {
+                backToTopBtn.classList.remove("show");
+            }
+        };
+        
+        // Scroll to top
+        backToTopBtn.addEventListener("click", function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // Logo Click Logic
+        function scrollToTop(e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
