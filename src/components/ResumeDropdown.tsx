@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 
 const RESUME_URL = "/Wahiduzzaman_Nayem_CV.pdf";
-const PORTFOLIO_URL = "https://wahidalways.github.io";
 
 const ResumeDropdown = ({ mobile = false }: { mobile?: boolean }) => {
   const [open, setOpen] = useState(false);
@@ -45,7 +44,7 @@ const ResumeDropdown = ({ mobile = false }: { mobile?: boolean }) => {
             className="absolute right-0 top-full mt-2 z-50 bg-popover border border-border rounded-xl shadow-lg overflow-hidden min-w-[160px]"
           >
             <a
-              href={PORTFOLIO_URL}
+              href={RESUME_URL}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setOpen(false)}

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -20,8 +20,12 @@
 
   <body>
     <script>
+      // Immediately apply a theme class before React hydrates.
+      // Default to dark for first-time visitors; if the user has a saved
+      // preference it will override this value.
       (function () {
-        var t = localStorage.getItem("theme") || "dark";
+        var stored = localStorage.getItem("theme");
+        var t = stored || "dark";
         document.documentElement.classList.add(t);
       })();
     </script>
