@@ -69,7 +69,7 @@ const Experience = () => {
             >
               {/* Timeline dot */}
               <div
-                className="absolute top-6 left-[15px] md:left-auto hidden md:block"
+                className="absolute top-0 left-[15px] md:left-auto hidden md:block"
                 style={i % 2 === 0 ? { right: "-7px" } : { left: "-7px" }}
               >
                 <motion.div
