@@ -127,10 +127,10 @@ const Navbar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 pt-3"
+      className="fixed top-0 left-0 right-0 z-50 px-4 lg:px-20 xl:px-8 pt-3"
     >
       <nav
-        className={`mx-auto max-w-6xl flex items-center justify-between px-5 md:px-6 transition-all duration-500 rounded-full ${
+        className={`mx-auto max-w-6xl flex items-center justify-between px-4 lg:px-5 xl:px-6 transition-all duration-500 rounded-full ${
           scrolled
             ? "glass py-2.5 shadow-lg"
             : "py-3 bg-background/60 backdrop-blur-md border border-border/50"
@@ -147,7 +147,7 @@ const Navbar = () => {
         </a>
 
         {/* Desktop nav */}
-        <div className="hidden xl:flex items-center gap-1">
+        <div className="hidden lg:flex items-center gap-0.5 xl:gap-1">
           {navItems.map((item) => {
             const isActive = activeSection === item.href.replace("#", "");
             return (
@@ -156,7 +156,7 @@ const Navbar = () => {
                 onClick={() => handleNav(item.href)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={`text-xs font-medium transition-all cursor-pointer relative px-3 py-1.5 rounded-full ${
+                className={`text-[10px] xl:text-xs font-medium transition-all cursor-pointer relative px-2 xl:px-3 py-1 xl:py-1.5 rounded-full ${
                   isActive
                     ? "text-primary-foreground bg-primary"
                     : "text-muted-foreground hover:text-foreground hover:bg-secondary/80"
@@ -166,13 +166,13 @@ const Navbar = () => {
               </motion.button>
             );
           })}
-          <div className="w-px h-5 bg-border mx-2" />
+          <div className="w-px h-5 bg-border mx-1 xl:mx-2" />
           <ThemeSwitcher />
           <motion.button
             whileHover={{ scale: 1.1, rotate: 15 }}
             whileTap={{ scale: 0.9 }}
             onClick={toggleTheme}
-            className="p-2 rounded-full hover:bg-secondary transition-colors cursor-pointer"
+            className="p-1.5 xl:p-2 rounded-full hover:bg-secondary transition-colors cursor-pointer"
             aria-label="Toggle theme"
           >
             <AnimatePresence mode="wait">
@@ -183,7 +183,7 @@ const Navbar = () => {
                 exit={{ rotate: 90, opacity: 0, scale: 0.5 }}
                 transition={{ duration: 0.2 }}
               >
-                {theme === "light" ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+                {theme === "light" ? <Moon className="w-3.5 h-3.5 xl:w-4 xl:h-4" /> : <Sun className="w-3.5 h-3.5 xl:w-4 xl:h-4" />}
               </motion.div>
             </AnimatePresence>
           </motion.button>
@@ -191,7 +191,7 @@ const Navbar = () => {
         </div>
 
         {/* Mobile toggle */}
-        <div className="flex xl:hidden items-center gap-2">
+        <div className="flex lg:hidden items-center gap-2">
           <ThemeSwitcher />
           <motion.button
             whileHover={{ scale: 1.1 }}
@@ -232,7 +232,7 @@ const Navbar = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="xl:hidden glass mx-auto max-w-6xl mt-2 rounded-2xl p-5 flex flex-col gap-2"
+            className="lg:hidden glass mx-auto max-w-6xl mt-2 rounded-2xl p-5 flex flex-col gap-2"
           >
             {navItems.map((item, i) => (
               <motion.button

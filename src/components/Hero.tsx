@@ -182,7 +182,7 @@ const Hero = () => {
 
       {/* Content */}
       <motion.div
-        className="container mx-auto px-4 sm:px-6 md:px-8 relative z-10 pt-24 pb-16 md:pt-0 md:pb-0"
+        className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-20 xl:px-8 relative z-10 pt-24 pb-16 md:pt-0 md:pb-0"
         style={{ y: contentY, opacity }}
       >
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-16">
