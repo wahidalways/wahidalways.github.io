@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { GraduationCap, Award } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import BABackground from "./BABackground";
@@ -23,19 +23,19 @@ const Education = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 max-w-4xl mx-auto">
           {education.map((edu, i) => (
             <ScrollReveal key={edu.degree} delay={i * 0.1}>
-              <motion.div
+              <m.div
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 className="glass rounded-2xl p-5 md:p-6 hover-glow h-full"
               >
                 <div className="flex items-start gap-3 md:gap-4">
-                  <motion.div
+                  <m.div
                     whileInView={{ rotate: [0, -10, 10, 0] }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}
                     className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0"
                   >
                     <GraduationCap className="w-5 h-5 md:w-6 md:h-6 text-primary" />
-                  </motion.div>
+                  </m.div>
                   <div className="min-w-0">
                     <h3 className="font-heading font-semibold text-sm md:text-base mb-1 leading-snug">{edu.degree}</h3>
                     <p className="text-xs md:text-sm text-muted-foreground mb-2">{edu.institution}</p>
@@ -48,7 +48,7 @@ const Education = () => {
                     )}
                   </div>
                 </div>
-              </motion.div>
+              </m.div>
             </ScrollReveal>
           ))}
         </div>

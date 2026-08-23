@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page not found | Md. Wahiduzzaman Nayem</title>
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=DM+Sans:wght@400&display=swap" rel="stylesheet" />
+    <!--
+      Standalone on purpose. GitHub Pages serves this file directly for any
+      unknown path, so it cannot reference the hashed build assets — those names
+      change on every deploy. Everything it needs is inline.
+    -->
+    <style>
+      :root {
+        --bg: hsl(210 20% 98%);
+        --fg: hsl(220 25% 10%);
+        --muted: hsl(220 10% 45%);
+        --primary: hsl(0 72% 51%);
+        --accent: hsl(15 80% 55%);
+        --border: hsl(214 20% 90%);
+      }
+      html.dark {
+        --bg: hsl(220 25% 6%);
+        --fg: hsl(210 20% 95%);
+        --muted: hsl(215 18% 70%);
+        --border: hsl(220 20% 18%);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: "DM Sans", system-ui, sans-serif;
+        text-align: center;
+      }
+      .code {
+        font-family: "Space Grotesk", system-ui, sans-serif;
+        font-size: clamp(64px, 18vw, 120px);
+        font-weight: 700;
+        line-height: 1;
+        margin: 0;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      h1 {
+        font-family: "Space Grotesk", system-ui, sans-serif;
+        font-size: clamp(20px, 4vw, 28px);
+        margin: 16px 0 8px;
+      }
+      p { color: var(--muted); margin: 0 0 28px; font-size: 15px; }
+      a {
+        display: inline-block;
+        padding: 12px 28px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: #fff;
+        font-family: "Space Grotesk", system-ui, sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        text-decoration: none;
+        transition: transform 200ms ease, box-shadow 200ms ease;
+      }
+      a:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgb(0 0 0 / 0.18); }
+      @media (prefers-reduced-motion: reduce) {
+        a { transition: none; }
+        a:hover { transform: none; }
+      }
+    </style>
+    <script>
+      // Match whatever theme the visitor last chose on the real site.
+      (function () {
+        try {
+          if ((localStorage.getItem("theme") || "dark") !== "light") {
+            document.documentElement.classList.add("dark");
+          }
+        } catch (e) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <main>
+      <p class="code">404</p>
+      <h1>This page does not exist</h1>
+      <p>The link may be out of date, or the address mistyped.</p>
+      <a href="/">Back to the portfolio</a>
+    </main>
+  </body>
+</html>

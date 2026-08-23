@@ -1,36 +1,145 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--
+      Boot theme BEFORE first paint.
+
+      Two things flash if this runs late: the light/dark class, and the ten
+      colour presets, which ThemeProvider only applies in a mount effect while
+      the stylesheet ships blue as its :root default. Both are resolved here,
+      synchronously in <head>, so the first painted frame is already correct.
+
+      The palette below is a mirror of `colorThemes` in
+      src/components/ThemeProvider.tsx — change both together.
+    -->
+    <script>
+      (function () {
+        var PALETTE = {
+          blue:    ["220 70% 50%", "175 80% 40%"],
+          emerald: ["160 84% 39%", "142 71% 45%"],
+          violet:  ["262 83% 58%", "280 65% 60%"],
+          rose:    ["346 77% 50%", "340 82% 52%"],
+          amber:   ["38 92% 50%",  "25 95% 53%"],
+          ocean:   ["199 89% 48%", "187 92% 41%"],
+          crimson: ["0 72% 51%",   "15 80% 55%"],
+          slate:   ["215 20% 45%", "210 30% 55%"],
+          forest:  ["150 60% 30%", "120 50% 40%"],
+          sunset:  ["20 90% 55%",  "350 80% 55%"]
+        };
+
+        // Private-mode browsers throw on any localStorage access, so every read
+        // is guarded and falls back to the same defaults ThemeProvider uses.
+        function read(key, fallback) {
+          try {
+            return localStorage.getItem(key) || fallback;
+          } catch (e) {
+            return fallback;
+          }
+        }
+
+        var root = document.documentElement;
+        root.classList.add(read("theme", "dark") === "light" ? "light" : "dark");
+
+        var pair = PALETTE[read("colorTheme", "crimson")] || PALETTE.crimson;
+        root.style.setProperty("--primary", pair[0]);
+        root.style.setProperty("--accent", pair[1]);
+        root.style.setProperty("--ring", pair[0]);
+        root.style.setProperty("--gradient-primary", "linear-gradient(135deg, hsl(" + pair[0] + "), hsl(" + pair[1] + "))");
+        root.style.setProperty("--gradient-accent", "linear-gradient(135deg, hsl(" + pair[1] + "), hsl(" + pair[0] + "))");
+      })();
+    </script>
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="preload" href="/profile.jpg" as="image" />
-    <title>Md. Wahiduzzaman Nayem | Technical Business Analyst</title>
-    <meta name="description" content="Portfolio of Md. Wahiduzzaman Nayem — Technical Business Analyst bridging business needs with technical solutions." />
-    <meta name="author" content="Md. Wahiduzzaman Nayem" />
+    <link
+      rel="preload"
+      as="image"
+      href="/profile-480.webp"
+      imagesrcset="/profile-240.webp 240w, /profile-480.webp 480w"
+      imagesizes="(min-width: 1024px) 240px, (min-width: 768px) 208px, (min-width: 640px) 176px, 144px"
+      type="image/webp"
+    />
 
-    <meta property="og:title" content="Md. Wahiduzzaman Nayem | Technical Business Analyst" />
-    <meta property="og:description" content="Portfolio of Md. Wahiduzzaman Nayem — Technical Business Analyst bridging business needs with technical solutions." />
+    <title>Md. Wahiduzzaman Nayem | Technical Business Analyst</title>
+    <meta name="description" content="Portfolio of Md. Wahiduzzaman Nayem — Technical Business Analyst with 2.5+ years in requirements engineering, business analysis and solution delivery." />
+    <meta name="author" content="Md. Wahiduzzaman Nayem" />
+    <meta name="theme-color" content="#0b0e13" />
+    <link rel="canonical" href="https://wahidalways.github.io/" />
+
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://wahidalways.github.io/profile.jpg" />
+    <meta property="og:url" content="https://wahidalways.github.io/" />
+    <meta property="og:site_name" content="Md. Wahiduzzaman Nayem" />
+    <meta property="og:title" content="Md. Wahiduzzaman Nayem | Technical Business Analyst" />
+    <meta property="og:description" content="Portfolio of Md. Wahiduzzaman Nayem — Technical Business Analyst with 2.5+ years in requirements engineering, business analysis and solution delivery." />
+    <!-- 1200x630: the aspect every large-image card crops to. Declaring the
+         dimensions lets a scraper reserve the slot before it fetches. -->
+    <meta property="og:image" content="https://wahidalways.github.io/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content="Md. Wahiduzzaman Nayem — Technical Business Analyst, Dhaka, Bangladesh" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@WahiduzzamanN" />
-    <meta name="twitter:image" content="https://wahidalways.github.io/profile.jpg" />
+    <meta name="twitter:creator" content="@WahiduzzamanN" />
+    <meta name="twitter:title" content="Md. Wahiduzzaman Nayem | Technical Business Analyst" />
+    <meta name="twitter:description" content="Portfolio of Md. Wahiduzzaman Nayem — Technical Business Analyst with 2.5+ years in requirements engineering, business analysis and solution delivery." />
+    <meta name="twitter:image" content="https://wahidalways.github.io/og-image.jpg" />
+    <meta name="twitter:image:alt" content="Md. Wahiduzzaman Nayem — Technical Business Analyst, Dhaka, Bangladesh" />
+
+    <!-- Structured data: this is what lets a search engine treat the page as a
+         person rather than a generic document when someone searches the name. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Md. Wahiduzzaman Nayem",
+        "url": "https://wahidalways.github.io/",
+        "image": "https://wahidalways.github.io/profile.jpg",
+        "jobTitle": "Technical Business Analyst",
+        "description": "Technical Business Analyst with 2.5+ years of experience in requirements engineering, business analysis and solution delivery.",
+        "email": "mailto:nayemwahid05@gmail.com",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Dhaka",
+          "addressCountry": "BD"
+        },
+        "worksFor": {
+          "@type": "Organization",
+          "name": "US Bangla Airlines"
+        },
+        "alumniOf": [
+          {
+            "@type": "CollegeOrUniversity",
+            "name": "Bangladesh University of Professionals"
+          },
+          {
+            "@type": "CollegeOrUniversity",
+            "name": "Daffodil International University"
+          }
+        ],
+        "knowsAbout": [
+          "Requirements Engineering",
+          "Business Process Analysis",
+          "BRD, SRS and FRD Documentation",
+          "Gap and Impact Analysis",
+          "Agile and Scrum",
+          "HRIS",
+          "Payroll and Workforce Management",
+          "Applicant Tracking Systems"
+        ],
+        "sameAs": [
+          "https://linkedin.com/in/nayemwahid",
+          "https://twitter.com/mrbrainaxes"
+        ]
+      }
+    </script>
   </head>
 
   <body>
-    <script>
-      // Immediately apply a theme class before React hydrates.
-      // Default to dark for first-time visitors; if the user has a saved
-      // preference it will override this value.
-      (function () {
-        var stored = localStorage.getItem("theme");
-        var t = stored || "dark";
-        document.documentElement.classList.add(t);
-      })();
-    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

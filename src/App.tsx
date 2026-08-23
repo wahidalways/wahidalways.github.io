@@ -1,28 +1,24 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { LazyMotion, domAnimation } from "framer-motion";
+import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
-
+/*
+ * A single static page on a static host. A client router bought nothing here:
+ * GitHub Pages answers an unknown path with its own 404 before any JS runs, so
+ * a catch-all route could never render. public/404.html covers that instead.
+ *
+ * LazyMotion + domAnimation drops framer-motion's drag and layout-projection
+ * engines, which nothing on this page uses. `strict` makes the bare `motion.*`
+ * component throw at development time, so a future edit cannot quietly pull the
+ * full bundle back in — use `m.*` instead.
+ */
 const App = () => (
   <ThemeProvider>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <LazyMotion features={domAnimation} strict>
+      <Index />
+    </LazyMotion>
+    <Toaster />
   </ThemeProvider>
 );
 

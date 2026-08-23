@@ -1,4 +1,4 @@
-import { motion, useInView, type Variant } from "framer-motion";
+import { m, useInView, type Variant } from "framer-motion";
 import { useRef, type ReactNode } from "react";
 
 interface ScrollRevealProps {
@@ -32,7 +32,7 @@ const ScrollReveal = ({
   const offset = directionMap[direction] || {};
 
   return (
-    <motion.div
+    <m.div
       ref={ref}
       initial={{ opacity: 0, ...offset }}
       animate={inView ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, ...offset }}
@@ -40,7 +40,7 @@ const ScrollReveal = ({
       className={className}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 };
 

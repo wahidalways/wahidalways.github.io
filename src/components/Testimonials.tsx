@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Quote } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 
@@ -11,7 +11,7 @@ const testimonials = [
   {
     quote: "Working with Nayem on the HRIS project was a great experience. He ensured every stakeholder was aligned and the deliverables were always on time and well-documented.",
     name: "Project Manager",
-    role: "US Bangla Airlines",
+    role: "TechnoNext Software Limited",
   },
   {
     quote: "His process automation initiatives saved us countless hours of manual work. Nayem brings both analytical rigor and a collaborative spirit to every project.",
@@ -32,7 +32,7 @@ const Testimonials = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 max-w-5xl mx-auto">
           {testimonials.map((item, i) => (
             <ScrollReveal key={i} delay={i * 0.12}>
-              <motion.div
+              <m.div
                 whileHover={{ y: -6, transition: { duration: 0.2 } }}
                 className="glass rounded-2xl p-6 md:p-8 hover-glow relative h-full"
               >
@@ -44,7 +44,7 @@ const Testimonials = () => {
                   <p className="font-heading font-semibold text-sm">{item.name}</p>
                   <p className="text-xs text-muted-foreground">{item.role}</p>
                 </div>
-              </motion.div>
+              </m.div>
             </ScrollReveal>
           ))}
         </div>

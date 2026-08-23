@@ -45,15 +45,6 @@
     --gradient-hero-light: linear-gradient(135deg, hsl(220 30% 96%), hsl(210 20% 92%));
     --gradient-accent: linear-gradient(135deg, hsl(175 80% 40%), hsl(200 90% 50%));
     --gradient-card: linear-gradient(145deg, hsl(0 0% 100% / 0.8), hsl(0 0% 100% / 0.4));
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
@@ -92,15 +83,6 @@
     --gradient-hero: linear-gradient(135deg, hsl(220 25% 4%), hsl(220 40% 10%));
     --gradient-hero-light: linear-gradient(135deg, hsl(220 25% 4%), hsl(220 40% 10%));
     --gradient-card: linear-gradient(145deg, hsl(220 25% 12% / 0.8), hsl(220 25% 8% / 0.4));
-
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -110,7 +92,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased;
+    @apply bg-background text-foreground font-body;
   }
 
   html {
@@ -119,20 +101,24 @@
 }
 
 @layer components {
+  /*
+   * Static surfaces sitting on a flat section background. No backdrop-filter:
+   * there is nothing behind them worth blurring, and each one would otherwise
+   * promote its text into a composited layer, which renders it noticeably soft.
+   */
   .glass {
+    background: hsl(var(--glass-bg));
+    border: 1px solid hsl(var(--glass-border));
+    box-shadow: 0 8px 32px hsl(var(--glass-shadow));
+  }
+
+  /* Surfaces that float over scrolling content, where the blur is the effect. */
+  .glass-panel {
     background: hsl(var(--glass-bg));
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid hsl(var(--glass-border));
     box-shadow: 0 8px 32px hsl(var(--glass-shadow));
-  }
-
-  .glass-strong {
-    background: hsl(var(--glass-bg));
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-    border: 1px solid hsl(var(--glass-border));
-    box-shadow: 0 12px 48px hsl(var(--glass-shadow));
   }
 
   .gradient-text {
@@ -163,8 +149,13 @@
     @apply py-20 md:py-28 px-4 md:px-8 lg:px-20 xl:px-8;
   }
 
+  /*
+   * `transition: all` makes the browser watch every animatable property on every
+   * one of these surfaces. Naming the two that actually change keeps hover work
+   * off the layout path.
+   */
   .hover-lift {
-    @apply transition-all duration-300;
+    transition: transform 300ms ease, box-shadow 300ms ease;
   }
 
   .hover-lift:hover {
@@ -173,7 +164,7 @@
   }
 
   .hover-glow {
-    @apply transition-all duration-300;
+    transition: box-shadow 300ms ease;
   }
 
   .hover-glow:hover {
@@ -181,10 +172,216 @@
   }
 
   .hover-border-accent {
-    @apply transition-all duration-300 border border-transparent;
+    @apply border border-transparent;
+    transition: border-color 300ms ease;
   }
 
   .hover-border-accent:hover {
     border-color: hsl(var(--accent) / 0.4);
+  }
+
+  /*
+   * Off-screen until focused, then pinned over the header. It must sit above
+   * the fixed nav (z-50) or it lands underneath it and reads as broken.
+   */
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 50%;
+    transform: translate(-50%, -150%);
+    z-index: 100;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    font-family: theme("fontFamily.heading");
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 200ms ease;
+  }
+
+  .skip-link:focus-visible {
+    transform: translate(-50%, 0);
+    outline: 2px solid hsl(var(--accent));
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skip-link { transition: none; }
+  }
+}
+
+/*
+ * Ambient decoration.
+ *
+ * These loops used to run through framer-motion, which composes x/y/rotate/scale
+ * into one transform string itself and therefore cannot hand them to the Web
+ * Animations API — every one of them wrote inline styles from the main thread on
+ * every frame, whether or not its section was on screen. As plain CSS keyframes
+ * of transform/opacity they run on the compositor, keep pace with a 120Hz
+ * display, and Chrome throttles them while they are scrolled out of view.
+ *
+ * Each element sets its own --dur/--delay (and --rot/--op where it varies) so
+ * the individual, staggered motion of the originals is preserved.
+ */
+@layer components {
+  .anim-loop {
+    animation-duration: var(--dur, 12s);
+    animation-delay: var(--delay, 0s);
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: both;
+  }
+
+  /*
+   * The only two worth pinning to their own layer: a 100px blur is expensive to
+   * repaint, so keep them off the repaint path while they drift.
+   */
+  .anim-blob-a,
+  .anim-blob-b {
+    will-change: transform;
+  }
+
+  .anim-spin {
+    animation-name: spin;
+    animation-timing-function: linear;
+  }
+
+  .anim-spin-reverse {
+    animation-name: spin-reverse;
+    animation-timing-function: linear;
+  }
+
+  .anim-ba-icon { animation-name: ba-icon-float; }
+  .anim-hero-icon { animation-name: hero-icon-float; }
+  .anim-particle { animation-name: particle-rise; }
+  .anim-blob-a { animation-name: blob-drift-a; }
+  .anim-blob-b { animation-name: blob-drift-b; }
+  .anim-bob { animation-name: bob; }
+  .anim-pulse-dot { animation-name: pulse-dot; }
+  .anim-pulse-scale { animation-name: pulse-scale; }
+  .anim-pulse-fade { animation-name: pulse-fade; }
+  .anim-fade-io { animation-name: fade-in-out; }
+  .anim-caret {
+    animation-name: caret-blink;
+    animation-duration: 1s;
+    animation-timing-function: steps(1, end);
+  }
+  .anim-path-draw { animation-name: path-draw; }
+  .anim-flow-pulse {
+    animation-name: flow-pulse;
+    animation-timing-function: linear;
+  }
+  .anim-spark { animation-name: spark; }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin-reverse { to { transform: rotate(-360deg); } }
+
+@keyframes ba-icon-float {
+  0%   { opacity: 0;    transform: translateY(0)     rotate(0deg); }
+  33%  { opacity: 0.06; transform: translateY(-15px) rotate(var(--rot, 0deg)); }
+  66%  { opacity: 0.02; transform: translateY(0)     rotate(0deg); }
+  100% { opacity: 0.06; transform: translateY(0)     rotate(0deg); }
+}
+
+@keyframes hero-icon-float {
+  0%   { opacity: 0;    transform: translateY(0)    rotate(0deg); }
+  33%  { opacity: 0.06; transform: translateY(-8px) rotate(4deg); }
+  66%  { opacity: 0.03; transform: translateY(0)    rotate(-4deg); }
+  100% { opacity: 0.06; transform: translateY(0)    rotate(0deg); }
+}
+
+@keyframes particle-rise {
+  0%   { opacity: 0;               transform: translateY(0); }
+  50%  { opacity: var(--op, 0.06); }
+  100% { opacity: 0;               transform: translateY(-40px); }
+}
+
+@keyframes blob-drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(15px, -12px, 0); }
+}
+
+@keyframes blob-drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(-15px, 15px, 0); }
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(8px); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1);   opacity: 1; }
+  50%      { transform: scale(1.3); opacity: 0.5; }
+}
+
+@keyframes pulse-scale {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.3); }
+}
+
+@keyframes pulse-fade {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.7; }
+}
+
+@keyframes caret-blink {
+  0%, 50%   { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
+@keyframes fade-in-out {
+  0%, 100% { opacity: 0; }
+  50%      { opacity: var(--op, 0.5); }
+}
+
+/*
+ * Paired with pathLength="1" + stroke-dasharray:1 on the path, this reproduces
+ * framer's pathLength 0 -> 1 -> 0 draw exactly, without the per-frame attribute
+ * writes it needed to do it.
+ */
+@keyframes path-draw {
+  0%, 100% { stroke-dashoffset: 1; }
+  50%      { stroke-dashoffset: 0; }
+}
+
+/*
+ * Paired with pathLength="100" + stroke-dasharray:"7 93" on the connector, this
+ * runs a short dash from the start of the path to its end. Normalising via
+ * pathLength means one keyframe drives paths of any real length at one speed.
+ */
+@keyframes flow-pulse {
+  from { stroke-dashoffset: 100; }
+  to   { stroke-dashoffset: 0; }
+}
+
+@keyframes spark {
+  0%   { opacity: 0;   transform: translate(0, 0); }
+  50%  { opacity: 0.6; }
+  100% { opacity: 0;   transform: translate(var(--dx, 0), var(--dy, 8px)); }
+}
+
+/*
+ * Respect the OS setting. Ambient loops stop outright; deliberate transitions
+ * are cut to a length that reads as instant without breaking layout that
+ * depends on an animation having finished.
+ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  .anim-loop {
+    animation: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

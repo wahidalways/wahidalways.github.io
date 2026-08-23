@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Share2, Linkedin, XIcon, Facebook, Mail, Link } from "lucide-react";
 import { toast } from "sonner";
 
@@ -67,18 +67,18 @@ const FloatingShare = () => {
 
   return (
     <div className="fixed bottom-6 left-6 z-50 flex flex-col-reverse items-center gap-2">
-      <motion.button
+      <m.button
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setOpen(!open)}
-        className="p-3 rounded-full glass hover-lift cursor-pointer"
+        className="p-3 rounded-full glass-panel hover-lift cursor-pointer"
         aria-label="Share"
       >
         <Share2 className="w-5 h-5 text-primary" />
-      </motion.button>
+      </m.button>
       <AnimatePresence>
         {open && shareLinks.map((item, i) => (
-          <motion.a
+          <m.a
             key={item.label}
             href={item.href}
             target="_blank"
@@ -87,25 +87,25 @@ const FloatingShare = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0, transition: { delay: i * 0.04 } }}
             exit={{ opacity: 0, y: 20, transition: { delay: (shareLinks.length - i) * 0.02 } }}
-            className="p-2.5 rounded-full glass hover-lift"
+            className="p-2.5 rounded-full glass-panel hover-lift"
             aria-label={item.label}
             onClick={() => setOpen(false)}
           >
             <item.icon className="w-4 h-4 text-foreground" />
-          </motion.a>
+          </m.a>
         ))}
         {open && (
-          <motion.button
+          <m.button
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0, transition: { delay: shareLinks.length * 0.04 } }}
             exit={{ opacity: 0, y: 20 }}
             onClick={copyLink}
-            className="p-2.5 rounded-full glass hover-lift cursor-pointer"
+            className="p-2.5 rounded-full glass-panel hover-lift cursor-pointer"
             aria-label="Copy link"
             title="Copy link"
           >
             <Link className="w-4 h-4 text-foreground" />
-          </motion.button>
+          </m.button>
         )}
       </AnimatePresence>
     </div>

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Database, Workflow, ClipboardCheck } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import BABackground from "./BABackground";
@@ -7,17 +7,38 @@ const skillCategories = [
   {
     title: "Business Analysis",
     icon: ClipboardCheck,
-    skills: ["Requirement Analysis", "SRS, CR, BRD", "Process Flow Diagram", "Gap Analysis", "Stakeholder Engagement", "Vendor Management"],
+    skills: [
+      "Requirements Gathering & Analysis",
+      "Business Process Analysis",
+      "BRD, SRS, FRD, CR Documentation",
+      "Gap & Impact Analysis",
+      "Stakeholder Engagement & Communication",
+      "Wireframing & UI Prototyping",
+    ],
   },
   {
-    title: "Technical Skills",
+    title: "Technical & Tools",
     icon: Database,
-    skills: ["Microsoft Excel / Google Sheet", "Draw.io / Lucidchart / Adobe XD", "Redmine / PMS / Trello", "HTML / CSS (Basic)", "SQL (Basic)"],
+    skills: [
+      "Microsoft Word / Google Docs",
+      "Microsoft Excel / Google Sheet",
+      "Draw.io / Lucidchart / Adobe XD",
+      "Redmine / PMS / Trello",
+      "SQL",
+      "HTML & CSS",
+    ],
   },
   {
-    title: "Soft Skills",
+    title: "Methodologies & Core Competencies",
     icon: Workflow,
-    skills: ["Problem-Solving & Critical Thinking", "Communication & Documentation", "Team Collaboration & Leadership", "Adaptability"],
+    skills: [
+      "Software Development Life Cycle (SDLC)",
+      "Agile & Scrum Methodology",
+      "Problem Solving & Analytical Thinking",
+      "Documentation & Requirement Translation",
+      "Cross-functional Collaboration",
+      "Adaptability in Fast-paced Agile Environments",
+    ],
   },
 ];
 
@@ -34,7 +55,7 @@ const Skills = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8 max-w-5xl mx-auto">
           {skillCategories.map((cat, i) => (
             <ScrollReveal key={cat.title} delay={i * 0.12}>
-              <motion.div
+              <m.div
                 whileHover={{ y: -6, transition: { duration: 0.2 } }}
                 className="glass rounded-2xl p-6 md:p-8 hover-glow h-full relative overflow-hidden"
               >
@@ -42,7 +63,7 @@ const Skills = () => {
                 <h3 className="font-heading font-semibold text-lg md:text-xl mb-5 md:mb-6 gradient-text">{cat.title}</h3>
                 <div className="flex flex-col gap-3">
                   {cat.skills.map((skill, j) => (
-                    <motion.div
+                    <m.div
                       key={skill}
                       initial={{ opacity: 0, x: -10 }}
                       whileInView={{ opacity: 1, x: 0 }}
@@ -50,17 +71,17 @@ const Skills = () => {
                       transition={{ delay: j * 0.06 }}
                       className="flex items-center gap-3"
                     >
-                      <motion.div
+                      <m.div
                         whileInView={{ scale: [0, 1.3, 1] }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.3 + j * 0.06 }}
                         className="w-2 h-2 rounded-full bg-accent shrink-0"
                       />
                       <span className="text-sm text-foreground">{skill}</span>
-                    </motion.div>
+                    </m.div>
                   ))}
                 </div>
-              </motion.div>
+              </m.div>
             </ScrollReveal>
           ))}
         </div>

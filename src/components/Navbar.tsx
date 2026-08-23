@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef, useCallback, useId } from "react";
+import { m, AnimatePresence } from "framer-motion";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 import ResumeDropdown from "./ResumeDropdown";
 import ThemeSwitcher from "./ThemeSwitcher";
+import { useDismissable } from "@/hooks/useDismissable";
 
 const navItems = [
   { label: "About", href: "#about" },
@@ -16,25 +17,32 @@ const navItems = [
   { label: "Contact", href: "#contact" },
 ];
 
+/*
+ * `scroll-behavior: smooth` is switched off for reduced motion in CSS, but
+ * scrollIntoView({ behavior: "smooth" }) is a JS argument and ignores the
+ * stylesheet entirely — so the preference has to be re-checked here.
+ */
+const scrollBehavior = (): ScrollBehavior =>
+  window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+
 const LogoMark = () => (
   <div className="flex items-center gap-1.5">
-    <motion.div
+    <m.div
       whileHover={{ rotate: [0, -10, 10, 0] }}
       transition={{ duration: 0.5 }}
       className="relative w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center"
       style={{ background: "var(--gradient-primary)" }}
     >
-      <motion.span
-        animate={{ opacity: [1, 0.7, 1] }}
-        transition={{ duration: 3, repeat: Infinity }}
-        className="font-heading text-sm font-bold text-primary-foreground leading-none"
+      <span
+        className="font-heading text-sm font-bold text-primary-foreground leading-none anim-loop anim-pulse-fade"
+        style={{ "--dur": "3s" } as React.CSSProperties}
       >
         M
-      </motion.span>
-    </motion.div>
+      </span>
+    </m.div>
     <div className="flex items-baseline">
       {["M", "W", "N"].map((letter, i) => (
-        <motion.span
+        <m.span
           key={i}
           initial={{ y: -10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -42,15 +50,14 @@ const LogoMark = () => (
           className="font-heading text-lg font-bold text-foreground tracking-tight"
         >
           {letter}
-        </motion.span>
+        </m.span>
       ))}
-      <motion.span
-        animate={{ scale: [1, 1.3, 1], opacity: [1, 0.5, 1] }}
-        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        className="font-heading text-lg font-bold text-accent"
+      <span
+        className="font-heading text-lg font-bold text-accent anim-loop anim-pulse-dot"
+        style={{ "--dur": "2s" } as React.CSSProperties}
       >
         .
-      </motion.span>
+      </span>
     </div>
   </div>
 );
@@ -61,6 +68,13 @@ const Navbar = () => {
   const [activeSection, setActiveSection] = useState("");
   const { theme, toggleTheme } = useTheme();
   const activeSectionRef = useRef("");
+  const menuId = useId();
+
+  // The whole header is the dismiss boundary, so a press anywhere on the page
+  // closes the mobile menu, and Escape hands focus back to the hamburger.
+  const { containerRef, triggerRef } = useDismissable<HTMLElement>(mobileOpen, () =>
+    setMobileOpen(false),
+  );
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -111,39 +125,44 @@ const Navbar = () => {
     return () => { clearTimeout(timer); observer.disconnect(); };
   }, []);
 
-  const handleNav = useCallback((href: string) => {
-    setMobileOpen(false);
+  const handleNav = useCallback((event: React.MouseEvent, href: string) => {
     const el = document.querySelector(href);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-      const id = href.replace("#", "");
-      activeSectionRef.current = id;
-      setActiveSection(id);
-    }
+    if (!el) return; // let the browser follow the real href as a fallback
+
+    event.preventDefault();
+    setMobileOpen(false);
+    el.scrollIntoView({ behavior: scrollBehavior() });
+    const id = href.replace("#", "");
+    activeSectionRef.current = id;
+    setActiveSection(id);
+  }, []);
+
+  const handleHome = useCallback((event: React.MouseEvent) => {
+    event.preventDefault();
+    setMobileOpen(false);
+    window.scrollTo({ top: 0, behavior: scrollBehavior() });
   }, []);
 
   return (
-    <motion.header
+    <m.header
+      ref={containerRef}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
       className="fixed top-0 left-0 right-0 z-50 px-4 lg:px-20 xl:px-8 pt-3"
     >
       <nav
-        className={`mx-auto max-w-6xl flex items-center justify-between px-4 lg:px-5 xl:px-6 transition-all duration-500 rounded-full ${
+        aria-label="Main"
+        className={`mx-auto max-w-6xl flex items-center justify-between px-4 lg:px-5 xl:px-6 py-3 rounded-full transition-[background-color,box-shadow,border-color,transform] duration-500 ${
           scrolled
-            ? "glass py-2.5 shadow-lg"
-            : "py-3 bg-background/60 backdrop-blur-md border border-border/50"
+            ? "glass-panel shadow-lg"
+            : "bg-background/60 backdrop-blur-md border border-border/50"
         }`}
       >
-        <a
-          href="#"
-          className="flex items-center group"
-          onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-        >
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+        <a href="#" aria-label="Back to top" className="flex items-center group" onClick={handleHome}>
+          <m.div whileHover={{ y: -1 }} whileTap={{ y: 0 }}>
             <LogoMark />
-          </motion.div>
+          </m.div>
         </a>
 
         {/* Desktop nav */}
@@ -151,11 +170,18 @@ const Navbar = () => {
           {navItems.map((item) => {
             const isActive = activeSection === item.href.replace("#", "");
             return (
-              <motion.button
+              /*
+               * Real anchors, not buttons. As buttons these could not be
+               * middle-clicked, opened in a new tab, copied as a link, or
+               * reached from a screen reader's list of links.
+               */
+              <m.a
                 key={item.label}
-                onClick={() => handleNav(item.href)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                href={item.href}
+                onClick={(e) => handleNav(e, item.href)}
+                aria-current={isActive ? "true" : undefined}
+                whileHover={{ y: -1 }}
+                whileTap={{ y: 0 }}
                 className={`text-[10px] xl:text-xs font-medium transition-all cursor-pointer relative px-2 xl:px-3 py-1 xl:py-1.5 rounded-full ${
                   isActive
                     ? "text-primary-foreground bg-primary"
@@ -163,100 +189,112 @@ const Navbar = () => {
                 }`}
               >
                 {item.label}
-              </motion.button>
+              </m.a>
             );
           })}
           <div className="w-px h-5 bg-border mx-1 xl:mx-2" />
           <ThemeSwitcher />
-          <motion.button
+          <m.button
             whileHover={{ scale: 1.1, rotate: 15 }}
             whileTap={{ scale: 0.9 }}
             onClick={toggleTheme}
             className="p-1.5 xl:p-2 rounded-full hover:bg-secondary transition-colors cursor-pointer"
-            aria-label="Toggle theme"
+            aria-label={theme === "light" ? "Switch to dark theme" : "Switch to light theme"}
           >
             <AnimatePresence mode="wait">
-              <motion.div
+              <m.div
                 key={theme}
                 initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
                 animate={{ rotate: 0, opacity: 1, scale: 1 }}
                 exit={{ rotate: 90, opacity: 0, scale: 0.5 }}
                 transition={{ duration: 0.2 }}
               >
-                {theme === "light" ? <Moon className="w-3.5 h-3.5 xl:w-4 xl:h-4" /> : <Sun className="w-3.5 h-3.5 xl:w-4 xl:h-4" />}
-              </motion.div>
+                {theme === "light"
+                  ? <Moon aria-hidden="true" className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
+                  : <Sun aria-hidden="true" className="w-3.5 h-3.5 xl:w-4 xl:h-4" />}
+              </m.div>
             </AnimatePresence>
-          </motion.button>
+          </m.button>
           <ResumeDropdown />
         </div>
 
         {/* Mobile toggle */}
         <div className="flex lg:hidden items-center gap-2">
           <ThemeSwitcher />
-          <motion.button
+          <m.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={toggleTheme}
             className="p-2 rounded-full hover:bg-secondary transition-colors cursor-pointer"
-            aria-label="Toggle theme"
+            aria-label={theme === "light" ? "Switch to dark theme" : "Switch to light theme"}
           >
-            {theme === "light" ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-          </motion.button>
-          <motion.button
+            {theme === "light"
+              ? <Moon aria-hidden="true" className="w-4 h-4" />
+              : <Sun aria-hidden="true" className="w-4 h-4" />}
+          </m.button>
+          <m.button
+            ref={triggerRef}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setMobileOpen(!mobileOpen)}
             className="p-2 cursor-pointer"
-            aria-label="Menu"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            aria-controls={mobileOpen ? menuId : undefined}
           >
             <AnimatePresence mode="wait">
-              <motion.div
+              <m.div
                 key={mobileOpen ? "close" : "open"}
                 initial={{ rotate: -90, opacity: 0 }}
                 animate={{ rotate: 0, opacity: 1 }}
                 exit={{ rotate: 90, opacity: 0 }}
                 transition={{ duration: 0.15 }}
               >
-                {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </motion.div>
+                {mobileOpen ? <X aria-hidden="true" className="w-5 h-5" /> : <Menu aria-hidden="true" className="w-5 h-5" />}
+              </m.div>
             </AnimatePresence>
-          </motion.button>
+          </m.button>
         </div>
       </nav>
 
       {/* Mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
-          <motion.div
+          <m.div
+            id={menuId}
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="lg:hidden glass mx-auto max-w-6xl mt-2 rounded-2xl p-5 flex flex-col gap-2"
+            className="lg:hidden glass-panel mx-auto max-w-6xl mt-2 rounded-2xl p-5 flex flex-col gap-2"
           >
-            {navItems.map((item, i) => (
-              <motion.button
-                key={item.label}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.04 }}
-                onClick={() => handleNav(item.href)}
-                className={`text-left text-sm font-medium transition-all cursor-pointer flex items-center gap-2 px-3 py-2 rounded-xl ${
-                  activeSection === item.href.replace("#", "")
-                    ? "text-primary-foreground bg-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
-                }`}
-              >
-                {item.label}
-              </motion.button>
-            ))}
+            <nav aria-label="Mobile" className="flex flex-col gap-2">
+              {navItems.map((item, i) => (
+                <m.a
+                  key={item.label}
+                  href={item.href}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.04 }}
+                  onClick={(e) => handleNav(e, item.href)}
+                  aria-current={activeSection === item.href.replace("#", "") ? "true" : undefined}
+                  className={`text-left text-sm font-medium transition-all cursor-pointer flex items-center gap-2 px-3 py-2 rounded-xl ${
+                    activeSection === item.href.replace("#", "")
+                      ? "text-primary-foreground bg-primary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
+                  }`}
+                >
+                  {item.label}
+                </m.a>
+              ))}
+            </nav>
             <div className="border-t border-border pt-3 mt-1">
               <ResumeDropdown mobile />
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
-    </motion.header>
+    </m.header>
   );
 };
 
