@@ -41,8 +41,6 @@
     --glass-shadow: 220 70% 50% / 0.08;
 
     --gradient-primary: linear-gradient(135deg, hsl(220 70% 50%), hsl(175 80% 40%));
-    --gradient-hero: linear-gradient(135deg, hsl(220 25% 8%), hsl(220 40% 15%));
-    --gradient-hero-light: linear-gradient(135deg, hsl(220 30% 96%), hsl(210 20% 92%));
     --gradient-accent: linear-gradient(135deg, hsl(175 80% 40%), hsl(200 90% 50%));
     --gradient-card: linear-gradient(145deg, hsl(0 0% 100% / 0.8), hsl(0 0% 100% / 0.4));
   }
@@ -80,8 +78,6 @@
     --glass-border: 210 20% 30% / 0.3;
     --glass-shadow: 210 100% 60% / 0.1;
 
-    --gradient-hero: linear-gradient(135deg, hsl(220 25% 4%), hsl(220 40% 10%));
-    --gradient-hero-light: linear-gradient(135deg, hsl(220 25% 4%), hsl(220 40% 10%));
     --gradient-card: linear-gradient(145deg, hsl(220 25% 12% / 0.8), hsl(220 25% 8% / 0.4));
   }
 }
@@ -258,7 +254,6 @@
   .anim-particle { animation-name: particle-rise; }
   .anim-blob-a { animation-name: blob-drift-a; }
   .anim-blob-b { animation-name: blob-drift-b; }
-  .anim-bob { animation-name: bob; }
   .anim-pulse-dot { animation-name: pulse-dot; }
   .anim-pulse-scale { animation-name: pulse-scale; }
   .anim-pulse-fade { animation-name: pulse-fade; }
@@ -307,11 +302,6 @@
 @keyframes blob-drift-b {
   0%, 100% { transform: translate3d(0, 0, 0); }
   50%      { transform: translate3d(-15px, 15px, 0); }
-}
-
-@keyframes bob {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(8px); }
 }
 
 @keyframes pulse-dot {
@@ -383,5 +373,245 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Hero abstract                                                              */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * An animatable angle. Registering the property is what makes it interpolate:
+ * an unregistered custom property is a token stream, so a keyframe on it jumps
+ * from start to end instead of sweeping. Browsers without @property still get
+ * the static conic gradient below, just without the travelling highlight.
+ */
+@property --hero-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@layer components {
+  /*
+   * A lit edge travelling the portrait frame. The gradient fills the whole
+   * element and a two-layer mask subtracts everything but a 1px border, which
+   * is far cheaper than animating a real border-image.
+   */
+  .hero-ring {
+    --hero-angle: 0deg;
+    background: conic-gradient(
+      from var(--hero-angle),
+      transparent 0deg,
+      hsl(var(--primary) / 0.85) 60deg,
+      hsl(var(--accent) / 0.9) 120deg,
+      transparent 200deg,
+      transparent 360deg
+    );
+    padding: 1px;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    animation: hero-ring-spin 6s linear infinite;
+  }
+
+  /*
+   * Blueprint grid. The radial mask is the point: an unmasked grid runs into
+   * the section edges and reads as a table, while this one dissolves before it
+   * gets there and reads as depth.
+   */
+  .hero-grid {
+    background-image:
+      linear-gradient(hsl(var(--foreground) / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--foreground) / 0.05) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 62% at 50% 42%, #000 30%, transparent 78%);
+    mask-image: radial-gradient(ellipse 80% 62% at 50% 42%, #000 30%, transparent 78%);
+  }
+
+  /* Six 64px cells across a phone reads as a table, not as texture. */
+  @media (max-width: 639px) {
+    .hero-grid {
+      background-size: 38px 38px;
+    }
+  }
+
+  /*
+   * Grain. A 120px blur across a wide gradient bands visibly on an 8-bit
+   * panel; a little static noise breaks the bands up. Inline SVG turbulence
+   * rather than a PNG — no request, and it scales to any viewport.
+   */
+  .hero-grain {
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .dark .hero-grain {
+    opacity: 0.05;
+  }
+
+  /* Primary CTA: gradient fill plus a sheen that crosses it on hover. */
+  .hero-cta {
+    background: var(--gradient-primary);
+    box-shadow: 0 10px 30px hsl(var(--primary) / 0.28);
+    transition: box-shadow 300ms ease;
+  }
+
+  .hero-cta:hover {
+    box-shadow: 0 16px 42px hsl(var(--primary) / 0.4);
+  }
+
+  .hero-cta::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 20%, hsl(0 0% 100% / 0.28) 46%, transparent 62%);
+    transform: translateX(-120%);
+    transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .hero-cta:hover::after,
+  .hero-cta:focus-visible::after {
+    transform: translateX(120%);
+  }
+
+  /*
+   * Registration brackets on the portrait. Two borders per corner rather than
+   * a box: the frame is read as marked up, not as boxed in.
+   */
+  .portrait-bracket {
+    position: absolute;
+    width: 0.9rem;
+    height: 0.9rem;
+    border-color: hsl(var(--accent) / 0.55);
+    border-style: solid;
+    border-width: 0;
+    pointer-events: none;
+  }
+
+  .portrait-bracket-tl {
+    top: -0.55rem;
+    left: -0.55rem;
+    border-top-width: 1.5px;
+    border-left-width: 1.5px;
+    border-top-left-radius: 0.35rem;
+  }
+
+  .portrait-bracket-tr {
+    top: -0.55rem;
+    right: -0.55rem;
+    border-top-width: 1.5px;
+    border-right-width: 1.5px;
+    border-top-right-radius: 0.35rem;
+  }
+
+  .portrait-bracket-bl {
+    bottom: -0.55rem;
+    left: -0.55rem;
+    border-bottom-width: 1.5px;
+    border-left-width: 1.5px;
+    border-bottom-left-radius: 0.35rem;
+  }
+
+  .portrait-bracket-br {
+    bottom: -0.55rem;
+    right: -0.55rem;
+    border-bottom-width: 1.5px;
+    border-right-width: 1.5px;
+    border-bottom-right-radius: 0.35rem;
+  }
+
+  /*
+   * Headline sweep. The stops stay inside the palette — a white highlight
+   * would vanish against the light theme at the exact moment it crosses.
+   * `background-clip: text` means this animates a paint, not a layout.
+   */
+  .headline-sheen {
+    background-image: linear-gradient(
+      100deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--accent)) 28%,
+      hsl(var(--accent) / 0.72) 42%,
+      hsl(var(--accent)) 56%,
+      hsl(var(--primary)) 100%
+    );
+    background-size: 260% 100%;
+    background-position: 130% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: headline-sheen 9s ease-in-out infinite;
+  }
+
+  /*
+   * Marquee. The track holds two identical groups and travels exactly half its
+   * own width, so the wrap point is invisible; each group carries its own
+   * trailing gap or the seam shows up as a wide space once per loop.
+   */
+  .marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee-scroll 52s linear infinite;
+  }
+
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  .marquee-group {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+    padding-right: 1.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .marquee-group {
+      gap: 2.5rem;
+      padding-right: 2.5rem;
+    }
+  }
+
+  .anim-ping { animation-name: hero-ping; }
+}
+
+@keyframes hero-ring-spin {
+  to { --hero-angle: 360deg; }
+}
+
+@keyframes headline-sheen {
+  0%, 100% { background-position: 130% 0; }
+  50%      { background-position: -30% 0; }
+}
+
+@keyframes marquee-scroll {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes hero-ping {
+  0%   { transform: scale(1);   opacity: 0.7; }
+  75%  { transform: scale(2.4); opacity: 0; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-ring,
+  .headline-sheen,
+  .marquee-track {
+    animation: none !important;
+  }
+
+  .hero-cta::after {
+    display: none;
   }
 }
