@@ -1,617 +1,451 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 210 20% 98%;
-    --foreground: 220 25% 10%;
+/* ========================================================================== */
+/* Type — self-hosted                                                          */
+/*                                                                             */
+/* Switzer (Indian Type Foundry, ITF Free Font License) and Fragment Mono      */
+/* (SIL OFL). Served from /fonts so no third-party request sits in front of    */
+/* the first paint; 400 and 500 are preloaded from index.html.                 */
+/* ========================================================================== */
 
-    --card: 0 0% 100%;
-    --card-foreground: 220 25% 10%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 10%;
-
-    --primary: 220 70% 50%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 210 20% 93%;
-    --secondary-foreground: 220 25% 10%;
-
-    --muted: 210 15% 95%;
-    --muted-foreground: 220 10% 45%;
-
-    --accent: 175 80% 40%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214 20% 90%;
-    --input: 214 20% 90%;
-    --ring: 220 70% 50%;
-
-    --radius: 0.75rem;
-
-    --glass-bg: 0 0% 100% / 0.7;
-    --glass-border: 0 0% 100% / 0.3;
-    --glass-shadow: 220 70% 50% / 0.08;
-
-    --gradient-primary: linear-gradient(135deg, hsl(220 70% 50%), hsl(175 80% 40%));
-    --gradient-accent: linear-gradient(135deg, hsl(175 80% 40%), hsl(200 90% 50%));
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100% / 0.8), hsl(0 0% 100% / 0.4));
-  }
-
-  .dark {
-    --background: 220 25% 6%;
-    --foreground: 210 20% 95%;
-
-    --card: 220 25% 10%;
-    --card-foreground: 210 20% 95%;
-
-    --popover: 220 25% 10%;
-    --popover-foreground: 210 20% 95%;
-
-    --primary: 210 100% 60%;
-    --primary-foreground: 220 25% 6%;
-
-    --secondary: 220 20% 15%;
-    --secondary-foreground: 210 20% 95%;
-
-    --muted: 220 20% 15%;
-    --muted-foreground: 215 18% 70%;
-
-    --accent: 175 80% 45%;
-    --accent-foreground: 220 25% 6%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 220 20% 18%;
-    --input: 220 20% 18%;
-    --ring: 210 100% 60%;
-
-    --glass-bg: 220 25% 10% / 0.6;
-    --glass-border: 210 20% 30% / 0.3;
-    --glass-shadow: 210 100% 60% / 0.1;
-
-    --gradient-card: linear-gradient(145deg, hsl(220 25% 12% / 0.8), hsl(220 25% 8% / 0.4));
-  }
+@font-face {
+  font-family: "Switzer";
+  src: url("/fonts/switzer-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
+@font-face {
+  font-family: "Switzer";
+  src: url("/fonts/switzer-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Switzer";
+  src: url("/fonts/switzer-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fragment Mono";
+  src: url("/fonts/fragment-mono-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ========================================================================== */
+/* Tokens                                                                      */
+/*                                                                             */
+/* Two grounds — Paper and Graphite — one signal colour. The signal is set by  */
+/* ThemeProvider (and mirrored in index.html's boot script) as four values:    */
+/* the fill, the text that sits on the fill, and a text-safe variant for each  */
+/* ground, because a colour that works as a fill rarely passes 4.5:1 as text.  */
+/* ========================================================================== */
+
 @layer base {
+  :root {
+    --background: 40 20% 95%;
+    --foreground: 60 4% 7%;
+    --card: 40 27% 98%;
+    --card-foreground: 60 4% 7%;
+    --popover: 40 27% 98%;
+    --popover-foreground: 60 4% 7%;
+    --muted: 40 14% 90%;
+    --muted-foreground: 45 4% 36%;
+    --secondary: 40 14% 90%;
+    --secondary-foreground: 60 4% 7%;
+    --border: 40 9% 83%;
+    --input: 40 9% 72%;
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --accent: 12 96% 52%;
+    --accent-foreground: 60 4% 7%;
+    --accent-text-light: 12 85% 40%;
+    --accent-text-dark: 14 100% 62%;
+    --accent-ink: var(--accent-text-light);
+
+    --primary: var(--accent);
+    --primary-foreground: var(--accent-foreground);
+    --ring: var(--accent);
+
+    --radius: 0.5rem;
+    --header-h: 4rem;
+  }
+
+  .dark,
+  .band-ink {
+    --background: 60 3% 5%;
+    --foreground: 40 18% 91%;
+    --card: 60 3% 8%;
+    --card-foreground: 40 18% 91%;
+    --popover: 60 3% 9%;
+    --popover-foreground: 40 18% 91%;
+    --muted: 60 3% 12%;
+    --muted-foreground: 45 5% 62%;
+    --secondary: 60 3% 12%;
+    --secondary-foreground: 40 18% 91%;
+    --border: 60 3% 17%;
+    --input: 60 3% 26%;
+    --accent-ink: var(--accent-text-dark);
+  }
+
+  /* In dark mode an "ink" band lifts one step instead of going darker still. */
+  .dark .band-ink {
+    --background: 60 3% 8%;
+    --card: 60 3% 11%;
+    --border: 60 3% 20%;
+  }
+
   * {
     @apply border-border;
   }
 
-  body {
-    @apply bg-background text-foreground font-body;
+  html {
+    -webkit-text-size-adjust: 100%;
+    /* optimizeLegibility is a known slow path for large text on low-end
+       devices; kerning is already on through font-feature-settings. */
+    text-rendering: auto;
   }
 
-  html {
-    scroll-behavior: smooth;
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "kern";
+  }
+
+  ::selection {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+  }
+
+  :where(a, button, input, textarea, select, [tabindex]):focus-visible {
+    outline: 2px solid hsl(var(--accent));
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  section[id] {
+    scroll-margin-top: var(--header-h);
   }
 }
 
+/* ========================================================================== */
+/* Lenis                                                                       */
+/* ========================================================================== */
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* ========================================================================== */
+/* Components                                                                  */
+/* ========================================================================== */
+
 @layer components {
+  /* The page grid. Every section aligns to this one measure. */
+  .shell {
+    @apply mx-auto w-full max-w-shell px-5 md:px-8 xl:px-12;
+  }
+
+  /* Mono metadata: section numbers, IDs, dates, field labels. */
+  .label {
+    @apply font-mono text-[11px] font-medium uppercase tracking-label text-muted-foreground;
+    line-height: 1.2;
+  }
+
+  .display {
+    @apply font-display font-medium tracking-display;
+    line-height: 0.92;
+    font-feature-settings: "kern";
+  }
+
+  /* The second tone of a heading: same face, same weight, quieter ink. */
+  .tone-em {
+    color: hsl(var(--muted-foreground));
+  }
+
   /*
-   * Static surfaces sitting on a flat section background. No backdrop-filter:
-   * there is nothing behind them worth blurring, and each one would otherwise
-   * promote its text into a composited layer, which renders it noticeably soft.
+   * Word masks for heading reveals. The padding keeps descenders and the
+   * serif italic's right-hand overhang from being clipped by the overflow.
    */
-  .glass {
-    background: hsl(var(--glass-bg));
-    border: 1px solid hsl(var(--glass-border));
-    box-shadow: 0 8px 32px hsl(var(--glass-shadow));
+  .split-mask {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding: 0 0.08em 0.12em 0;
+    margin: 0 -0.08em -0.12em 0;
   }
 
-  /* Surfaces that float over scrolling content, where the blur is the effect. */
-  .glass-panel {
-    background: hsl(var(--glass-bg));
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid hsl(var(--glass-border));
-    box-shadow: 0 8px 32px hsl(var(--glass-shadow));
+  .split-word {
+    display: inline-block;
   }
 
-  .gradient-text {
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  /*
+   * Scrubbed words are atomic boxes. As plain inline spans, every opacity step
+   * during the scroll-linked fade invalidated layout for the whole paragraph;
+   * as inline-blocks it is a paint-only change.
+   */
+  .scrub-word {
+    display: inline-block;
   }
 
-  .gradient-border {
-    position: relative;
-    border: none;
+  /* Underline that draws in from the left on hover. */
+  .link-draw {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition: background-size 500ms cubic-bezier(0.16, 1, 0.3, 1), color 200ms ease;
   }
 
-  .gradient-border::before {
-    content: '';
+  .link-draw:hover,
+  .link-draw:focus-visible {
+    background-size: 100% 1px;
+  }
+
+  .btn {
+    @apply relative inline-flex items-center justify-center gap-2.5 overflow-hidden rounded-full font-medium;
+    @apply h-12 px-6 text-sm transition-colors duration-300;
+    isolation: isolate;
+  }
+
+  .btn-accent {
+    @apply bg-accent text-accent-foreground;
+  }
+
+  /* Fill that rises from below on hover — the ink replaces the signal. */
+  .btn-accent::before {
+    content: "";
     position: absolute;
     inset: 0;
-    padding: 1px;
+    z-index: -1;
+    background: hsl(var(--foreground));
+    transform: translateY(101%);
+    transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
     border-radius: inherit;
-    background: var(--gradient-primary);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
   }
 
-  .section-padding {
-    @apply py-20 md:py-28 px-4 md:px-8 lg:px-20 xl:px-8;
+  .btn-accent:hover {
+    @apply text-background;
   }
 
-  /*
-   * `transition: all` makes the browser watch every animatable property on every
-   * one of these surfaces. Naming the two that actually change keeps hover work
-   * off the layout path.
-   */
-  .hover-lift {
-    transition: transform 300ms ease, box-shadow 300ms ease;
+  .btn-accent:hover::before {
+    transform: translateY(0);
   }
 
-  .hover-lift:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 50px hsl(var(--glass-shadow));
+  .btn-line {
+    @apply border border-foreground/20 text-foreground hover:border-foreground;
   }
 
-  .hover-glow {
-    transition: box-shadow 300ms ease;
+  .field {
+    @apply w-full bg-transparent border-0 border-b border-input px-0 py-3 text-base text-foreground;
+    @apply placeholder:text-muted-foreground/60 transition-colors duration-300;
+    border-radius: 0;
   }
 
-  .hover-glow:hover {
-    box-shadow: 0 0 25px hsl(var(--primary) / 0.15), 0 10px 40px hsl(var(--glass-shadow));
+  .field:hover {
+    border-color: hsl(var(--foreground) / 0.5);
   }
 
-  .hover-border-accent {
-    @apply border border-transparent;
-    transition: border-color 300ms ease;
+  .field:focus,
+  .field:focus-visible {
+    outline: none;
+    border-color: hsl(var(--accent));
+    box-shadow: 0 1px 0 0 hsl(var(--accent));
   }
 
-  .hover-border-accent:hover {
-    border-color: hsl(var(--accent) / 0.4);
-  }
-
-  /*
-   * Off-screen until focused, then pinned over the header. It must sit above
-   * the fixed nav (z-50) or it lands underneath it and reads as broken.
-   */
   .skip-link {
     position: fixed;
     top: 0.75rem;
     left: 50%;
-    transform: translate(-50%, -150%);
     z-index: 100;
+    transform: translate(-50%, -200%);
     padding: 0.625rem 1.25rem;
-    border-radius: 0.75rem;
-    background: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-    font-family: theme("fontFamily.heading");
+    border-radius: 999px;
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
     font-size: 0.875rem;
-    font-weight: 600;
-    text-decoration: none;
+    font-weight: 500;
     transition: transform 200ms ease;
   }
 
   .skip-link:focus-visible {
     transform: translate(-50%, 0);
-    outline: 2px solid hsl(var(--accent));
-    outline-offset: 2px;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .skip-link { transition: none; }
+  /* Faint column guides — the grid the page is set on, shown once, in the hero. */
+  .column-guides {
+    background-image: linear-gradient(
+      to right,
+      hsl(var(--foreground) / 0.055) 1px,
+      transparent 1px
+    );
+    background-size: calc(100% / 12) 100%;
   }
-}
 
-/*
- * Ambient decoration.
- *
- * These loops used to run through framer-motion, which composes x/y/rotate/scale
- * into one transform string itself and therefore cannot hand them to the Web
- * Animations API — every one of them wrote inline styles from the main thread on
- * every frame, whether or not its section was on screen. As plain CSS keyframes
- * of transform/opacity they run on the compositor, keep pace with a 120Hz
- * display, and Chrome throttles them while they are scrolled out of view.
- *
- * Each element sets its own --dur/--delay (and --rot/--op where it varies) so
- * the individual, staggered motion of the originals is preserved.
- */
-@layer components {
-  .anim-loop {
-    animation-duration: var(--dur, 12s);
-    animation-delay: var(--delay, 0s);
-    animation-iteration-count: infinite;
-    animation-timing-function: ease-in-out;
-    animation-fill-mode: both;
+  @media (max-width: 767px) {
+    .column-guides {
+      background-size: calc(100% / 4) 100%;
+    }
+  }
+
+  /* Crop marks on a figure, as on a print proof. */
+  .crop-marks {
+    position: relative;
+  }
+
+  .crop-marks::before,
+  .crop-marks::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+    border-color: hsl(var(--foreground) / 0.55);
+    border-style: solid;
+  }
+
+  .crop-marks::before {
+    top: -8px;
+    left: -8px;
+    border-width: 1px 0 0 1px;
+  }
+
+  .crop-marks::after {
+    right: -8px;
+    bottom: -8px;
+    border-width: 0 1px 1px 0;
+  }
+
+  /* Marquee fallback: a plain CSS loop until GSAP takes it over. */
+  .marquee-track {
+    display: flex;
+    width: max-content;
   }
 
   /*
-   * The only two worth pinning to their own layer: a 100px blur is expensive to
-   * repaint, so keep them off the repaint path while they drift.
+   * Case studies are a readable grid by default. Only when GSAP confirms a
+   * desktop viewport with motion allowed does the track become a horizontal
+   * strip — so if scripting fails, nothing ends up scrolled out of reach.
    */
-  .anim-blob-a,
-  .anim-blob-b {
-    will-change: transform;
+  .cases.is-horizontal .cases-track {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1.5rem;
+    width: max-content;
   }
 
-  .anim-spin {
-    animation-name: spin;
-    animation-timing-function: linear;
+  .cases.is-horizontal .case-card {
+    width: min(78vw, 1040px);
+    flex-shrink: 0;
   }
 
-  .anim-spin-reverse {
-    animation-name: spin-reverse;
-    animation-timing-function: linear;
+  .status-dot {
+    position: relative;
+    display: inline-flex;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: hsl(var(--accent));
   }
 
-  .anim-ba-icon { animation-name: ba-icon-float; }
-  .anim-hero-icon { animation-name: hero-icon-float; }
-  .anim-particle { animation-name: particle-rise; }
-  .anim-blob-a { animation-name: blob-drift-a; }
-  .anim-blob-b { animation-name: blob-drift-b; }
-  .anim-pulse-dot { animation-name: pulse-dot; }
-  .anim-pulse-scale { animation-name: pulse-scale; }
-  .anim-pulse-fade { animation-name: pulse-fade; }
-  .anim-fade-io { animation-name: fade-in-out; }
-  .anim-caret {
-    animation-name: caret-blink;
-    animation-duration: 1s;
-    animation-timing-function: steps(1, end);
+  .status-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: inherit;
+    /* A few pulses to draw the eye, then still. An endless loop kept the page
+       producing new frames — and style work — forever, even while idle. */
+    animation: status-ping 2.2s cubic-bezier(0, 0, 0.2, 1) 5;
   }
-  .anim-path-draw { animation-name: path-draw; }
-  .anim-flow-pulse {
-    animation-name: flow-pulse;
-    animation-timing-function: linear;
+}
+
+@layer components {
+  /* Case study body: stacked in the grid, side by side where there is room. */
+  .case-body {
+    grid-template-columns: 1fr;
   }
-  .anim-spark { animation-name: spark; }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .case-body {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .cases.is-horizontal .case-body {
+    grid-template-columns: 1.05fr 1fr;
+  }
+
+  .cases-progress {
+    display: none;
+  }
+
+  .cases.is-horizontal .cases-progress {
+    display: flex;
+  }
+
+  .cases.is-horizontal .cases-pin {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .cases.is-horizontal .case-card {
+    min-height: min(calc(100vh - 12rem), 620px);
+  }
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes spin-reverse { to { transform: rotate(-360deg); } }
-
-@keyframes ba-icon-float {
-  0%   { opacity: 0;    transform: translateY(0)     rotate(0deg); }
-  33%  { opacity: 0.06; transform: translateY(-15px) rotate(var(--rot, 0deg)); }
-  66%  { opacity: 0.02; transform: translateY(0)     rotate(0deg); }
-  100% { opacity: 0.06; transform: translateY(0)     rotate(0deg); }
-}
-
-@keyframes hero-icon-float {
-  0%   { opacity: 0;    transform: translateY(0)    rotate(0deg); }
-  33%  { opacity: 0.06; transform: translateY(-8px) rotate(4deg); }
-  66%  { opacity: 0.03; transform: translateY(0)    rotate(-4deg); }
-  100% { opacity: 0.06; transform: translateY(0)    rotate(0deg); }
-}
-
-@keyframes particle-rise {
-  0%   { opacity: 0;               transform: translateY(0); }
-  50%  { opacity: var(--op, 0.06); }
-  100% { opacity: 0;               transform: translateY(-40px); }
-}
-
-@keyframes blob-drift-a {
-  0%, 100% { transform: translate3d(0, 0, 0); }
-  50%      { transform: translate3d(15px, -12px, 0); }
-}
-
-@keyframes blob-drift-b {
-  0%, 100% { transform: translate3d(0, 0, 0); }
-  50%      { transform: translate3d(-15px, 15px, 0); }
-}
-
-@keyframes pulse-dot {
-  0%, 100% { transform: scale(1);   opacity: 1; }
-  50%      { transform: scale(1.3); opacity: 0.5; }
-}
-
-@keyframes pulse-scale {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.3); }
-}
-
-@keyframes pulse-fade {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0.7; }
-}
-
-@keyframes caret-blink {
-  0%, 50%   { opacity: 1; }
-  50.01%, 100% { opacity: 0; }
-}
-
-@keyframes fade-in-out {
-  0%, 100% { opacity: 0; }
-  50%      { opacity: var(--op, 0.5); }
-}
-
-/*
- * Paired with pathLength="1" + stroke-dasharray:1 on the path, this reproduces
- * framer's pathLength 0 -> 1 -> 0 draw exactly, without the per-frame attribute
- * writes it needed to do it.
- */
-@keyframes path-draw {
-  0%, 100% { stroke-dashoffset: 1; }
-  50%      { stroke-dashoffset: 0; }
-}
-
-/*
- * Paired with pathLength="100" + stroke-dasharray:"7 93" on the connector, this
- * runs a short dash from the start of the path to its end. Normalising via
- * pathLength means one keyframe drives paths of any real length at one speed.
- */
-@keyframes flow-pulse {
-  from { stroke-dashoffset: 100; }
-  to   { stroke-dashoffset: 0; }
-}
-
-@keyframes spark {
-  0%   { opacity: 0;   transform: translate(0, 0); }
-  50%  { opacity: 0.6; }
-  100% { opacity: 0;   transform: translate(var(--dx, 0), var(--dy, 8px)); }
-}
-
-/*
- * Respect the OS setting. Ambient loops stop outright; deliberate transitions
- * are cut to a length that reads as instant without breaking layout that
- * depends on an animation having finished.
- */
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-
-  .anim-loop {
-    animation: none !important;
+  .status-dot::after {
+    display: none;
   }
+}
 
+/* Lite mode (set by src/lib/performance.ts on hardware that cannot keep pace). */
+.perf-lite .status-dot::after {
+  display: none;
+}
+
+/* The pinned case-study strip is one large moving surface; keep it on its own layer. */
+.cases.is-horizontal .cases-track {
+  will-change: transform;
+}
+
+@keyframes status-ping {
+  0% { transform: scale(1); opacity: 0.7; }
+  80%, 100% { transform: scale(2.6); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-}
-
-/* -------------------------------------------------------------------------- */
-/* Hero abstract                                                              */
-/* -------------------------------------------------------------------------- */
-
-/*
- * An animatable angle. Registering the property is what makes it interpolate:
- * an unregistered custom property is a token stream, so a keyframe on it jumps
- * from start to end instead of sweeping. Browsers without @property still get
- * the static conic gradient below, just without the travelling highlight.
- */
-@property --hero-angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-
-@layer components {
-  /*
-   * A lit edge travelling the portrait frame. The gradient fills the whole
-   * element and a two-layer mask subtracts everything but a 1px border, which
-   * is far cheaper than animating a real border-image.
-   */
-  .hero-ring {
-    --hero-angle: 0deg;
-    background: conic-gradient(
-      from var(--hero-angle),
-      transparent 0deg,
-      hsl(var(--primary) / 0.85) 60deg,
-      hsl(var(--accent) / 0.9) 120deg,
-      transparent 200deg,
-      transparent 360deg
-    );
-    padding: 1px;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask-composite: exclude;
-    animation: hero-ring-spin 6s linear infinite;
-  }
-
-  /*
-   * Blueprint grid. The radial mask is the point: an unmasked grid runs into
-   * the section edges and reads as a table, while this one dissolves before it
-   * gets there and reads as depth.
-   */
-  .hero-grid {
-    background-image:
-      linear-gradient(hsl(var(--foreground) / 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(var(--foreground) / 0.05) 1px, transparent 1px);
-    background-size: 64px 64px;
-    -webkit-mask-image: radial-gradient(ellipse 80% 62% at 50% 42%, #000 30%, transparent 78%);
-    mask-image: radial-gradient(ellipse 80% 62% at 50% 42%, #000 30%, transparent 78%);
-  }
-
-  /* Six 64px cells across a phone reads as a table, not as texture. */
-  @media (max-width: 639px) {
-    .hero-grid {
-      background-size: 38px 38px;
-    }
-  }
-
-  /*
-   * Grain. A 120px blur across a wide gradient bands visibly on an 8-bit
-   * panel; a little static noise breaks the bands up. Inline SVG turbulence
-   * rather than a PNG — no request, and it scales to any viewport.
-   */
-  .hero-grain {
-    opacity: 0.035;
-    mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-
-  .dark .hero-grain {
-    opacity: 0.05;
-  }
-
-  /* Primary CTA: gradient fill plus a sheen that crosses it on hover. */
-  .hero-cta {
-    background: var(--gradient-primary);
-    box-shadow: 0 10px 30px hsl(var(--primary) / 0.28);
-    transition: box-shadow 300ms ease;
-  }
-
-  .hero-cta:hover {
-    box-shadow: 0 16px 42px hsl(var(--primary) / 0.4);
-  }
-
-  .hero-cta::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(110deg, transparent 20%, hsl(0 0% 100% / 0.28) 46%, transparent 62%);
-    transform: translateX(-120%);
-    transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .hero-cta:hover::after,
-  .hero-cta:focus-visible::after {
-    transform: translateX(120%);
-  }
-
-  /*
-   * Registration brackets on the portrait. Two borders per corner rather than
-   * a box: the frame is read as marked up, not as boxed in.
-   */
-  .portrait-bracket {
-    position: absolute;
-    width: 0.9rem;
-    height: 0.9rem;
-    border-color: hsl(var(--accent) / 0.55);
-    border-style: solid;
-    border-width: 0;
-    pointer-events: none;
-  }
-
-  .portrait-bracket-tl {
-    top: -0.55rem;
-    left: -0.55rem;
-    border-top-width: 1.5px;
-    border-left-width: 1.5px;
-    border-top-left-radius: 0.35rem;
-  }
-
-  .portrait-bracket-tr {
-    top: -0.55rem;
-    right: -0.55rem;
-    border-top-width: 1.5px;
-    border-right-width: 1.5px;
-    border-top-right-radius: 0.35rem;
-  }
-
-  .portrait-bracket-bl {
-    bottom: -0.55rem;
-    left: -0.55rem;
-    border-bottom-width: 1.5px;
-    border-left-width: 1.5px;
-    border-bottom-left-radius: 0.35rem;
-  }
-
-  .portrait-bracket-br {
-    bottom: -0.55rem;
-    right: -0.55rem;
-    border-bottom-width: 1.5px;
-    border-right-width: 1.5px;
-    border-bottom-right-radius: 0.35rem;
-  }
-
-  /*
-   * Headline sweep. The stops stay inside the palette — a white highlight
-   * would vanish against the light theme at the exact moment it crosses.
-   * `background-clip: text` means this animates a paint, not a layout.
-   */
-  .headline-sheen {
-    background-image: linear-gradient(
-      100deg,
-      hsl(var(--primary)) 0%,
-      hsl(var(--accent)) 28%,
-      hsl(var(--accent) / 0.72) 42%,
-      hsl(var(--accent)) 56%,
-      hsl(var(--primary)) 100%
-    );
-    background-size: 260% 100%;
-    background-position: 130% 0;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    animation: headline-sheen 9s ease-in-out infinite;
-  }
-
-  /*
-   * Marquee. The track holds two identical groups and travels exactly half its
-   * own width, so the wrap point is invisible; each group carries its own
-   * trailing gap or the seam shows up as a wide space once per loop.
-   */
-  .marquee {
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-  }
-
-  .marquee-track {
-    display: flex;
-    width: max-content;
-    animation: marquee-scroll 52s linear infinite;
-  }
-
-  .marquee:hover .marquee-track {
-    animation-play-state: paused;
-  }
-
-  .marquee-group {
-    display: flex;
-    align-items: center;
-    gap: 1.75rem;
-    padding-right: 1.75rem;
-  }
-
-  @media (min-width: 640px) {
-    .marquee-group {
-      gap: 2.5rem;
-      padding-right: 2.5rem;
-    }
-  }
-
-  .anim-ping { animation-name: hero-ping; }
-}
-
-@keyframes hero-ring-spin {
-  to { --hero-angle: 360deg; }
-}
-
-@keyframes headline-sheen {
-  0%, 100% { background-position: 130% 0; }
-  50%      { background-position: -30% 0; }
-}
-
-@keyframes marquee-scroll {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-50%, 0, 0); }
-}
-
-@keyframes hero-ping {
-  0%   { transform: scale(1);   opacity: 0.7; }
-  75%  { transform: scale(2.4); opacity: 0; }
-  100% { transform: scale(2.4); opacity: 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-ring,
-  .headline-sheen,
-  .marquee-track {
-    animation: none !important;
-  }
-
-  .hero-cta::after {
-    display: none;
+    scroll-behavior: auto !important;
   }
 }

@@ -1,65 +1,64 @@
-import { useState, useCallback, lazy, Suspense } from "react";
+import { useCallback, useRef, useState } from "react";
+import SmoothScroll from "@/lib/smooth-scroll";
+import { usePageMotion } from "@/lib/page-motion";
+import Preloader, { shouldShowPreloader } from "@/components/Preloader";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import Preloader, { shouldShowPreloader } from "@/components/Preloader";
-import { m } from "framer-motion";
+import About from "@/components/About";
+import Stats from "@/components/Stats";
+import Skills from "@/components/Skills";
+import Experience from "@/components/Experience";
+import Projects from "@/components/Projects";
+import Education from "@/components/Education";
+import Certifications from "@/components/Certifications";
+import Testimonials from "@/components/Testimonials";
+import Contact from "@/components/Contact";
+import Footer from "@/components/Footer";
+import BackToTop from "@/components/BackToTop";
+import FloatingShare from "@/components/FloatingShare";
 
-const About = lazy(() => import("@/components/About"));
-const Stats = lazy(() => import("@/components/Stats"));
-const Skills = lazy(() => import("@/components/Skills"));
-const Experience = lazy(() => import("@/components/Experience"));
-const Projects = lazy(() => import("@/components/Projects"));
-const Education = lazy(() => import("@/components/Education"));
-const Certifications = lazy(() => import("@/components/Certifications"));
-const Testimonials = lazy(() => import("@/components/Testimonials"));
-const Contact = lazy(() => import("@/components/Contact"));
-const Footer = lazy(() => import("@/components/Footer"));
-const BackToTop = lazy(() => import("@/components/BackToTop"));
-const FloatingShare = lazy(() => import("@/components/FloatingShare"));
-
+/*
+ * Sections are imported eagerly. Lazy-loading them saved a few kilobytes but
+ * made the page's height change after first layout, and every ScrollTrigger —
+ * the pinned case studies above all — measures positions against that height.
+ */
 const Index = () => {
-  // Resolved once, before the first render, so a returning visitor never pays
-  // for a splash frame — and never pays for the fade-in that follows it either.
+  // Resolved once before the first render, so a returning visitor never sees a
+  // splash frame at all.
   const [loading, setLoading] = useState(shouldShowPreloader);
-
   const handlePreloaderComplete = useCallback(() => setLoading(false), []);
+
+  const pageRef = useRef<HTMLDivElement>(null);
+  usePageMotion(pageRef);
 
   return (
     <>
       {loading && <Preloader onComplete={handlePreloaderComplete} />}
-      <m.div
-        initial={{ opacity: loading ? 0 : 1 }}
-        animate={{ opacity: loading ? 0 : 1 }}
-        transition={{ duration: 0.4 }}
-        className="min-h-screen bg-background"
-      >
-        {/*
-          * The header carries eight nav links, a theme toggle, a colour picker
-          * and a resume menu. Without this, every keyboard and screen-reader
-          * visitor tabs through all of them before reaching any content.
-          */}
-        <a href="#main" className="skip-link">Skip to content</a>
-        <Navbar />
+      <SmoothScroll />
+
+      <a href="#main" className="skip-link">
+        Skip to content
+      </a>
+      <Navbar />
+
+      <div ref={pageRef} className="relative bg-background">
         <main id="main">
-          <Hero />
-          <Suspense fallback={null}>
-            <About />
-            <Stats />
-            <Skills />
-            <Experience />
-            <Projects />
-            <Education />
-            <Certifications />
-            <Testimonials />
-            <Contact />
-          </Suspense>
+          <Hero ready={!loading} />
+          <About />
+          <Stats />
+          <Skills />
+          <Experience />
+          <Projects />
+          <Education />
+          <Certifications />
+          <Testimonials />
+          <Contact />
         </main>
-        <Suspense fallback={null}>
-          <Footer />
-          <BackToTop />
-          <FloatingShare />
-        </Suspense>
-      </m.div>
+        <Footer />
+      </div>
+
+      <BackToTop />
+      <FloatingShare />
     </>
   );
 };

@@ -1,78 +1,44 @@
-import { m, useInView } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
-import { Award, Layers, TrendingUp, Briefcase } from "lucide-react";
-import ScrollReveal from "./ScrollReveal";
-
 // Figures are drawn from the CV — 2.5+ years in the profile, six entries under
 // Domain Knowledge, four entries under Certifications & Awards — except the role
 // count, which includes the US Bangla Airlines role that post-dates the CV.
 const stats = [
-  { icon: Briefcase, value: 2.5, suffix: "+", label: "Years Experience" },
-  { icon: Layers, value: 6, suffix: "", label: "Domains Covered" },
-  { icon: TrendingUp, value: 4, suffix: "", label: "Analyst Roles Held" },
-  { icon: Award, value: 4, suffix: "", label: "Awards & Certifications" },
+  { value: "2.5", suffix: "+", label: "Years Experience" },
+  { value: "6", suffix: "", label: "Domains Covered" },
+  { value: "4", suffix: "", label: "Analyst Roles Held" },
+  { value: "4", suffix: "", label: "Awards & Certifications" },
 ];
 
-const Counter = ({ target, suffix }: { target: number; suffix: string }) => {
-  const [count, setCount] = useState(0);
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true });
-  const decimals = Number.isInteger(target) ? 0 : 1;
-
-  // Time-based rAF rather than a 16ms setInterval, which drifts and lands
-  // between frames on a high-refresh display. This also eases out instead of
-  // counting linearly, and always finishes on exactly `target`.
-  useEffect(() => {
-    if (!inView) return;
-    const duration = 1500;
-    let raf = 0;
-    let start = 0;
-
-    const tick = (now: number) => {
-      if (!start) start = now;
-      const t = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - t, 3);
-      const factor = 10 ** decimals;
-      setCount(Math.round(target * eased * factor) / factor);
-      if (t < 1) raf = requestAnimationFrame(tick);
-    };
-
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [inView, target, decimals]);
-
-  return (
-    <span ref={ref} className="font-heading text-2xl md:text-4xl font-bold gradient-text">
-      {count.toFixed(decimals)}{suffix}
-    </span>
-  );
-};
-
+/*
+ * The figures render as their real values. page-motion counts them up from zero
+ * when motion is allowed and writes the true value back if it is torn down, so
+ * a visitor with reduced motion — or no JavaScript — reads the right number.
+ */
 const Stats = () => {
   return (
-    <section className="section-padding bg-secondary/30 relative overflow-hidden">
-      <div className="container mx-auto relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-4xl mx-auto">
+    <section aria-label="Career in numbers" className="band-ink bg-background text-foreground">
+      <div className="shell">
+        <dl className="grid grid-cols-2 lg:grid-cols-4">
           {stats.map((stat, i) => (
-            <ScrollReveal key={stat.label} delay={i * 0.1}>
-              <m.div
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="glass rounded-2xl p-4 md:p-6 text-center hover-glow"
-              >
-                <m.div
-                  whileInView={{ rotate: [0, 10, -10, 0] }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}
-                  className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3"
-                >
-                  <stat.icon className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-                </m.div>
-                <Counter target={stat.value} suffix={stat.suffix} />
-                <p className="text-[10px] md:text-sm text-muted-foreground mt-2 font-medium">{stat.label}</p>
-              </m.div>
-            </ScrollReveal>
+            <div
+              key={stat.label}
+              className={`flex flex-col justify-between gap-10 md:gap-16 py-8 md:py-14 border-border
+                ${i % 2 === 0 ? "border-r pr-5 md:pr-8" : "pl-5 md:pl-8"}
+                ${i < 2 ? "border-b lg:border-b-0" : ""}
+                lg:px-8 lg:first:pl-0 lg:last:pr-0 ${i < 3 ? "lg:border-r" : "lg:border-r-0"}`}
+            >
+              <dt className="flex items-start justify-between gap-3">
+                <span className="label text-balance">{stat.label}</span>
+                <span aria-hidden="true" className="font-mono text-[11px] text-muted-foreground">
+                  0{i + 1}
+                </span>
+              </dt>
+              <dd className="display tabular-nums text-[clamp(3.75rem,10.5vw,9rem)] leading-[0.8]">
+                <span data-counter={stat.value}>{stat.value}</span>
+                {stat.suffix && <span className="text-accent-ink">{stat.suffix}</span>}
+              </dd>
+            </div>
           ))}
-        </div>
+        </dl>
       </div>
     </section>
   );

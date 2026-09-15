@@ -1,70 +1,70 @@
 import { m, AnimatePresence } from "framer-motion";
-import { Palette, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { useId, useState } from "react";
-import { useTheme, colorThemes } from "./ThemeProvider";
+import { useTheme, accentThemes } from "./ThemeProvider";
 import { useDismissable } from "@/hooks/useDismissable";
 
 const ThemeSwitcher = () => {
-  const { colorTheme, setColorTheme } = useTheme();
+  const { accentTheme, setAccentTheme } = useTheme();
   const [open, setOpen] = useState(false);
   const menuId = useId();
   const { containerRef, triggerRef } = useDismissable<HTMLDivElement>(open, () => setOpen(false));
 
   return (
     <div ref={containerRef} className="relative">
-      <m.button
+      <button
         ref={triggerRef}
-        whileHover={{ scale: 1.1, rotate: 15 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => setOpen(!open)}
+        type="button"
+        onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
-        className="p-2 rounded-full hover:bg-secondary transition-colors cursor-pointer"
         aria-label="Change theme colour"
+        className="group grid place-items-center w-10 h-10 rounded-full border border-foreground/15 hover:border-foreground transition-colors cursor-pointer"
       >
-        <Palette aria-hidden="true" className="w-4 h-4" />
-      </m.button>
+        <span
+          aria-hidden="true"
+          className="block w-3.5 h-3.5 rounded-full bg-accent transition-transform duration-500 ease-out-expo group-hover:scale-125"
+        />
+      </button>
 
       <AnimatePresence>
         {open && (
           <m.div
             id={menuId}
             role="menu"
-            aria-label="Colour theme"
-            initial={{ opacity: 0, y: -8, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.95 }}
-            transition={{ duration: 0.15 }}
-            className="absolute right-0 top-full mt-2 z-50 bg-popover border border-border rounded-xl shadow-lg p-3 min-w-[220px]"
+            aria-label="Signal colour"
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute right-0 top-full mt-3 z-50 w-56 rounded-lg border border-border bg-popover p-1.5 shadow-[0_24px_60px_-20px_rgb(0_0_0/0.35)]"
           >
-            <p className="text-xs font-medium text-muted-foreground mb-2.5 px-1">Color Theme</p>
-            <div className="grid grid-cols-5 gap-2">
-              {colorThemes.map((t) => {
-                const selected = colorTheme === t.id;
-                return (
-                  <m.button
-                    key={t.id}
-                    whileHover={{ scale: 1.15 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => { setColorTheme(t.id); setOpen(false); }}
-                    role="menuitemradio"
-                    aria-checked={selected}
-                    // The swatch has no text, so the colour name is the only
-                    // thing a screen reader can announce. `title` alone would
-                    // not be exposed reliably.
-                    aria-label={t.label}
-                    className={`w-9 h-9 rounded-lg flex items-center justify-center cursor-pointer transition-all ${
-                      selected ? "ring-2 ring-foreground ring-offset-2 ring-offset-background" : ""
-                    }`}
-                    style={{ background: `linear-gradient(135deg, hsl(${t.primary}), hsl(${t.accent}))` }}
-                    title={t.label}
-                  >
-                    {selected && <Check aria-hidden="true" className="w-3.5 h-3.5 text-white drop-shadow-md" />}
-                  </m.button>
-                );
-              })}
-            </div>
+            <p className="label px-2.5 pt-2 pb-2.5">Signal colour</p>
+            {accentThemes.map((t) => {
+              const selected = accentTheme === t.id;
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={selected}
+                  onClick={() => {
+                    setAccentTheme(t.id);
+                    setOpen(false);
+                  }}
+                  className="flex w-full items-center gap-3 rounded-md px-2.5 py-2 text-sm text-left hover:bg-muted transition-colors cursor-pointer"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="w-4 h-4 rounded-full ring-1 ring-inset ring-black/10"
+                    style={{ background: `hsl(${t.accent})` }}
+                  />
+                  <span className="flex-1">{t.label}</span>
+                  {selected && <Check aria-hidden="true" className="w-4 h-4" />}
+                </button>
+              );
+            })}
           </m.div>
         )}
       </AnimatePresence>

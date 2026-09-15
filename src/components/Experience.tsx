@@ -1,7 +1,5 @@
-import { m } from "framer-motion";
-import { Building2, Calendar, ArrowRight } from "lucide-react";
-import ScrollReveal from "./ScrollReveal";
-import BABackground from "./BABackground";
+import { Building2 } from "lucide-react";
+import { SectionHeader } from "./ui/typography";
 
 const experiences = [
   {
@@ -51,77 +49,74 @@ const experiences = [
   },
 ];
 
+const pad = (n: number) => String(n).padStart(2, "0");
+
+/*
+ * A career record in three columns — when, what, and the detail — with each
+ * responsibility numbered as a sub-clause of its role (4.1, 4.2 …). The date
+ * column holds its place while a long role scrolls past on wide screens.
+ */
 const Experience = () => {
   return (
-    <section id="experience" className="section-padding relative overflow-hidden">
-      <BABackground density="medium" />
-      <div className="container mx-auto relative z-10">
-        <ScrollReveal className="text-center mb-12 md:mb-16">
-          <span className="text-sm font-medium text-accent uppercase tracking-widest">Career</span>
-          <h2 className="font-heading text-3xl md:text-5xl font-bold mt-3">Work Experience</h2>
-        </ScrollReveal>
+    <section id="experience" className="relative">
+      <div className="shell pt-20 md:pt-28 pb-20 md:pb-28">
+        <SectionHeader
+          index="03"
+          eyebrow="Career"
+          title={["Work", { tone: "Experience" }]}
+          lede="Four analyst roles, each one closer to the systems a business actually runs on."
+        />
 
-        <div className="max-w-4xl mx-auto relative">
-          {/* Timeline line */}
-          <m.div
-            className="absolute left-5 md:left-1/2 md:-translate-x-px top-0 bottom-0 w-0.5"
-            style={{ background: "var(--gradient-primary)" }}
-            initial={{ scaleY: 0 }}
-            whileInView={{ scaleY: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
-          />
-
-          {experiences.map((exp, i) => (
-            <ScrollReveal
-              key={exp.title + exp.duration}
-              direction={i % 2 === 0 ? "left" : "right"}
-              delay={i * 0.15}
-              className={`relative mb-10 md:mb-12 md:w-1/2 ${i % 2 === 0 ? "md:pr-12" : "md:ml-auto md:pl-12"}`}
-            >
-              {/* Timeline dot */}
-              <div
-                className="absolute top-0 left-[15px] md:left-auto hidden md:block"
-                style={i % 2 === 0 ? { right: "-7px" } : { left: "-7px" }}
+        <ol className="border-t border-foreground/15">
+          {experiences.map((exp, i) => {
+            const n = experiences.length - i;
+            const current = i === 0;
+            return (
+              <li
+                key={exp.title + exp.duration}
+                data-reveal
+                className="grid grid-cols-12 gap-x-6 gap-y-6 border-b border-border py-10 md:py-16"
               >
-                <div
-                  className="w-3.5 h-3.5 rounded-full bg-primary shadow-md anim-loop anim-pulse-scale"
-                  style={{ "--dur": "2.5s", "--delay": `${i * 0.5}s` } as React.CSSProperties}
-                />
-              </div>
-
-              <m.div
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="glass rounded-2xl p-5 md:p-6 hover-glow ml-12 md:ml-0"
-              >
-                <div className="flex items-center gap-2 text-accent text-sm font-medium mb-2">
-                  <Calendar className="w-4 h-4" />
-                  {exp.duration}
+                <div className="col-span-12 md:col-span-4 lg:col-span-3">
+                  <div className="md:sticky md:top-24 flex flex-wrap md:flex-col items-center md:items-start gap-x-4 gap-y-3">
+                    <span aria-hidden="true" className="font-mono text-[11px] text-muted-foreground">
+                      R.{pad(n)}
+                    </span>
+                    <p className="font-mono text-[13px] text-foreground">{exp.duration}</p>
+                    {current && (
+                      <span className="inline-flex items-center gap-2 rounded-full border border-foreground/15 px-2.5 py-1 label text-foreground">
+                        <span aria-hidden="true" className="status-dot" />
+                        Current
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <h3 className="font-heading font-bold text-lg md:text-xl mb-1">{exp.title}</h3>
-                <p className="flex items-center gap-1.5 text-xs md:text-sm text-muted-foreground mb-4">
-                  <Building2 className="w-3.5 h-3.5 shrink-0" />
-                  <span>{exp.company}</span>
-                </p>
-                <ul className="space-y-2">
+
+                <div className="col-span-12 md:col-span-8 lg:col-span-4">
+                  <h3 className="display text-[2.1rem] sm:text-5xl lg:text-[3.25rem] leading-[0.95]">{exp.title}</h3>
+                  <p className="mt-4 flex items-center gap-2 text-[15px] text-muted-foreground">
+                    <Building2 aria-hidden="true" className="w-4 h-4 shrink-0" strokeWidth={1.5} />
+                    <span>{exp.company}</span>
+                  </p>
+                </div>
+
+                <ul className="col-span-12 md:col-start-5 md:col-span-8 lg:col-start-auto lg:col-span-5 space-y-4">
                   {exp.points.map((point, j) => (
-                    <m.li
+                    <li
                       key={j}
-                      initial={{ opacity: 0, x: -5 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.1 + j * 0.06 }}
-                      className="flex gap-2 text-xs md:text-sm text-muted-foreground"
+                      className="grid grid-cols-[2.5rem_1fr] gap-2 text-[15px] leading-relaxed text-muted-foreground text-pretty"
                     >
-                      <ArrowRight className="w-3 h-3 text-accent mt-1 shrink-0" />
-                      {point}
-                    </m.li>
+                      <span aria-hidden="true" className="font-mono text-[11px] text-foreground/70 pt-[5px]">
+                        {n}.{j + 1}
+                      </span>
+                      <span>{point}</span>
+                    </li>
                   ))}
                 </ul>
-              </m.div>
-            </ScrollReveal>
-          ))}
-        </div>
+              </li>
+            );
+          })}
+        </ol>
       </div>
     </section>
   );

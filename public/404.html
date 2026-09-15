@@ -6,96 +6,54 @@
     <title>Page not found | Md. Wahiduzzaman Nayem</title>
     <meta name="robots" content="noindex" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=DM+Sans:wght@400&display=swap" rel="stylesheet" />
+    <link rel="preload" href="/fonts/switzer-500.woff2" as="font" type="font/woff2" crossorigin />
     <!--
       Standalone on purpose. GitHub Pages serves this file directly for any
-      unknown path, so it cannot reference the hashed build assets — those names
-      change on every deploy. Everything it needs is inline.
+      unknown path, so it cannot reference the hashed build assets. Colours
+      mirror the Paper / Graphite grounds in src/index.css.
     -->
     <style>
-      :root {
-        --bg: hsl(210 20% 98%);
-        --fg: hsl(220 25% 10%);
-        --muted: hsl(220 10% 45%);
-        --primary: hsl(0 72% 51%);
-        --accent: hsl(15 80% 55%);
-        --border: hsl(214 20% 90%);
-      }
-      html.dark {
-        --bg: hsl(220 25% 6%);
-        --fg: hsl(210 20% 95%);
-        --muted: hsl(215 18% 70%);
-        --border: hsl(220 20% 18%);
-      }
+      @font-face { font-family: Switzer; src: url(/fonts/switzer-400.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+      @font-face { font-family: Switzer; src: url(/fonts/switzer-500.woff2) format("woff2"); font-weight: 500; font-display: swap; }
+      @font-face { font-family: "Fragment Mono"; src: url(/fonts/fragment-mono-400.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+      :root { --bg: #f5f3ef; --fg: #121211; --muted: #625f59; --line: #d6d2ca; --accent: #f9471a; --accent-fg: #121211; }
+      html.dark { --bg: #0d0d0c; --fg: #ece9e3; --muted: #9d9b94; --line: #2c2c2a; }
       * { box-sizing: border-box; }
       body {
-        margin: 0;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 24px;
-        background: var(--bg);
-        color: var(--fg);
-        font-family: "DM Sans", system-ui, sans-serif;
-        text-align: center;
+        margin: 0; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between;
+        padding: 24px clamp(20px, 4vw, 48px); background: var(--bg); color: var(--fg);
+        font-family: Switzer, system-ui, sans-serif; -webkit-font-smoothing: antialiased;
       }
-      .code {
-        font-family: "Space Grotesk", system-ui, sans-serif;
-        font-size: clamp(64px, 18vw, 120px);
-        font-weight: 700;
-        line-height: 1;
-        margin: 0;
-        background: linear-gradient(135deg, var(--primary), var(--accent));
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
+      .label { font-family: "Fragment Mono", ui-monospace, monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+      header, footer { display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid var(--line); padding-top: 12px; }
+      .code { font-weight: 500; font-size: clamp(120px, 34vw, 420px); line-height: 0.8; letter-spacing: -0.06em; margin: 0; }
+      h1 { font-weight: 500; font-size: clamp(28px, 5vw, 56px); letter-spacing: -0.035em; line-height: 1; margin: 24px 0 12px; }
+      em { font-style: normal; color: var(--muted); }
+      p { color: var(--muted); margin: 0 0 32px; font-size: 16px; max-width: 32rem; }
+      a.btn {
+        display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 24px; border-radius: 999px;
+        background: var(--accent); color: var(--accent-fg); font-size: 14px; font-weight: 500; text-decoration: none;
       }
-      h1 {
-        font-family: "Space Grotesk", system-ui, sans-serif;
-        font-size: clamp(20px, 4vw, 28px);
-        margin: 16px 0 8px;
-      }
-      p { color: var(--muted); margin: 0 0 28px; font-size: 15px; }
-      a {
-        display: inline-block;
-        padding: 12px 28px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, var(--primary), var(--accent));
-        color: #fff;
-        font-family: "Space Grotesk", system-ui, sans-serif;
-        font-weight: 700;
-        font-size: 14px;
-        text-decoration: none;
-        transition: transform 200ms ease, box-shadow 200ms ease;
-      }
-      a:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgb(0 0 0 / 0.18); }
-      @media (prefers-reduced-motion: reduce) {
-        a { transition: none; }
-        a:hover { transform: none; }
-      }
+      a.btn:hover { background: var(--fg); color: var(--bg); }
+      a.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
     </style>
     <script>
-      // Match whatever theme the visitor last chose on the real site.
       (function () {
-        try {
-          if ((localStorage.getItem("theme") || "dark") !== "light") {
-            document.documentElement.classList.add("dark");
-          }
-        } catch (e) {
-          document.documentElement.classList.add("dark");
-        }
+        var saved = null;
+        try { saved = localStorage.getItem("theme"); } catch (e) {}
+        var dark = saved ? saved === "dark" : window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (dark) document.documentElement.classList.add("dark");
       })();
     </script>
   </head>
   <body>
+    <header><span class="label">MWN — Portfolio</span><span class="label">Error 404</span></header>
     <main>
       <p class="code">404</p>
-      <h1>This page does not exist</h1>
+      <h1>This page is <em>not in the spec.</em></h1>
       <p>The link may be out of date, or the address mistyped.</p>
-      <a href="/">Back to the portfolio</a>
+      <a class="btn" href="/">Back to the portfolio &rarr;</a>
     </main>
+    <footer><span class="label">Dhaka, Bangladesh</span><span class="label">Technical Business Analyst</span></footer>
   </body>
 </html>

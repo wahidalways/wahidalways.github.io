@@ -1,11 +1,10 @@
-import { m } from "framer-motion";
 import { Database, Workflow, ClipboardCheck } from "lucide-react";
-import ScrollReveal from "./ScrollReveal";
-import BABackground from "./BABackground";
+import { SectionHeader } from "./ui/typography";
 
 const skillCategories = [
   {
     title: "Business Analysis",
+    code: "BA",
     icon: ClipboardCheck,
     skills: [
       "Requirements Gathering & Analysis",
@@ -18,6 +17,7 @@ const skillCategories = [
   },
   {
     title: "Technical & Tools",
+    code: "TL",
     icon: Database,
     skills: [
       "Microsoft Word / Google Docs",
@@ -30,6 +30,7 @@ const skillCategories = [
   },
   {
     title: "Methodologies & Core Competencies",
+    code: "MC",
     icon: Workflow,
     skills: [
       "Software Development Life Cycle (SDLC)",
@@ -42,47 +43,57 @@ const skillCategories = [
   },
 ];
 
+const pad = (n: number) => String(n).padStart(2, "0");
+
+/*
+ * Laid out as a requirements register: every entry carries an ID, the way a
+ * line in an SRS does. It is a small conceit, but it is the one that tells a
+ * hiring manager how this person organises information before they read a word.
+ */
 const Skills = () => {
   return (
-    <section id="skills" className="section-padding bg-secondary/30 relative overflow-hidden">
-      <BABackground density="light" />
-      <div className="container mx-auto relative z-10">
-        <ScrollReveal className="text-center mb-12 md:mb-16">
-          <span className="text-sm font-medium text-accent uppercase tracking-widest">Skills</span>
-          <h2 className="font-heading text-3xl md:text-5xl font-bold mt-3">Skills & Expertise</h2>
-        </ScrollReveal>
+    <section id="skills" className="relative">
+      <div className="shell pt-20 md:pt-28 pb-20 md:pb-28">
+        <SectionHeader
+          index="02"
+          eyebrow="Skills"
+          title={["Skills &", { tone: "Expertise" }]}
+          lede="A working register of methods, tools and competencies — indexed the way I index requirements."
+        />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8 max-w-5xl mx-auto">
-          {skillCategories.map((cat, i) => (
-            <ScrollReveal key={cat.title} delay={i * 0.12}>
-              <m.div
-                whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="glass rounded-2xl p-6 md:p-8 hover-glow h-full relative overflow-hidden"
-              >
-                <cat.icon className="absolute -bottom-4 -right-4 w-20 h-20 md:w-24 md:h-24 text-primary/[0.04]" />
-                <h3 className="font-heading font-semibold text-lg md:text-xl mb-5 md:mb-6 gradient-text">{cat.title}</h3>
-                <div className="flex flex-col gap-3">
-                  {cat.skills.map((skill, j) => (
-                    <m.div
-                      key={skill}
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: j * 0.06 }}
-                      className="flex items-center gap-3"
-                    >
-                      <m.div
-                        whileInView={{ scale: [0, 1.3, 1] }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.3 + j * 0.06 }}
-                        className="w-2 h-2 rounded-full bg-accent shrink-0"
-                      />
-                      <span className="text-sm text-foreground">{skill}</span>
-                    </m.div>
-                  ))}
+        <div className="grid md:grid-cols-3 gap-x-6 lg:gap-x-10 gap-y-16">
+          {skillCategories.map((cat) => (
+            <div key={cat.title} data-reveal>
+              <div className="flex items-start justify-between gap-4 border-b border-foreground pb-5">
+                <div className="flex items-start gap-3">
+                  <cat.icon aria-hidden="true" className="mt-1 w-5 h-5 shrink-0" strokeWidth={1.5} />
+                  <h3 className="font-display text-2xl lg:text-[1.75rem] leading-[1.1] tracking-[-0.03em] text-balance">
+                    {cat.title}
+                  </h3>
                 </div>
-              </m.div>
-            </ScrollReveal>
+                <span className="label whitespace-nowrap pt-1.5">
+                  {pad(cat.skills.length)} items
+                </span>
+              </div>
+              <ul>
+                {cat.skills.map((skill, j) => (
+                  <li
+                    key={skill}
+                    className="group grid grid-cols-[3.5rem_1fr] items-baseline gap-2 border-b border-border py-3.5 md:py-4"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="font-mono text-[11px] text-muted-foreground transition-colors group-hover:text-accent-ink"
+                    >
+                      {cat.code}-{pad(j + 1)}
+                    </span>
+                    <span className="text-[15px] leading-snug transition-transform duration-500 ease-out-expo group-hover:translate-x-1.5">
+                      {skill}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
         </div>
       </div>

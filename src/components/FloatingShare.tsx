@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { subscribeScroll } from "@/lib/scroll-store";
 import { m, AnimatePresence } from "framer-motion";
 import { Share2, Linkedin, XIcon, Facebook, Mail, Link } from "lucide-react";
 import { toast } from "sonner";
@@ -23,6 +24,11 @@ const RedditIcon = () => (
 
 const FloatingShare = () => {
   const [open, setOpen] = useState(false);
+  // Out of the way on the hero, where it would sit on top of the portrait
+  // caption; it arrives once the reader has committed to scrolling.
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => subscribeScroll((y) => setVisible(y > 600)), []);
   const url = typeof window !== "undefined" ? window.location.href : "";
   const text = "Check out this portfolio!";
 
@@ -65,16 +71,19 @@ const FloatingShare = () => {
     setOpen(false);
   };
 
+  if (!visible && !open) return null;
+
   return (
-    <div className="fixed bottom-6 left-6 z-50 flex flex-col-reverse items-center gap-2">
+    <div className="fixed bottom-5 left-5 z-40 flex flex-col-reverse items-start gap-2">
       <m.button
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setOpen(!open)}
-        className="p-3 rounded-full glass-panel hover-lift cursor-pointer"
+        className="grid place-items-center w-12 h-12 rounded-full border border-border bg-background text-foreground hover:border-foreground transition-colors cursor-pointer"
         aria-label="Share"
+        aria-expanded={open}
       >
-        <Share2 className="w-5 h-5 text-primary" />
+        <Share2 aria-hidden="true" className="w-4 h-4" strokeWidth={1.75} />
       </m.button>
       <AnimatePresence>
         {open && shareLinks.map((item, i) => (
@@ -87,11 +96,12 @@ const FloatingShare = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0, transition: { delay: i * 0.04 } }}
             exit={{ opacity: 0, y: 20, transition: { delay: (shareLinks.length - i) * 0.02 } }}
-            className="p-2.5 rounded-full glass-panel hover-lift"
+            className="flex items-center gap-2.5 h-10 rounded-full border border-border bg-popover pl-3 pr-4 text-[13px] text-foreground shadow-[0_10px_30px_-14px_rgb(0_0_0/0.4)] hover:border-foreground transition-colors"
             aria-label={item.label}
             onClick={() => setOpen(false)}
           >
-            <item.icon className="w-4 h-4 text-foreground" />
+            <item.icon aria-hidden="true" className="w-4 h-4 text-foreground" />
+            <span>{item.label}</span>
           </m.a>
         ))}
         {open && (
@@ -100,11 +110,12 @@ const FloatingShare = () => {
             animate={{ opacity: 1, y: 0, transition: { delay: shareLinks.length * 0.04 } }}
             exit={{ opacity: 0, y: 20 }}
             onClick={copyLink}
-            className="p-2.5 rounded-full glass-panel hover-lift cursor-pointer"
+            className="flex items-center gap-2.5 h-10 rounded-full border border-border bg-popover pl-3 pr-4 text-[13px] text-foreground shadow-[0_10px_30px_-14px_rgb(0_0_0/0.4)] hover:border-foreground transition-colors cursor-pointer"
             aria-label="Copy link"
             title="Copy link"
           >
-            <Link className="w-4 h-4 text-foreground" />
+            <Link aria-hidden="true" className="w-4 h-4 text-foreground" />
+            <span>Copy link</span>
           </m.button>
         )}
       </AnimatePresence>

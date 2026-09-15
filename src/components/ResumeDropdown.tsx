@@ -1,5 +1,5 @@
 import { m, AnimatePresence } from "framer-motion";
-import { Download, Eye, ChevronDown } from "lucide-react";
+import { ArrowUpRight, Download, ChevronDown } from "lucide-react";
 import { useId, useState } from "react";
 import { toast } from "sonner";
 import { useDismissable } from "@/hooks/useDismissable";
@@ -11,26 +11,23 @@ const ResumeDropdown = ({ mobile = false }: { mobile?: boolean }) => {
   const menuId = useId();
   const { containerRef, triggerRef } = useDismissable<HTMLDivElement>(open, () => setOpen(false));
 
-  const baseClass = mobile
-    ? "flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-primary text-primary-foreground hover:opacity-90 transition-opacity w-fit cursor-pointer"
-    : "flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium bg-primary text-primary-foreground hover:opacity-90 transition-opacity ml-1 cursor-pointer";
-
   return (
     <div ref={containerRef} className="relative">
-      <m.button
+      <button
         ref={triggerRef}
-        whileHover={{ y: -1 }}
-        whileTap={{ y: 0 }}
-        onClick={() => setOpen(!open)}
+        type="button"
+        onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
-        className={baseClass}
+        className={`btn btn-accent cursor-pointer ${mobile ? "h-12 px-6 text-sm" : "h-10 px-5 text-[13px]"}`}
       >
-        <Download aria-hidden="true" className={mobile ? "w-4 h-4" : "w-3.5 h-3.5"} />
-        Resume
-        <ChevronDown aria-hidden="true" className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} />
-      </m.button>
+        <span>Resume</span>
+        <ChevronDown
+          aria-hidden="true"
+          className={`w-3.5 h-3.5 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+        />
+      </button>
 
       <AnimatePresence>
         {open && (
@@ -38,11 +35,13 @@ const ResumeDropdown = ({ mobile = false }: { mobile?: boolean }) => {
             id={menuId}
             role="menu"
             aria-label="Resume options"
-            initial={{ opacity: 0, y: -8, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.95 }}
-            transition={{ duration: 0.15 }}
-            className="absolute right-0 top-full mt-2 z-50 bg-popover border border-border rounded-xl shadow-lg overflow-hidden min-w-[160px]"
+            initial={{ opacity: 0, y: mobile ? 6 : -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: mobile ? 6 : -6 }}
+            transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+            className={`absolute z-50 w-60 rounded-lg border border-border bg-popover p-1.5 shadow-[0_24px_60px_-20px_rgb(0_0_0/0.35)] ${
+              mobile ? "left-0 bottom-full mb-3" : "right-0 top-full mt-3"
+            }`}
           >
             <a
               href={RESUME_URL}
@@ -50,10 +49,13 @@ const ResumeDropdown = ({ mobile = false }: { mobile?: boolean }) => {
               rel="noopener noreferrer"
               role="menuitem"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-secondary focus-visible:bg-secondary transition-colors cursor-pointer"
+              className="group flex items-center justify-between gap-3 rounded-md px-3 py-2.5 text-sm hover:bg-muted transition-colors"
             >
-              <Eye aria-hidden="true" className="w-4 h-4 text-primary" />
-              View Resume
+              <span>View Resume</span>
+              <ArrowUpRight
+                aria-hidden="true"
+                className="w-4 h-4 text-muted-foreground transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              />
             </a>
             <a
               href={RESUME_URL}
@@ -63,10 +65,15 @@ const ResumeDropdown = ({ mobile = false }: { mobile?: boolean }) => {
                 toast.success("Download started!", { description: "Your resume is being downloaded." });
                 setOpen(false);
               }}
-              className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-secondary focus-visible:bg-secondary transition-colors border-t border-border cursor-pointer"
+              className="group flex items-center justify-between gap-3 rounded-md px-3 py-2.5 text-sm hover:bg-muted transition-colors"
             >
-              <Download aria-hidden="true" className="w-4 h-4 text-accent" />
-              Download PDF
+              <span>
+                Download PDF <span className="label ml-1">CV</span>
+              </span>
+              <Download
+                aria-hidden="true"
+                className="w-4 h-4 text-muted-foreground transition-transform duration-300 group-hover:translate-y-0.5"
+              />
             </a>
           </m.div>
         )}

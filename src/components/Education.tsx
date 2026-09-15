@@ -1,7 +1,4 @@
-import { m } from "framer-motion";
-import { GraduationCap, Award } from "lucide-react";
-import ScrollReveal from "./ScrollReveal";
-import BABackground from "./BABackground";
+import { SectionHeader } from "./ui/typography";
 
 const education = [
   { degree: "Master of Business Administration (Professional)", institution: "Bangladesh University of Professionals (BUP)", year: "Sep 2025 – Ongoing", gpa: "N/A" },
@@ -10,48 +7,48 @@ const education = [
   { degree: "SSC", institution: "A. Malek Institution", year: "2012 – 2017", gpa: "5.00 / 5.00" },
 ];
 
+/* An academic record, set as a table: period, qualification, institution, result. */
 const Education = () => {
   return (
-    <section id="education" className="section-padding relative overflow-hidden">
-      <BABackground density="light" />
-      <div className="container mx-auto relative z-10">
-        <ScrollReveal className="text-center mb-12 md:mb-16">
-          <span className="text-sm font-medium text-accent uppercase tracking-widest">Education</span>
-          <h2 className="font-heading text-3xl md:text-5xl font-bold mt-3">Academic Background</h2>
-        </ScrollReveal>
+    <section id="education" className="relative">
+      <div className="shell pt-20 md:pt-28 pb-20 md:pb-28">
+        <SectionHeader index="05" eyebrow="Education" title={["Academic", { tone: "Background" }]} />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 max-w-4xl mx-auto">
-          {education.map((edu, i) => (
-            <ScrollReveal key={edu.degree} delay={i * 0.1}>
-              <m.div
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="glass rounded-2xl p-5 md:p-6 hover-glow h-full"
-              >
-                <div className="flex items-start gap-3 md:gap-4">
-                  <m.div
-                    whileInView={{ rotate: [0, -10, 10, 0] }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}
-                    className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0"
-                  >
-                    <GraduationCap className="w-5 h-5 md:w-6 md:h-6 text-primary" />
-                  </m.div>
-                  <div className="min-w-0">
-                    <h3 className="font-heading font-semibold text-sm md:text-base mb-1 leading-snug">{edu.degree}</h3>
-                    <p className="text-xs md:text-sm text-muted-foreground mb-2">{edu.institution}</p>
-                    <p className="text-xs text-accent font-medium">{edu.year}</p>
-                    {edu.gpa !== "N/A" && (
-                      <div className="flex items-center gap-1.5 mt-2">
-                        <Award className="w-3.5 h-3.5 text-accent" />
-                        <span className="text-xs md:text-sm font-medium text-foreground">CGPA: {edu.gpa}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </m.div>
-            </ScrollReveal>
-          ))}
+        <div
+          aria-hidden="true"
+          className="hidden lg:grid grid-cols-12 gap-x-6 border-b border-foreground pb-3"
+        >
+          <span className="label col-span-2">Period</span>
+          <span className="label col-span-5">Qualification</span>
+          <span className="label col-span-3">Institution</span>
+          <span className="label col-span-2 text-right">Result</span>
         </div>
+
+        <ol className="border-t border-foreground lg:border-t-0">
+          {education.map((edu) => (
+            <li
+              key={edu.degree}
+              data-reveal
+              className="group grid grid-cols-2 lg:grid-cols-12 items-baseline gap-x-6 gap-y-3 border-b border-border py-7 md:py-9"
+            >
+              <p className="order-1 col-span-1 lg:col-span-2 font-mono text-[13px] text-foreground">{edu.year}</p>
+              <h3 className="order-3 lg:order-2 col-span-2 lg:col-span-5 font-display text-2xl md:text-[2rem] leading-[1.1] tracking-[-0.03em] text-balance transition-transform duration-500 ease-out-expo lg:group-hover:translate-x-2">
+                {edu.degree}
+              </h3>
+              <p className="order-4 lg:order-3 col-span-2 lg:col-span-3 text-[15px] text-muted-foreground">{edu.institution}</p>
+              <p className="order-2 lg:order-4 col-span-1 lg:col-span-2 text-right font-mono text-[13px]">
+                {edu.gpa !== "N/A" ? (
+                  <>
+                    <span className="text-muted-foreground">CGPA </span>
+                    <span className="text-foreground">{edu.gpa}</span>
+                  </>
+                ) : (
+                  <span className="text-muted-foreground">In progress</span>
+                )}
+              </p>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );

@@ -1,80 +1,124 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 export type Theme = "light" | "dark";
-export type ColorTheme = "blue" | "emerald" | "violet" | "rose" | "amber" | "ocean" | "crimson" | "slate" | "forest" | "sunset";
+export type AccentTheme = "signal" | "cobalt" | "acid" | "jade" | "amber";
 
 interface ThemeContextType {
   theme: Theme;
-  colorTheme: ColorTheme;
+  accentTheme: AccentTheme;
   toggleTheme: () => void;
-  setColorTheme: (ct: ColorTheme) => void;
+  setAccentTheme: (id: AccentTheme) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: "light",
-  colorTheme: "blue",
+  accentTheme: "signal",
   toggleTheme: () => {},
-  setColorTheme: () => {},
+  setAccentTheme: () => {},
 });
 
 export const useTheme = () => useContext(ThemeContext);
 
-export const colorThemes: { id: ColorTheme; label: string; primary: string; accent: string }[] = [
-  { id: "blue", label: "Ocean Blue", primary: "220 70% 50%", accent: "175 80% 40%" },
-  { id: "emerald", label: "Emerald", primary: "160 84% 39%", accent: "142 71% 45%" },
-  { id: "violet", label: "Violet", primary: "262 83% 58%", accent: "280 65% 60%" },
-  { id: "rose", label: "Rose", primary: "346 77% 50%", accent: "340 82% 52%" },
-  { id: "amber", label: "Amber", primary: "38 92% 50%", accent: "25 95% 53%" },
-  { id: "ocean", label: "Deep Ocean", primary: "199 89% 48%", accent: "187 92% 41%" },
-  { id: "crimson", label: "Crimson", primary: "0 72% 51%", accent: "15 80% 55%" },
-  { id: "slate", label: "Slate", primary: "215 20% 45%", accent: "210 30% 55%" },
-  { id: "forest", label: "Forest", primary: "150 60% 30%", accent: "120 50% 40%" },
-  { id: "sunset", label: "Sunset", primary: "20 90% 55%", accent: "350 80% 55%" },
+/*
+ * Five curated signals, not a rainbow. Each carries four values: the fill, the
+ * text colour that sits on that fill, and a text-safe variant for each ground —
+ * a colour vivid enough to work as a fill almost never passes 4.5:1 as small
+ * text on a light page.
+ *
+ * Mirrored in the boot script in index.html; change both together.
+ */
+export const accentThemes: {
+  id: AccentTheme;
+  label: string;
+  accent: string;
+  foreground: string;
+  textLight: string;
+  textDark: string;
+}[] = [
+  { id: "signal", label: "Signal", accent: "12 96% 52%", foreground: "60 4% 7%", textLight: "12 85% 40%", textDark: "14 100% 62%" },
+  { id: "cobalt", label: "Cobalt", accent: "228 96% 60%", foreground: "0 0% 100%", textLight: "228 75% 48%", textDark: "226 100% 72%" },
+  { id: "acid", label: "Acid", accent: "74 88% 56%", foreground: "60 4% 7%", textLight: "80 75% 27%", textDark: "74 88% 60%" },
+  { id: "jade", label: "Jade", accent: "160 70% 42%", foreground: "60 4% 7%", textLight: "162 80% 26%", textDark: "158 62% 55%" },
+  { id: "amber", label: "Amber", accent: "36 100% 54%", foreground: "60 4% 7%", textLight: "30 90% 34%", textDark: "38 100% 60%" },
 ];
 
-const applyColorTheme = (ct: ColorTheme) => {
-  const found = colorThemes.find((t) => t.id === ct);
-  if (!found) return;
-  const root = document.documentElement;
-  root.style.setProperty("--primary", found.primary);
-  root.style.setProperty("--accent", found.accent);
-  root.style.setProperty("--ring", found.primary);
-  root.style.setProperty("--gradient-primary", `linear-gradient(135deg, hsl(${found.primary}), hsl(${found.accent}))`);
-  root.style.setProperty("--gradient-accent", `linear-gradient(135deg, hsl(${found.accent}), hsl(${found.primary}))`);
+const isAccent = (v: unknown): v is AccentTheme => accentThemes.some((t) => t.id === v);
+
+const safeGet = (key: string) => {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+};
+
+const safeSet = (key: string, value: string) => {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    /* storage blocked — the choice lasts for this page view only */
+  }
+};
+
+const applyAccent = (id: AccentTheme) => {
+  const t = accentThemes.find((a) => a.id === id) ?? accentThemes[0];
+  const root = document.documentElement.style;
+  root.setProperty("--accent", t.accent);
+  root.setProperty("--accent-foreground", t.foreground);
+  root.setProperty("--accent-text-light", t.textLight);
+  root.setProperty("--accent-text-dark", t.textDark);
 };
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+  // The boot script in index.html has already resolved the ground before
+  // first paint; read it back rather than deciding a second time.
   const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window !== "undefined") {
-      return (localStorage.getItem("theme") as Theme) || "dark";
-    }
-    return "dark";
+    if (typeof document === "undefined") return "light";
+    return document.documentElement.classList.contains("dark") ? "dark" : "light";
   });
 
-  const [colorTheme, setColorThemeState] = useState<ColorTheme>(() => {
-    if (typeof window !== "undefined") {
-      return (localStorage.getItem("colorTheme") as ColorTheme) || "crimson";
-    }
-    return "crimson";
+  const [accentTheme, setAccentState] = useState<AccentTheme>(() => {
+    const saved = typeof window === "undefined" ? null : safeGet("accentTheme");
+    return isAccent(saved) ? saved : "signal";
   });
 
   useEffect(() => {
     const root = document.documentElement;
     root.classList.remove("light", "dark");
     root.classList.add(theme);
-    localStorage.setItem("theme", theme);
   }, [theme]);
 
   useEffect(() => {
-    applyColorTheme(colorTheme);
-    localStorage.setItem("colorTheme", colorTheme);
-  }, [colorTheme]);
+    applyAccent(accentTheme);
+  }, [accentTheme]);
 
-  const toggleTheme = () => setTheme((prev) => (prev === "light" ? "dark" : "light"));
-  const setColorTheme = (ct: ColorTheme) => setColorThemeState(ct);
+  // Until the visitor picks a ground themselves, follow the OS as it changes.
+  useEffect(() => {
+    const mq = window.matchMedia?.("(prefers-color-scheme: dark)");
+    if (!mq?.addEventListener) return;
+    const onChange = (e: MediaQueryListEvent) => {
+      if (safeGet("theme")) return;
+      setTheme(e.matches ? "dark" : "light");
+    };
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    setTheme((prev) => {
+      const next = prev === "light" ? "dark" : "light";
+      safeSet("theme", next);
+      return next;
+    });
+  }, []);
+
+  const setAccentTheme = useCallback((id: AccentTheme) => {
+    setAccentState(id);
+    safeSet("accentTheme", id);
+  }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme, colorTheme, toggleTheme, setColorTheme }}>
+    <ThemeContext.Provider value={{ theme, accentTheme, toggleTheme, setAccentTheme }}>
       {children}
     </ThemeContext.Provider>
   );

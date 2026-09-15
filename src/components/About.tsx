@@ -1,8 +1,5 @@
-import { m } from "framer-motion";
 import { Target, Users, FileText, TrendingUp } from "lucide-react";
-import ScrollReveal from "./ScrollReveal";
-import BABackground from "./BABackground";
-import FlowchartAnimation from "./FlowchartAnimation";
+import { SectionHeader, ScrubText } from "./ui/typography";
 
 const highlights = [
   { icon: Target, label: "Requirements Engineering", desc: "Gathering, analysing and translating business needs into actionable specifications" },
@@ -20,70 +17,96 @@ const domains = [
   "Healthcare & Medical Travel",
 ];
 
+const pad = (n: number) => String(n).padStart(2, "0");
+
 const About = () => {
   return (
-    <section id="about" className="section-padding relative overflow-hidden">
-      <BABackground density="light" />
-      <div className="container mx-auto relative z-10">
-        <ScrollReveal className="text-center mb-12 md:mb-16">
-          <span className="text-sm font-medium text-accent uppercase tracking-widest">About Me</span>
-          <h2 className="font-heading text-3xl md:text-5xl font-bold mt-3">Professional Summary</h2>
-        </ScrollReveal>
+    <section id="about" className="relative">
+      <div className="shell pt-20 md:pt-28 pb-20 md:pb-28">
+        <SectionHeader index="01" eyebrow="About Me" title={["Professional", { tone: "Summary" }]} />
 
-        <ScrollReveal delay={0.1} className="max-w-3xl mx-auto mb-12 md:mb-16">
-          <p className="text-muted-foreground leading-relaxed text-base md:text-lg text-center px-2">
-            Technical Business Analyst with 2.5+ years of experience in requirements engineering, business analysis, and solution delivery. I leverage AI-powered tools and techniques to enhance requirement analysis, documentation quality, and process optimization. Skilled in stakeholder management, business process analysis, and creating functional documentation and Change Requests — adept at translating business needs into clear, actionable solutions that drive operational efficiency and business value.
+        {/* The summary: its opening sentence as the statement, the rest as body. */}
+        <div className="grid grid-cols-12 gap-x-6">
+          <p
+            data-scrub
+            className="col-span-12 md:col-start-4 md:col-span-9 font-display text-[clamp(1.75rem,3.7vw,3.5rem)] leading-[1.06] tracking-[-0.035em] text-balance"
+          >
+            <ScrubText text="Technical Business Analyst with 2.5+ years of experience in requirements engineering, business analysis, and solution delivery." />
           </p>
-        </ScrollReveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12 md:mb-16">
-          {highlights.map((item, i) => (
-            <ScrollReveal key={item.label} delay={i * 0.1}>
-              <m.div
-                whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="glass rounded-2xl p-5 md:p-6 hover-glow cursor-default h-full"
-              >
-                <m.div
-                  whileInView={{ rotate: [0, -8, 8, 0] }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}
-                  className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4"
-                >
-                  <item.icon className="w-5 h-5 md:w-6 md:h-6 text-primary" />
-                </m.div>
-                <h3 className="font-heading font-semibold text-base md:text-lg mb-2">{item.label}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-              </m.div>
-            </ScrollReveal>
-          ))}
+          <div className="col-span-12 md:col-start-4 md:col-span-9 mt-10 md:mt-14 grid md:grid-cols-2 gap-6 md:gap-10 text-base md:text-[17px] leading-relaxed text-muted-foreground text-pretty">
+            <p data-reveal>
+              I leverage AI-powered tools and techniques to enhance requirement analysis, documentation quality, and
+              process optimization.
+            </p>
+            <p data-reveal>
+              Skilled in stakeholder management, business process analysis, and creating functional documentation and
+              Change Requests — adept at translating business needs into clear, actionable solutions that drive
+              operational efficiency and business value.
+            </p>
+          </div>
         </div>
 
-        {/* Flowchart */}
-        <ScrollReveal delay={0.2} className="text-center mb-12 md:mb-16">
-          <h3 className="font-heading font-semibold text-lg mb-5">How I Work</h3>
-          <div className="max-w-xl mx-auto px-2">
-            <FlowchartAnimation />
+        {/* Capabilities */}
+        <div className="mt-24 md:mt-36">
+          <div className="flex items-end justify-between gap-6 pb-5">
+            <h3 className="label text-foreground">Core capabilities</h3>
+            <span aria-hidden="true" className="label">C.01 — C.04</span>
           </div>
-        </ScrollReveal>
-
-        <ScrollReveal delay={0.2} className="text-center">
-          <h3 className="font-heading font-semibold text-lg mb-4">Domain Expertise</h3>
-          <div className="flex flex-wrap justify-center gap-2 md:gap-3">
-            {domains.map((d, i) => (
-              <m.span
-                key={d}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.06 }}
-                whileHover={{ y: -3 }}
-                className="px-3 md:px-4 py-1.5 md:py-2 rounded-full glass text-xs md:text-sm font-medium text-foreground cursor-default hover-border-accent"
+          <ul className="grid sm:grid-cols-2 lg:grid-cols-4 border-t border-foreground/15">
+            {highlights.map((item, i) => (
+              <li
+                key={item.label}
+                data-reveal
+                className={`group relative flex min-h-[15rem] md:min-h-[18rem] flex-col justify-between gap-10 border-b border-border p-6 md:p-7 transition-colors duration-500 ease-out-expo hover:bg-foreground hover:text-background
+                  ${i % 2 === 0 ? "sm:border-r" : ""} lg:border-r ${i === 3 ? "lg:border-r-0" : ""}`}
               >
-                {d}
-              </m.span>
+                <div className="flex items-start justify-between">
+                  <item.icon aria-hidden="true" className="w-6 h-6 transition-transform duration-500 ease-out-expo group-hover:scale-110" strokeWidth={1.5} />
+                  <span aria-hidden="true" className="font-mono text-[11px] text-muted-foreground group-hover:text-background/60">
+                    C.{pad(i + 1)}
+                  </span>
+                </div>
+                <div>
+                  <h4 className="font-display text-xl md:text-2xl tracking-[-0.025em] leading-tight">{item.label}</h4>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground group-hover:text-background/70 transition-colors duration-500 text-pretty">
+                    {item.desc}
+                  </p>
+                </div>
+              </li>
             ))}
+          </ul>
+        </div>
+
+        {/* Domains */}
+        <div className="mt-24 md:mt-36 grid grid-cols-12 gap-x-6 gap-y-8">
+          <div className="col-span-12 md:col-span-3">
+            <h3 className="label text-foreground">Domain Expertise</h3>
+            <p className="mt-4 max-w-[16rem] text-sm leading-relaxed text-muted-foreground">
+              Sectors I have written requirements for, from discovery through sign-off.
+            </p>
           </div>
-        </ScrollReveal>
+          <ul className="col-span-12 md:col-span-9 border-t border-foreground/15">
+            {domains.map((d, i) => (
+              <li
+                key={d}
+                data-reveal
+                className="group grid grid-cols-[2.75rem_1fr_auto] md:grid-cols-[4rem_1fr_auto] items-baseline border-b border-border py-5 md:py-7"
+              >
+                <span aria-hidden="true" className="font-mono text-[11px] text-muted-foreground">
+                  {pad(i + 1)}
+                </span>
+                <span className="font-display text-2xl sm:text-3xl md:text-[2.75rem] leading-[1.05] tracking-[-0.035em] transition-transform duration-500 ease-out-expo group-hover:translate-x-3">
+                  {d}
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="w-2 h-2 rounded-full bg-accent scale-0 transition-transform duration-500 ease-out-expo group-hover:scale-100"
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );

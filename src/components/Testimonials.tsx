@@ -1,6 +1,4 @@
-import { m } from "framer-motion";
-import { Quote } from "lucide-react";
-import ScrollReveal from "./ScrollReveal";
+import { SectionHeader } from "./ui/typography";
 
 const testimonials = [
   {
@@ -20,32 +18,47 @@ const testimonials = [
   },
 ];
 
+const initials = (name: string) =>
+  name
+    .split(" ")
+    .map((w) => w[0])
+    .join("");
+
 const Testimonials = () => {
   return (
-    <section id="testimonials" className="section-padding bg-secondary/30">
-      <div className="container mx-auto">
-        <ScrollReveal className="text-center mb-12 md:mb-16">
-          <span className="text-sm font-medium text-accent uppercase tracking-widest">Testimonials</span>
-          <h2 className="font-heading text-3xl md:text-5xl font-bold mt-3">What People Say</h2>
-        </ScrollReveal>
+    <section id="testimonials" className="band-ink relative bg-background text-foreground">
+      <div className="shell pt-20 md:pt-28 pb-20 md:pb-28">
+        <SectionHeader index="07" eyebrow="Testimonials" title={["What People", { tone: "Say" }]} />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-3 border-t border-foreground/15">
           {testimonials.map((item, i) => (
-            <ScrollReveal key={i} delay={i * 0.12}>
-              <m.div
-                whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="glass rounded-2xl p-6 md:p-8 hover-glow relative h-full"
-              >
-                <Quote className="w-7 h-7 md:w-8 md:h-8 text-primary/15 absolute top-5 right-5 md:top-6 md:right-6" />
-                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mb-5 md:mb-6 relative z-10">
-                  "{item.quote}"
-                </p>
-                <div className="border-t border-border pt-3 md:pt-4">
-                  <p className="font-heading font-semibold text-sm">{item.name}</p>
-                  <p className="text-xs text-muted-foreground">{item.role}</p>
-                </div>
-              </m.div>
-            </ScrollReveal>
+            <figure
+              key={item.name}
+              data-reveal
+              className={`flex flex-col justify-between gap-10 border-b border-border py-10 md:py-12 md:border-b-0
+                ${i > 0 ? "md:border-l md:pl-8 lg:pl-10" : ""} ${i < testimonials.length - 1 ? "md:pr-8 lg:pr-10" : ""}`}
+            >
+              <div>
+                <span aria-hidden="true" className="block font-display text-8xl leading-[0.55] text-accent-ink">
+                  &ldquo;
+                </span>
+                <blockquote className="mt-6 font-display text-[1.3rem] md:text-[1.35rem] lg:text-[1.55rem] leading-[1.32] tracking-[-0.02em] text-pretty">
+                  {item.quote}
+                </blockquote>
+              </div>
+              <figcaption className="flex items-center gap-3">
+                <span
+                  aria-hidden="true"
+                  className="grid place-items-center w-10 h-10 rounded-full bg-foreground text-background font-mono text-[11px] font-medium"
+                >
+                  {initials(item.name)}
+                </span>
+                <span>
+                  <span className="block text-[15px] text-foreground">{item.name}</span>
+                  <span className="label mt-1 block normal-case tracking-normal text-[12px]">{item.role}</span>
+                </span>
+              </figcaption>
+            </figure>
           ))}
         </div>
       </div>
