@@ -39,7 +39,7 @@ const Contact = () => {
       toast.success("Email copied", { description: EMAIL });
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast("Copy is blocked here", { description: `Write to ${EMAIL} directly.` });
+      toast.info("Copy is blocked here", { description: `Write to ${EMAIL} directly.` });
     }
   };
 
@@ -62,7 +62,7 @@ const Contact = () => {
       const subject = encodeURIComponent(`Portfolio enquiry from ${name}`);
       const body = encodeURIComponent(`${message}\n\nFrom: ${name} (${email})`);
       window.location.href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
-      toast("Opening your email app…", {
+      toast.info("Opening your email app…", {
         description: "No mail app? Write to " + EMAIL + " directly.",
       });
       return;
@@ -110,15 +110,15 @@ const Contact = () => {
             <p className="label">Email</p>
             <a
               href={`mailto:${EMAIL}`}
-              className="link-draw mt-4 inline-block font-display text-[clamp(1.5rem,5.4vw,2.6rem)] lg:text-[clamp(1.5rem,2.6vw,2.6rem)] leading-tight tracking-[-0.035em] break-all"
+              className="group mt-2 inline-block py-2 font-display text-[clamp(1.5rem,5.4vw,2.6rem)] lg:text-[clamp(1.5rem,2.6vw,2.6rem)] leading-tight tracking-[-0.035em] break-all"
             >
-              {EMAIL}
+              <span className="link-draw">{EMAIL}</span>
             </a>
             <div className="mt-5">
               <button
                 type="button"
                 onClick={copyEmail}
-                className="inline-flex items-center gap-2 label text-foreground hover:text-accent-ink transition-colors cursor-pointer"
+                className="-my-4 inline-flex items-center gap-2 py-4 label text-foreground hover:text-accent-ink transition-colors cursor-pointer"
               >
                 {copied ? <Check aria-hidden="true" className="w-3.5 h-3.5" /> : <Copy aria-hidden="true" className="w-3.5 h-3.5" />}
                 {copied ? "Copied" : "Copy address"}
@@ -136,7 +136,7 @@ const Contact = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`${d.label} (opens in a new tab)`}
-                        className="group inline-flex items-center gap-1.5 hover:text-accent-ink transition-colors"
+                        className="group -my-3 inline-flex items-center gap-1.5 py-3 hover:text-accent-ink transition-colors"
                       >
                         <span className="link-draw">{d.label}</span>
                         <ArrowUpRight

@@ -116,7 +116,8 @@ const Navbar = () => {
   }, []);
 
   const iconButton =
-    "grid place-items-center w-10 h-10 rounded-full border border-foreground/15 hover:border-foreground transition-colors cursor-pointer";
+    // 44px on touch screens (the minimum comfortable tap size), 40px on desktop.
+    "grid place-items-center w-11 h-11 md:w-10 md:h-10 rounded-full border border-foreground/15 hover:border-foreground transition-colors cursor-pointer";
 
   return (
     <header
@@ -136,7 +137,7 @@ const Navbar = () => {
         }`}
       >
         <nav aria-label="Main" className="shell flex h-16 items-center justify-between gap-6">
-          <a href="#" aria-label="Back to top" onClick={handleHome} className="shrink-0">
+          <a href="#" aria-label="Back to top" onClick={handleHome} className="-my-2.5 shrink-0 py-2.5">
             {/* Capitals stand taller than lowercase; sized so the monogram sits level with the nav. */}
             <Wordmark className="text-[1.5rem] md:text-[1.6rem]" />
           </a>

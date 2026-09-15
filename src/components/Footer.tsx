@@ -7,6 +7,8 @@ const sections = [
   { label: "Experience", href: "#experience" },
   { label: "Projects", href: "#projects" },
   { label: "Education", href: "#education" },
+  { label: "Certifications", href: "#certifications" },
+  { label: "Testimonials", href: "#testimonials" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -40,11 +42,12 @@ const Footer = () => {
 
           <nav aria-label="Footer" className="col-span-6 md:col-span-3">
             <p className="label">Index</p>
-            <ul className="mt-5 space-y-2.5">
+            {/* On phones each link gets a full 44px row to tap; on desktop the list tightens up. */}
+            <ul className="mt-3 md:mt-5 md:space-y-2.5">
               {sections.map((s) => (
                 <li key={s.href}>
-                  <a href={s.href} className="link-draw text-[15px] text-muted-foreground hover:text-foreground">
-                    {s.label}
+                  <a href={s.href} className="group inline-flex py-3 md:py-0 text-[15px] text-muted-foreground hover:text-foreground">
+                    <span className="link-draw">{s.label}</span>
                   </a>
                 </li>
               ))}
@@ -53,15 +56,15 @@ const Footer = () => {
 
           <div className="col-span-6 md:col-span-3">
             <p className="label">Elsewhere</p>
-            <ul className="mt-5 space-y-2.5">
+            <ul className="mt-3 md:mt-5 md:space-y-2.5">
               {elsewhere.map((l) => (
                 <li key={l.label}>
                   <a
                     href={l.href}
                     {...(l.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                    className="link-draw text-[15px] text-muted-foreground hover:text-foreground"
+                    className="group inline-flex py-3 md:py-0 text-[15px] text-muted-foreground hover:text-foreground"
                   >
-                    {l.label}
+                    <span className="link-draw">{l.label}</span>
                   </a>
                 </li>
               ))}
@@ -90,7 +93,7 @@ const Footer = () => {
         <div className="shell flex flex-col md:flex-row md:items-center justify-between gap-3 pt-6 pb-24 md:pb-6 text-[13px] text-muted-foreground">
           <p>© {new Date().getFullYear()} Md. Wahiduzzaman Nayem. All rights reserved.</p>
           <p>Designed & Developed by MWN</p>
-          <a href="#" className="inline-flex items-center gap-1.5 text-foreground hover:text-accent-ink transition-colors">
+          <a href="#" className="-my-3 inline-flex items-center gap-1.5 self-start py-3 text-foreground hover:text-accent-ink transition-colors">
             Back to top
             <ArrowUp aria-hidden="true" className="w-3.5 h-3.5" />
           </a>

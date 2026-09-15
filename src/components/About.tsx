@@ -63,7 +63,7 @@ const About = () => {
               >
                 <div className="flex items-start justify-between">
                   <item.icon aria-hidden="true" className="w-6 h-6 transition-transform duration-500 ease-out-expo group-hover:scale-110" strokeWidth={1.5} />
-                  <span aria-hidden="true" className="font-mono text-[11px] text-muted-foreground group-hover:text-background/60">
+                  <span aria-hidden="true" className="font-mono text-[12px] md:text-[11px] text-muted-foreground group-hover:text-background/60">
                     C.{pad(i + 1)}
                   </span>
                 </div>
@@ -79,24 +79,25 @@ const About = () => {
         </div>
 
         {/* Domains */}
-        <div className="mt-24 md:mt-36 grid grid-cols-12 gap-x-6 gap-y-8">
+        <div className="mt-20 md:mt-28 grid grid-cols-12 gap-x-6 gap-y-8">
           <div className="col-span-12 md:col-span-3">
             <h3 className="label text-foreground">Domain Expertise</h3>
             <p className="mt-4 max-w-[16rem] text-sm leading-relaxed text-muted-foreground">
               Sectors I have written requirements for, from discovery through sign-off.
             </p>
           </div>
-          <ul className="col-span-12 md:col-span-9 border-t border-foreground/15">
+          {/* A compact two-column register: six sectors read at a glance instead of filling a screen. */}
+          <ul className="col-span-12 md:col-span-9 grid sm:grid-cols-2 gap-x-6 border-t border-foreground/15">
             {domains.map((d, i) => (
               <li
                 key={d}
                 data-reveal
-                className="group grid grid-cols-[2.75rem_1fr_auto] md:grid-cols-[4rem_1fr_auto] items-baseline border-b border-border py-5 md:py-7"
+                className="group grid grid-cols-[2.5rem_1fr_auto] items-baseline border-b border-border py-4 md:py-5"
               >
-                <span aria-hidden="true" className="font-mono text-[11px] text-muted-foreground">
+                <span aria-hidden="true" className="font-mono text-[12px] md:text-[11px] text-muted-foreground">
                   {pad(i + 1)}
                 </span>
-                <span className="font-display text-2xl sm:text-3xl md:text-[2.75rem] leading-[1.05] tracking-[-0.035em] transition-transform duration-500 ease-out-expo group-hover:translate-x-3">
+                <span className="font-display text-xl md:text-2xl leading-tight tracking-[-0.025em] transition-transform duration-500 ease-out-expo group-hover:translate-x-2">
                   {d}
                 </span>
                 <span

@@ -31,7 +31,7 @@ const Stats = () => {
               {/* Two label lines reserved, so figures line up across a row even where one label wraps. */}
               <dt className="flex min-h-[27px] items-start justify-between gap-3">
                 <span className="label text-balance">{stat.label}</span>
-                <span aria-hidden="true" className="font-mono text-[11px] text-muted-foreground">
+                <span aria-hidden="true" className="font-mono text-[12px] md:text-[11px] text-muted-foreground">
                   0{i + 1}
                 </span>
               </dt>

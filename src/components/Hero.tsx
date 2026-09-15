@@ -240,7 +240,7 @@ const Hero = ({ ready }: { ready: boolean }) => {
               <figure className="lg:ml-auto lg:max-w-[calc(52vh*0.8)]">
                 <Portrait />
                 {/* A plate caption, as in a printed spread. It names the figure, not the role — that is in the meta row. */}
-                <figcaption className="hero-fade mt-3 flex items-baseline justify-between gap-3 font-mono text-[11px] leading-snug text-muted-foreground">
+                <figcaption className="hero-fade mt-3 flex items-baseline justify-between gap-3 font-mono text-[12px] md:text-[11px] leading-snug text-muted-foreground">
                   <span>
                     Fig. 01 — <span className="text-foreground">Portrait</span>
                   </span>
@@ -261,7 +261,7 @@ const Hero = ({ ready }: { ready: boolean }) => {
 
             <div className="col-span-12 sm:col-start-5 sm:col-span-8 lg:col-start-1 lg:col-span-6 lg:row-start-3 flex flex-col gap-6 md:gap-7 lg:gap-[clamp(1rem,2.6vh,1.75rem)]">
               <p className="hero-fade max-w-lg text-[15px] md:text-base leading-relaxed text-muted-foreground text-pretty">
-                Requirements engineering and process design across HRIS, payroll, recruitment and airline systems —
+                Requirements engineering and process design across HRIS, payroll and recruitment systems —
                 written so engineering can build it and the business can sign it off.
               </p>
 

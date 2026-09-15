@@ -83,7 +83,7 @@ const Skills = () => {
                   >
                     <span
                       aria-hidden="true"
-                      className="font-mono text-[11px] text-muted-foreground transition-colors group-hover:text-accent-ink"
+                      className="font-mono text-[12px] md:text-[11px] text-muted-foreground transition-colors group-hover:text-accent-ink"
                     >
                       {cat.code}-{pad(j + 1)}
                     </span>

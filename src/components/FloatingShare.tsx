@@ -65,10 +65,15 @@ const FloatingShare = () => {
     },
   ];
 
-  const copyLink = () => {
-    navigator.clipboard.writeText(url);
-    toast.success("Link copied!", { description: "Portfolio URL has been copied to clipboard." });
+  // Confirm only once the copy has actually happened; clipboard access can be refused.
+  const copyLink = async () => {
     setOpen(false);
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("Link copied", { description: "The portfolio URL is on your clipboard." });
+    } catch {
+      toast.error("Couldn't copy the link", { description: url });
+    }
   };
 
   if (!visible && !open) return null;

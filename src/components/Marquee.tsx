@@ -8,7 +8,6 @@ const CAPABILITIES = [
   "HRIS",
   "Payroll",
   "Recruitment & ATS",
-  "Airline Systems",
   "BRD · FRD · SRS",
   "Gap & Impact Analysis",
   "Process Design",

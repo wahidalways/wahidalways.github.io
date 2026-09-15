@@ -20,7 +20,7 @@ const ThemeSwitcher = () => {
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
         aria-label="Change theme colour"
-        className="group grid place-items-center w-10 h-10 rounded-full border border-foreground/15 hover:border-foreground transition-colors cursor-pointer"
+        className="group grid place-items-center w-11 h-11 md:w-10 md:h-10 rounded-full border border-foreground/15 hover:border-foreground transition-colors cursor-pointer"
       >
         <span
           aria-hidden="true"

@@ -164,7 +164,7 @@ const Projects = () => {
                           {project.tags.map((tag) => (
                             <li
                               key={tag}
-                              className="rounded-full border border-border px-2.5 py-1 font-mono text-[10px] uppercase tracking-label text-muted-foreground"
+                              className="rounded-full border border-border px-2.5 py-1 font-mono text-[12px] md:text-[10px] uppercase tracking-label text-muted-foreground"
                             >
                               {tag}
                             </li>

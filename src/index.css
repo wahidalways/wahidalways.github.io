@@ -169,9 +169,9 @@ html.lenis body {
     @apply mx-auto w-full max-w-shell px-5 md:px-8 xl:px-12;
   }
 
-  /* Mono metadata: section numbers, IDs, dates, field labels. */
+  /* Mono metadata: section numbers, IDs, dates, field labels. 12px on phones, where 11px is hard to read. */
   .label {
-    @apply font-mono text-[11px] font-medium uppercase tracking-label text-muted-foreground;
+    @apply font-mono text-[12px] md:text-[11px] font-medium uppercase tracking-label text-muted-foreground;
     line-height: 1.2;
   }
 
@@ -221,7 +221,11 @@ html.lenis body {
   }
 
   .link-draw:hover,
-  .link-draw:focus-visible {
+  .link-draw:focus-visible,
+  /* When a link carries extra padding for a larger tap area, the underline sits
+     on an inner span; hovering or focusing anywhere on the link draws it. */
+  .group:hover > .link-draw,
+  .group:focus-visible > .link-draw {
     background-size: 100% 1px;
   }
 
@@ -282,7 +286,7 @@ html.lenis body {
     left: 50%;
     z-index: 100;
     transform: translate(-50%, -200%);
-    padding: 0.625rem 1.25rem;
+    padding: 0.75rem 1.25rem;
     border-radius: 999px;
     background: hsl(var(--accent));
     color: hsl(var(--accent-foreground));
@@ -428,6 +432,48 @@ html.lenis body {
 .perf-lite .status-dot::after {
   display: none;
 }
+
+/*
+ * Notifications (see src/components/ui/sonner.tsx): an inverted card, so it
+ * reads clearly over any section, with colour only on the small icon. Icon
+ * tones are set per ground — lighter on the ink card, deeper on the paper one.
+ */
+/* sonner sets a system font stack on its container; use the site's type instead. */
+.toaster[data-sonner-toaster] {
+  font-family: inherit;
+}
+
+[data-sonner-toast].toast-card {
+  background: hsl(var(--foreground));
+  color: hsl(var(--background));
+  box-shadow: 0 16px 40px -16px rgb(0 0 0 / 0.45);
+  --toast-tone: var(--accent-text-dark);
+}
+
+[data-sonner-toast].toast-card .toast-description {
+  color: hsl(var(--background) / 0.68);
+}
+
+[data-sonner-toast].toast-card .toast-icon {
+  color: hsl(var(--toast-tone));
+}
+
+[data-sonner-toast][data-type="success"] { --toast-tone: 150 60% 55%; }
+[data-sonner-toast][data-type="error"] { --toast-tone: 0 85% 68%; }
+[data-sonner-toast][data-type="warning"] { --toast-tone: 40 95% 60%; }
+[data-sonner-toast][data-type="info"],
+[data-sonner-toast][data-type="loading"] { --toast-tone: 214 95% 70%; }
+
+.dark [data-sonner-toast].toast-card {
+  box-shadow: 0 16px 40px -16px rgb(0 0 0 / 0.7);
+  --toast-tone: var(--accent-text-light);
+}
+
+.dark [data-sonner-toast][data-type="success"] { --toast-tone: 152 70% 28%; }
+.dark [data-sonner-toast][data-type="error"] { --toast-tone: 0 75% 42%; }
+.dark [data-sonner-toast][data-type="warning"] { --toast-tone: 30 90% 34%; }
+.dark [data-sonner-toast][data-type="info"],
+.dark [data-sonner-toast][data-type="loading"] { --toast-tone: 214 80% 44%; }
 
 /* The pinned case-study strip is one large moving surface; keep it on its own layer. */
 .cases.is-horizontal .cases-track {

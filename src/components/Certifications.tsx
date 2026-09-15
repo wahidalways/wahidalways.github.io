@@ -10,7 +10,8 @@ const certifications = [
 
 /*
  * The two NASA results are the headline, so they get the room: large panels
- * led by the year. The two certificates follow as ruled entries beneath.
+ * led by the result itself — what was achieved — with the programme and year
+ * beneath. The two certificates follow as ruled entries.
  */
 const Certifications = () => {
   const featured = certifications.filter((c) => c.highlight);
@@ -26,22 +27,23 @@ const Certifications = () => {
             <article
               key={cert.title + cert.year}
               data-reveal
-              className="group relative flex min-h-[22rem] md:min-h-[28rem] flex-col justify-between overflow-hidden rounded-[10px] border border-border bg-card p-6 md:p-8"
+              className="group relative flex min-h-[18rem] md:min-h-[24rem] flex-col justify-between gap-10 overflow-hidden rounded-[10px] border border-border bg-card p-6 md:p-8"
             >
               <div className="flex items-start justify-between gap-4">
-                <span className="inline-flex items-center gap-2 rounded-full bg-accent px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-label text-accent-foreground">
+                <span className="inline-flex items-center gap-2 rounded-full bg-accent px-2.5 py-1 font-mono text-[12px] md:text-[10px] font-medium uppercase tracking-label text-accent-foreground">
                   Featured
                 </span>
                 <cert.icon aria-hidden="true" className="w-7 h-7 transition-transform duration-700 ease-out-expo group-hover:rotate-12" strokeWidth={1.25} />
               </div>
 
               <div>
-                <p className="display tabular-nums text-[5.5rem] md:text-[8rem] leading-[0.8] text-foreground/90">
-                  {cert.year}
+                <p className="display text-[2.6rem] sm:text-5xl lg:text-[4rem] leading-[0.95] text-balance">
+                  {cert.subtitle}
+                  <span aria-hidden="true" className="inline-block h-[0.16em] w-[0.16em] ml-[0.06em] bg-accent" />
                 </p>
-                <div className="mt-6 border-t border-border pt-5">
-                  <h3 className="font-display text-2xl md:text-3xl tracking-[-0.03em] leading-tight">{cert.title}</h3>
-                  <p className="mt-2 tone-em text-xl md:text-2xl text-accent-ink">{cert.subtitle}</p>
+                <div className="mt-6 flex items-baseline justify-between gap-4 border-t border-border pt-5">
+                  <h3 className="font-display text-xl md:text-2xl tracking-[-0.03em] leading-tight">{cert.title}</h3>
+                  <span className="shrink-0 font-mono text-[13px] tabular-nums text-muted-foreground">{cert.year}</span>
                 </div>
               </div>
 

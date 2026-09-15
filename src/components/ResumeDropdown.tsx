@@ -62,7 +62,7 @@ const ResumeDropdown = ({ mobile = false }: { mobile?: boolean }) => {
               download
               role="menuitem"
               onClick={() => {
-                toast.success("Download started!", { description: "Your resume is being downloaded." });
+                toast.success("Download started", { description: "Wahiduzzaman_Nayem_CV.pdf" });
                 setOpen(false);
               }}
               className="group flex items-center justify-between gap-3 rounded-md px-3 py-2.5 text-sm hover:bg-muted transition-colors"
