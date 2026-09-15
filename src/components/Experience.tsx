@@ -1,5 +1,4 @@
-import { Building2, Plus } from "lucide-react";
-import { ScrollTrigger, ensureGsap } from "@/lib/gsap";
+import { Building2 } from "lucide-react";
 import { SectionHeader } from "./ui/typography";
 
 const experiences = [
@@ -41,8 +40,6 @@ const experiences = [
     title: "Intern Business Analyst",
     company: "TechnoNext Software Limited",
     duration: "Feb 2024 – May 2024",
-    // The earliest role: its detail sits behind "Show details" to shorten the page.
-    collapsed: true,
     points: [
       "Assisted in requirement gathering and process analysis for food delivery and medical travel systems.",
       "Contributed to SRS, change requests, and process flow documentation to improve clarity and support development.",
@@ -53,13 +50,6 @@ const experiences = [
 ];
 
 const pad = (n: number) => String(n).padStart(2, "0");
-
-// Opening or closing a role changes the page height, which moves every scroll
-// trigger below it — including the pinned Projects strip. Re-measure them.
-const remeasure = () => {
-  ensureGsap();
-  ScrollTrigger.refresh();
-};
 
 /*
  * A career record in three columns — when, what, and the detail — with each
@@ -110,50 +100,19 @@ const Experience = () => {
                   </p>
                 </div>
 
-                {exp.collapsed ? (
-                  // Native <details>: keyboard and screen-reader support, and the
-                  // content is still in the page for search engines.
-                  <details
-                    className="group/details col-span-12 md:col-start-5 md:col-span-8 lg:col-start-auto lg:col-span-5"
-                    onToggle={remeasure}
-                  >
-                    <summary className="-my-2 inline-flex min-h-[44px] cursor-pointer list-none items-center gap-2 label text-foreground transition-colors hover:text-accent-ink [&::-webkit-details-marker]:hidden">
-                      <Plus
-                        aria-hidden="true"
-                        className="h-3.5 w-3.5 transition-transform duration-300 group-open/details:rotate-45"
-                      />
-                      <span className="group-open/details:hidden">Show details</span>
-                      <span className="hidden group-open/details:inline">Hide details</span>
-                    </summary>
-                    <ul className="mt-4 space-y-4">
-                      {exp.points.map((point, j) => (
-                        <li
-                          key={j}
-                          className="grid grid-cols-[2.5rem_1fr] gap-2 text-[15px] leading-relaxed text-muted-foreground text-pretty"
-                        >
-                          <span aria-hidden="true" className="font-mono text-[12px] md:text-[11px] text-foreground/70 pt-[5px]">
-                            {n}.{j + 1}
-                          </span>
-                          <span>{point}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
-                ) : (
-                  <ul className="col-span-12 md:col-start-5 md:col-span-8 lg:col-start-auto lg:col-span-5 space-y-4">
-                    {exp.points.map((point, j) => (
-                      <li
-                        key={j}
-                        className="grid grid-cols-[2.5rem_1fr] gap-2 text-[15px] leading-relaxed text-muted-foreground text-pretty"
-                      >
-                        <span aria-hidden="true" className="font-mono text-[12px] md:text-[11px] text-foreground/70 pt-[5px]">
-                          {n}.{j + 1}
-                        </span>
-                        <span>{point}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                <ul className="col-span-12 md:col-start-5 md:col-span-8 lg:col-start-auto lg:col-span-5 space-y-4">
+                  {exp.points.map((point, j) => (
+                    <li
+                      key={j}
+                      className="grid grid-cols-[2.5rem_1fr] gap-2 text-[15px] leading-relaxed text-muted-foreground text-pretty"
+                    >
+                      <span aria-hidden="true" className="font-mono text-[12px] md:text-[11px] text-foreground/70 pt-[5px]">
+                        {n}.{j + 1}
+                      </span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
               </li>
             );
           })}

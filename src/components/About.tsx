@@ -58,18 +58,25 @@ const About = () => {
               <li
                 key={item.label}
                 data-reveal
-                className={`group relative flex min-h-[15rem] md:min-h-[18rem] flex-col justify-between gap-10 border-b border-border p-6 md:p-7 transition-colors duration-500 ease-out-expo hover:bg-foreground hover:text-background
+                // At rest the signal marks each icon. On hover, paper takes a light tint of
+                // it — a full fill of a vivid signal shouts on a light page — while
+                // graphite takes the full fill.
+                className={`group relative flex min-h-[15rem] md:min-h-[18rem] flex-col justify-between gap-10 border-b border-border p-6 md:p-7 transition-colors duration-500 ease-out-expo hover:bg-accent/50 dark:hover:bg-accent dark:hover:text-accent-foreground
                   ${i % 2 === 0 ? "sm:border-r" : ""} lg:border-r ${i === 3 ? "lg:border-r-0" : ""}`}
               >
                 <div className="flex items-start justify-between">
-                  <item.icon aria-hidden="true" className="w-6 h-6 transition-transform duration-500 ease-out-expo group-hover:scale-110" strokeWidth={1.5} />
-                  <span aria-hidden="true" className="font-mono text-[12px] md:text-[11px] text-muted-foreground group-hover:text-background/60">
+                  <item.icon
+                    aria-hidden="true"
+                    className="w-6 h-6 text-accent-ink transition-[transform,color] duration-500 ease-out-expo group-hover:scale-110 group-hover:text-foreground dark:group-hover:text-accent-foreground"
+                    strokeWidth={1.5}
+                  />
+                  <span aria-hidden="true" className="font-mono text-[12px] md:text-[11px] text-muted-foreground group-hover:text-foreground/70 dark:group-hover:text-accent-foreground/70">
                     C.{pad(i + 1)}
                   </span>
                 </div>
                 <div>
                   <h4 className="font-display text-xl md:text-2xl tracking-[-0.025em] leading-tight">{item.label}</h4>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground group-hover:text-background/70 transition-colors duration-500 text-pretty">
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground group-hover:text-foreground/80 dark:group-hover:text-accent-foreground/85 transition-colors duration-500 text-pretty">
                     {item.desc}
                   </p>
                 </div>

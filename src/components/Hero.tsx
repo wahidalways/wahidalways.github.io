@@ -3,6 +3,7 @@ import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { ArrowDownRight, ArrowUpRight, User } from "lucide-react";
 import { gsap, EASE, MOTION_OK, ensureGsap, useIsoLayoutEffect } from "@/lib/gsap";
 import { useMagnetic } from "@/lib/useMagnetic";
+import { isLowPowerDevice } from "@/lib/performance";
 import { SplitText } from "./ui/typography";
 import Marquee from "./Marquee";
 
@@ -98,7 +99,7 @@ const Portrait = () => {
         {!imgError ? (
           // Oversized a little so the scroll parallax never reveals an edge.
           <div data-speed="16" className="absolute -inset-y-[4%] inset-x-0">
-            <picture>
+            <picture className="hero-portrait-drift block h-full w-full">
               <source
                 type="image/webp"
                 srcSet="/hero-480.webp 480w, /hero-800.webp 800w, /hero-1200.webp 1200w"
@@ -152,8 +153,12 @@ const Hero = ({ ready }: { ready: boolean }) => {
       const tl = gsap.timeline({ paused: true, defaults: { ease: EASE } });
 
       tl.from(q(".hero-guides"), { autoAlpha: 0, duration: 1.6 }, 0)
-        .from(q(".hero-meta"), { autoAlpha: 0, y: 14, duration: 0.9, stagger: 0.07 }, 0)
+        // Each meta card's hairline draws in, then its text settles beneath it.
+        .from(q(".hero-meta-rule"), { scaleX: 0, duration: 1.2, stagger: 0.09 }, 0)
+        .from(q(".hero-meta dt, .hero-meta dd"), { autoAlpha: 0, y: 12, duration: 0.9, stagger: 0.045 }, 0.15)
         .from(q(".hero-name .split-word"), { yPercent: 118, duration: 1.35, stagger: 0.08 }, 0.1)
+        // The closing square lands last, with a small overshoot.
+        .from(q(".hero-mark"), { scale: 0, rotate: -90, duration: 0.8, ease: "back.out(2.4)" }, 0.95)
         .from(q(".hero-portrait-clip"), { clipPath: "inset(100% 0% 0% 0%)", duration: 1.4 }, 0.3)
         .from(q(".hero-portrait-img"), { scale: 1.2, duration: 1.9 }, 0.3)
         .from(q(".hero-fade"), { autoAlpha: 0, y: 22, duration: 1.1, stagger: 0.08 }, 0.55)
@@ -162,7 +167,52 @@ const Hero = ({ ready }: { ready: boolean }) => {
       timelineRef.current = tl;
       if (readyRef.current) tl.play();
 
+      // The continuous effects below are decorative; weak hardware skips them.
+      const decorative = !isLowPowerDevice();
+      const cleanups: (() => void)[] = [];
+
+      // As the hero leaves, its content lifts and dims a touch. Scrubbed, so it
+      // reverses exactly on the way back up.
+      if (decorative) {
+        gsap.to(q(".hero-stack"), {
+          yPercent: -4,
+          // Kept light: the buttons are still on screen for most of this scroll.
+          opacity: 0.6,
+          ease: "none",
+          scrollTrigger: { trigger: root, start: "top top", end: "bottom top", scrub: true },
+        });
+      }
+
+      // The photograph drifts a few pixels against the cursor, zoomed just enough
+      // that the drift never shows an edge. Fine pointers only.
+      const figure = root.querySelector<HTMLElement>(".hero-figure");
+      const drift = root.querySelector<HTMLElement>(".hero-portrait-drift");
+      if (decorative && figure && drift && window.matchMedia("(pointer: fine)").matches) {
+        const xTo = gsap.quickTo(drift, "x", { duration: 0.9, ease: "power3.out" });
+        const yTo = gsap.quickTo(drift, "y", { duration: 0.9, ease: "power3.out" });
+        const onEnter = () => gsap.to(drift, { scale: 1.06, duration: 0.9, ease: EASE, overwrite: "auto" });
+        const onMove = (e: PointerEvent) => {
+          const r = figure.getBoundingClientRect();
+          xTo(((e.clientX - r.left) / r.width - 0.5) * -12);
+          yTo(((e.clientY - r.top) / r.height - 0.5) * -12);
+        };
+        const onLeave = () => {
+          xTo(0);
+          yTo(0);
+          gsap.to(drift, { scale: 1, duration: 0.9, ease: EASE, overwrite: "auto" });
+        };
+        figure.addEventListener("pointerenter", onEnter);
+        figure.addEventListener("pointermove", onMove);
+        figure.addEventListener("pointerleave", onLeave);
+        cleanups.push(() => {
+          figure.removeEventListener("pointerenter", onEnter);
+          figure.removeEventListener("pointermove", onMove);
+          figure.removeEventListener("pointerleave", onLeave);
+        });
+      }
+
       return () => {
+        cleanups.forEach((fn) => fn());
         timelineRef.current = null;
       };
     });
@@ -192,8 +242,14 @@ const Hero = ({ ready }: { ready: boolean }) => {
         <div className="shell relative flex flex-1 flex-col">
           <dl className="hero-meta-row mt-6 md:mt-8 lg:mt-[clamp(0.75rem,2.5vh,2.5rem)] grid grid-cols-2 md:grid-cols-4 gap-x-5 md:gap-x-6 gap-y-4">
             {META.map((item) => (
-              <div key={item.term} className="hero-meta border-t border-border pt-3">
-                <dt className="label">{item.term}</dt>
+              <div key={item.term} className="hero-meta group relative pt-3">
+                {/* The card's rule, drawn in on load; a darker one sweeps over it on hover. */}
+                <span aria-hidden="true" className="hero-meta-rule absolute inset-x-0 top-0 h-px origin-left bg-border" />
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-foreground transition-transform duration-700 ease-out-expo group-hover:scale-x-100"
+                />
+                <dt className="label transition-colors duration-300 group-hover:text-foreground">{item.term}</dt>
                 <dd className="mt-1.5 flex items-center gap-2 text-[13px] leading-snug text-foreground">
                   {item.status && <span aria-hidden="true" className="status-dot shrink-0" />}
                   <span>
@@ -225,7 +281,7 @@ const Hero = ({ ready }: { ready: boolean }) => {
                 <SplitText parts={["Nayem"]} />
                 <span aria-hidden="true" className="split-mask">
                   <span className="split-word">
-                    <span className="inline-block h-[0.16em] w-[0.16em] ml-[0.04em] bg-accent" />
+                    <span className="hero-mark inline-block h-[0.16em] w-[0.16em] ml-[0.04em] bg-accent" />
                   </span>
                 </span>
               </span>
@@ -237,7 +293,7 @@ const Hero = ({ ready }: { ready: boolean }) => {
              * photo. Its height is capped at about half the viewport.
              */}
             <div className="col-span-5 sm:col-span-4 lg:col-span-3 lg:col-start-10 lg:row-start-1 lg:row-span-3 self-start lg:self-end">
-              <figure className="lg:ml-auto lg:max-w-[calc(52vh*0.8)]">
+              <figure className="hero-figure lg:ml-auto lg:max-w-[calc(52vh*0.8)]">
                 <Portrait />
                 {/* A plate caption, as in a printed spread. It names the figure, not the role — that is in the meta row. */}
                 <figcaption className="hero-fade mt-3 flex items-baseline justify-between gap-3 font-mono text-[12px] md:text-[11px] leading-snug text-muted-foreground">

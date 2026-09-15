@@ -8,7 +8,7 @@
       Boot theme BEFORE first paint, so the first frame is already correct.
 
       Ground: the visitor's saved choice, else their OS preference.
-      Signal: the saved accent preset, else "signal".
+      Signal: the saved accent preset, else "acid".
 
       ACCENTS below mirrors `accentThemes` in src/components/ThemeProvider.tsx
       — change both together. Values: fill, text-on-fill, text on paper,
@@ -17,9 +17,10 @@
     <script>
       (function () {
         var ACCENTS = {
+          acid: ["74 88% 56%", "60 4% 7%", "80 75% 27%", "74 88% 60%"],
           signal: ["12 96% 52%", "60 4% 7%", "12 85% 40%", "14 100% 62%"],
           cobalt: ["228 96% 60%", "0 0% 100%", "228 75% 48%", "226 100% 72%"],
-          acid: ["74 88% 56%", "60 4% 7%", "80 75% 27%", "74 88% 60%"],
+          violet: ["262 83% 58%", "0 0% 100%", "262 70% 48%", "258 100% 76%"],
           jade: ["160 70% 42%", "60 4% 7%", "162 80% 26%", "158 62% 55%"],
           amber: ["36 100% 54%", "60 4% 7%", "30 90% 34%", "38 100% 60%"]
         };
@@ -38,7 +39,7 @@
         var theme = saved === "light" || saved === "dark" ? saved : prefersDark ? "dark" : "light";
         root.classList.add(theme);
 
-        var a = ACCENTS[read("accentTheme")] || ACCENTS.signal;
+        var a = ACCENTS[read("accentTheme")] || ACCENTS.acid;
         root.style.setProperty("--accent", a[0]);
         root.style.setProperty("--accent-foreground", a[1]);
         root.style.setProperty("--accent-text-light", a[2]);

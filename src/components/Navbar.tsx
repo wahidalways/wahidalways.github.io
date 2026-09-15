@@ -253,14 +253,29 @@ const Navbar = () => {
                           href={item.href}
                           onClick={(e) => handleNav(e, item.href)}
                           aria-current={isActive ? "true" : undefined}
-                          className="flex items-baseline justify-between py-3.5 sm:py-4"
+                          // The current section fills with the signal; the rest step back
+                          // so the filled row is the first thing the eye finds.
+                          className={`group -mx-3 my-1 flex items-center justify-between rounded-lg px-3 py-2.5 sm:py-3 transition-colors duration-300 ${
+                            isActive
+                              ? "bg-accent text-accent-foreground"
+                              : "text-muted-foreground hover:text-foreground"
+                          }`}
                         >
-                          <span className="display text-[2.1rem] sm:text-5xl">{item.label}</span>
                           <span
-                            aria-hidden="true"
-                            className={`font-mono text-xs ${isActive ? "text-accent-ink" : "text-muted-foreground"}`}
+                            className={`display text-[2.1rem] sm:text-5xl transition-transform duration-500 ease-out-expo ${
+                              isActive ? "translate-x-1.5" : "group-hover:translate-x-1.5"
+                            }`}
                           >
+                            {item.label}
+                          </span>
+                          <span aria-hidden="true" className="flex items-center gap-2 font-mono text-xs">
                             {pad(i + 1)}
+                            {/* The wordmark's closing square, marking where the reader is. */}
+                            <span
+                              className={`block w-1.5 h-1.5 bg-current transition-opacity duration-300 ${
+                                isActive ? "opacity-100" : "opacity-0"
+                              }`}
+                            />
                           </span>
                         </a>
                       </m.li>

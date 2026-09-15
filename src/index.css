@@ -42,6 +42,16 @@
   font-display: swap;
 }
 
+/* Pixelify Sans (SIL OFL), Latin subset, variable 400–700. Used only in the
+   arcade ticker under the hero, so it is not preloaded. */
+@font-face {
+  font-family: "Pixelify Sans";
+  src: url("/fonts/pixelify-sans.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ========================================================================== */
 /* Tokens                                                                      */
 /*                                                                             */
@@ -68,10 +78,10 @@
     --destructive: 0 72% 45%;
     --destructive-foreground: 0 0% 100%;
 
-    --accent: 12 96% 52%;
+    --accent: 74 88% 56%;
     --accent-foreground: 60 4% 7%;
-    --accent-text-light: 12 85% 40%;
-    --accent-text-dark: 14 100% 62%;
+    --accent-text-light: 80 75% 27%;
+    --accent-text-dark: 74 88% 60%;
     --accent-ink: var(--accent-text-light);
 
     --primary: var(--accent);
@@ -343,10 +353,47 @@ html.lenis body {
     border-width: 0 1px 1px 0;
   }
 
+  /* On hover the marks open out a few pixels, as if the frame were being re-measured. */
+  .crop-marks::before,
+  .crop-marks::after {
+    transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .crop-marks:hover::before {
+      transform: translate(-4px, -4px);
+    }
+
+    .crop-marks:hover::after {
+      transform: translate(4px, 4px);
+    }
+  }
+
   /* Marquee fallback: a plain CSS loop until GSAP takes it over. */
   .marquee-track {
     display: flex;
     width: max-content;
+  }
+
+  /* The ticker's pixel mouth: three frames in one SVG, one visible at a time. */
+  .chomper > g {
+    visibility: hidden;
+  }
+
+  .chomper[data-frame="0"] > g:nth-of-type(1),
+  .chomper[data-frame="1"] > g:nth-of-type(2),
+  .chomper[data-frame="2"] > g:nth-of-type(3) {
+    visibility: visible;
+  }
+
+  /* The ghosts' skirts: two frames, swapped for every ghost at once by the band. */
+  .marquee-ghost > [data-skirt="1"],
+  [data-wiggle="1"] .marquee-ghost > [data-skirt="0"] {
+    visibility: hidden;
+  }
+
+  [data-wiggle="1"] .marquee-ghost > [data-skirt="1"] {
+    visibility: visible;
   }
 
   /*

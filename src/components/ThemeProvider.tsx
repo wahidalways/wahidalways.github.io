@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 export type Theme = "light" | "dark";
-export type AccentTheme = "signal" | "cobalt" | "acid" | "jade" | "amber";
+export type AccentTheme = "acid" | "signal" | "cobalt" | "violet" | "jade" | "amber";
 
 interface ThemeContextType {
   theme: Theme;
@@ -12,7 +12,7 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: "light",
-  accentTheme: "signal",
+  accentTheme: "acid",
   toggleTheme: () => {},
   setAccentTheme: () => {},
 });
@@ -20,7 +20,7 @@ const ThemeContext = createContext<ThemeContextType>({
 export const useTheme = () => useContext(ThemeContext);
 
 /*
- * Five curated signals, not a rainbow. Each carries four values: the fill, the
+ * Six curated signals, not a rainbow. Each carries four values: the fill, the
  * text colour that sits on that fill, and a text-safe variant for each ground —
  * a colour vivid enough to work as a fill almost never passes 4.5:1 as small
  * text on a light page.
@@ -35,9 +35,10 @@ export const accentThemes: {
   textLight: string;
   textDark: string;
 }[] = [
+  { id: "acid", label: "Acid", accent: "74 88% 56%", foreground: "60 4% 7%", textLight: "80 75% 27%", textDark: "74 88% 60%" },
   { id: "signal", label: "Signal", accent: "12 96% 52%", foreground: "60 4% 7%", textLight: "12 85% 40%", textDark: "14 100% 62%" },
   { id: "cobalt", label: "Cobalt", accent: "228 96% 60%", foreground: "0 0% 100%", textLight: "228 75% 48%", textDark: "226 100% 72%" },
-  { id: "acid", label: "Acid", accent: "74 88% 56%", foreground: "60 4% 7%", textLight: "80 75% 27%", textDark: "74 88% 60%" },
+  { id: "violet", label: "Violet", accent: "262 83% 58%", foreground: "0 0% 100%", textLight: "262 70% 48%", textDark: "258 100% 76%" },
   { id: "jade", label: "Jade", accent: "160 70% 42%", foreground: "60 4% 7%", textLight: "162 80% 26%", textDark: "158 62% 55%" },
   { id: "amber", label: "Amber", accent: "36 100% 54%", foreground: "60 4% 7%", textLight: "30 90% 34%", textDark: "38 100% 60%" },
 ];
@@ -79,7 +80,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
   const [accentTheme, setAccentState] = useState<AccentTheme>(() => {
     const saved = typeof window === "undefined" ? null : safeGet("accentTheme");
-    return isAccent(saved) ? saved : "signal";
+    return isAccent(saved) ? saved : "acid";
   });
 
   useEffect(() => {

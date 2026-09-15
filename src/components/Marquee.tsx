@@ -16,35 +16,267 @@ const CAPABILITIES = [
   "UAT & Traceability",
 ];
 
+type Run = { x: number; y: number; w: number };
+
+/** Row-runs of the cells in `rows` whose character is one of `chars`. */
+const runsOf = (rows: string[], chars: string, offsetY = 0): Run[] => {
+  const runs: Run[] = [];
+  rows.forEach((row, y) => {
+    let start = -1;
+    for (let x = 0; x <= row.length; x++) {
+      const on = x < row.length && chars.includes(row[x]);
+      if (on && start < 0) start = x;
+      if (!on && start >= 0) {
+        runs.push({ x: start, y: y + offsetY, w: x - start });
+        start = -1;
+      }
+    }
+  });
+  return runs;
+};
+
+const PixelRuns = ({ runs, className }: { runs: Run[]; className?: string }) => (
+  <>
+    {runs.map((r) => (
+      <rect key={`${r.x}-${r.y}`} x={r.x} y={r.y} width={r.w} height={1} className={className} />
+    ))}
+  </>
+);
+
 /*
+ * The chomper: a 13×13 pixel mouth. Three frames — open, half, shut — differ
+ * only in the wedge cut out of the right side. The eye is painted in the page
+ * ground rather than cut out, because the track passes behind this half.
+ */
+const SPRITE = 13;
+const EYE = { x: 7, y: 3 };
+const CHOMP_FRAMES = [0.95, 0.45, -1].map((slope) => {
+  const c = (SPRITE - 1) / 2;
+  const rows = Array.from({ length: SPRITE }, (_, y) =>
+    Array.from({ length: SPRITE }, (_, x) => {
+      const dx = x - c;
+      const dy = y - c;
+      const body = dx * dx + dy * dy <= 6.6 * 6.6;
+      const mouth = slope >= 0 && dx > 0 && Math.abs(dy) <= dx * slope;
+      return body && !mouth ? "#" : ".";
+    }).join(""),
+  );
+  return runsOf(rows, "#");
+});
+const OPEN = 0;
+const HALF = 1;
+const SHUT = 2;
+
+/*
+ * The ghost that separates the words: 10×10, eyes looking left toward the
+ * mouth, and a skirt with two frames that swap as the band moves. Ghosts take
+ * the classic four colours, each deepened a little so it still reads on the
+ * light page.
+ */
+const GHOST_COLORS = ["#dc2626", "#db2777", "#0891b2", "#ea580c"];
+// Cycle the four, but never let the last ghost match the first — they sit side
+// by side where the loop wraps.
+const ghostColor = (i: number) => {
+  const c = i % GHOST_COLORS.length;
+  return GHOST_COLORS[i === CAPABILITIES.length - 1 && c === 0 ? 2 : c];
+};
+const GHOST = [
+  "...####...",
+  ".########.",
+  "##########",
+  "#oo##oo###",
+  "#po##po###",
+  "##########",
+  "##########",
+  "##########",
+  "##########",
+];
+const GHOST_BODY = runsOf(GHOST, "#");
+const GHOST_WHITES = runsOf(GHOST, "o");
+const GHOST_PUPILS = runsOf(GHOST, "p");
+const GHOST_SKIRTS = ["#.##..##.#", ".##.##.##."].map((row) => runsOf([row], "#", GHOST.length));
+
+const Ghost = ({ color }: { color: string }) => (
+  <svg
+    aria-hidden="true"
+    viewBox="0 0 10 10"
+    shapeRendering="crispEdges"
+    data-color={color}
+    style={{ fill: color }}
+    className="marquee-ghost h-5 w-5 shrink-0 transition-transform duration-500 ease-out-expo group-hover/item:-translate-y-1"
+  >
+    <PixelRuns runs={GHOST_BODY} />
+    <PixelRuns runs={GHOST_WHITES} className="fill-white" />
+    <PixelRuns runs={GHOST_PUPILS} className="fill-[#1e3a8a]" />
+    {GHOST_SKIRTS.map((runs, i) => (
+      <g key={i} data-skirt={i}>
+        <PixelRuns runs={runs} />
+      </g>
+    ))}
+  </svg>
+);
+
+// Bites per second, and skirt swaps per second, of loop time.
+const CHEW_RATE = 7;
+const WIGGLE_RATE = 5;
+// How far ahead (px) the mouth opens for an arriving ghost.
+const ANTICIPATE = 14;
+const CRUMBS = 8;
+
+/*
+ * A ruled band with a fixed label on the left and the capabilities running
+ * into it. Between the words run pixel ghosts, and a pixel mouth at the label
+ * eats each ghost as it arrives; the words slide past behind the shut mouth.
+ *
  * The list is rendered twice and the track travels exactly half its own width,
  * so the loop has no seam. It is one compositor-friendly transform tween.
  *
- * Three things keep it cheap:
- *   - it pauses whenever the band is off screen, so it costs nothing while the
- *     rest of the page is being read;
- *   - the scroll speed-up drives a single reusable quickTo, instead of
- *     creating a fresh tween on every scroll event as it used to;
- *   - on low-power devices the speed-up is skipped entirely.
+ * Nothing else has a clock of its own. On each loop update the mouth works out,
+ * from cached ghost offsets and the track's current position, whether a ghost
+ * is arriving (open), inside the lips (chewing) or not there (shut), and the
+ * ghosts' skirts swap on the same loop time — so all of it keeps pace with the
+ * band through scroll speed-ups and hover stops. Each bite spits a couple of
+ * pixel crumbs from a small reused pool.
+ *
+ * What keeps it cheap:
+ *   - it pauses whenever the band is off screen;
+ *   - positions are measured once (and on refresh), not every frame, and
+ *     attributes are only written when they change;
+ *   - the scroll speed-up and hover slow-down share one reusable quickTo;
+ *   - on low-power devices the speed changes and crumbs are skipped.
  *
  * Under reduced motion there is no loop, so the track wraps onto several lines
- * instead of running off the edge with half its items out of view.
+ * instead of running off the edge, and the label and mouth step aside.
  */
 const Marquee = () => {
   const bandRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const mouthRef = useRef<SVGSVGElement>(null);
 
   useIsoLayoutEffect(() => {
     const band = bandRef.current;
     const track = trackRef.current;
-    if (!band || !track) return;
+    const mouth = mouthRef.current;
+    if (!band || !track || !mouth) return;
     ensureGsap();
     const mm = gsap.matchMedia();
 
     mm.add(MOTION_OK, () => {
-      track.dataset.running = "true";
+      band.dataset.running = "true";
       const loop = gsap.to(track, { xPercent: -50, duration: 42, ease: "none", repeat: -1 });
+      const decorative = !isLowPowerDevice();
+      const cleanups: (() => void)[] = [];
 
+      // --- Where everything is, in band coordinates -----------------------------
+      const ghostEls = gsap.utils.toArray<SVGSVGElement>(".marquee-ghost", track);
+      let ghosts: { l: number; r: number; color: string }[] = [];
+      let trackBase = 0;
+      let trackWidth = 1;
+      let swallowX = 0; // the mouth's centre: a ghost is gone once it passes this
+      let lipsX = 0; // the mouth's front edge
+      let midY = 0;
+
+      const measure = () => {
+        const bandRect = band.getBoundingClientRect();
+        const trackRect = track.getBoundingClientRect();
+        trackWidth = track.offsetWidth || 1;
+        const shiftNow = ((gsap.getProperty(track, "xPercent") as number) / 100) * trackWidth;
+        trackBase = trackRect.left - bandRect.left - shiftNow;
+        ghosts = ghostEls.map((g) => {
+          const r = g.getBoundingClientRect();
+          return { l: r.left - trackRect.left, r: r.right - trackRect.left, color: g.dataset.color ?? "" };
+        });
+        const m = mouth.getBoundingClientRect();
+        swallowX = m.left + m.width / 2 - bandRect.left;
+        lipsX = m.right - bandRect.left;
+        midY = m.top + m.height / 2 - bandRect.top;
+      };
+      measure();
+      // Web fonts and resizes move everything; ScrollTrigger refreshes on both.
+      ScrollTrigger.addEventListener("refresh", measure);
+      document.fonts?.ready.then(measure).catch(() => {});
+      cleanups.push(() => ScrollTrigger.removeEventListener("refresh", measure));
+
+      // --- Crumbs -----------------------------------------------------------------
+      const crumbs = gsap.utils.toArray<HTMLElement>(".chomp-crumb", band);
+      let nextCrumb = 0;
+      // Crumbs are bits of whichever ghost is being eaten, so they share its colour.
+      const spit = (color: string) => {
+        for (let k = 0; k < 2; k++) {
+          const el = crumbs[nextCrumb++ % crumbs.length];
+          if (!el) return;
+          gsap.killTweensOf(el);
+          gsap.set(el, {
+            backgroundColor: color,
+            x: lipsX - 8,
+            y: midY + gsap.utils.random(-6, 6),
+            rotate: 0,
+            scale: gsap.utils.random([1, 1.34]),
+            autoAlpha: 1,
+          });
+          // Burst up or down out of the lips, then drop away.
+          const side = k === 0 ? -1 : 1;
+          gsap
+            .timeline()
+            .to(el, {
+              x: `+=${gsap.utils.random(-4, 10)}`,
+              y: `+=${side * gsap.utils.random(9, 17)}`,
+              rotate: gsap.utils.random(-120, 120),
+              duration: 0.18,
+              ease: "power2.out",
+            })
+            .to(el, { y: `+=${gsap.utils.random(14, 24)}`, autoAlpha: 0, duration: 0.38, ease: "power2.in" });
+        }
+      };
+
+      // --- The mouth and the ghosts, kept in time with the band ------------------------
+      let frame = -1;
+      let bite = -1;
+      let wiggle = -1;
+      const setFrame = (next: number) => {
+        if (next === frame) return;
+        frame = next;
+        mouth.dataset.frame = String(next);
+      };
+
+      const tick = () => {
+        const time = loop.totalTime();
+
+        const w = Math.floor(time * WIGGLE_RATE) % 2;
+        if (w !== wiggle) {
+          wiggle = w;
+          band.dataset.wiggle = String(w);
+        }
+
+        const shift = trackBase + ((gsap.getProperty(track, "xPercent") as number) / 100) * trackWidth;
+        let eating: string | null = null;
+        let arriving = false;
+        for (const g of ghosts) {
+          const left = g.l + shift;
+          const right = g.r + shift;
+          if (left < lipsX && right > swallowX) {
+            eating = g.color;
+            break;
+          }
+          if (left >= lipsX && left < lipsX + ANTICIPATE) arriving = true;
+        }
+
+        if (eating !== null) {
+          const b = Math.floor(time * CHEW_RATE) % 2;
+          setFrame(b === 0 ? OPEN : HALF);
+          if (b !== bite) {
+            bite = b;
+            if (b === 1 && decorative) spit(eating);
+          }
+        } else {
+          bite = -1;
+          setFrame(arriving ? OPEN : SHUT);
+        }
+      };
+      loop.eventCallback("onUpdate", tick);
+      tick();
+
+      // --- Visibility, scroll and hover ---------------------------------------------
       const visibility = ScrollTrigger.create({
         trigger: band,
         start: "top bottom",
@@ -53,10 +285,7 @@ const Marquee = () => {
       });
       if (!visibility.isActive) loop.pause();
 
-      let unsubscribe = () => {};
-      let settle: ReturnType<typeof setTimeout> | undefined;
-
-      if (!isLowPowerDevice()) {
+      if (decorative) {
         const speed = { value: 1 };
         const setSpeed = gsap.quickTo(speed, "value", {
           duration: 0.5,
@@ -66,22 +295,47 @@ const Marquee = () => {
           },
         });
 
+        // Hovering eases the band — and the chase — to a stop so an item can be read.
+        let hovered = false;
+        if (window.matchMedia("(pointer: fine)").matches) {
+          const onEnter = () => {
+            hovered = true;
+            setSpeed(0);
+          };
+          const onLeave = () => {
+            hovered = false;
+            setSpeed(1);
+          };
+          band.addEventListener("pointerenter", onEnter);
+          band.addEventListener("pointerleave", onLeave);
+          cleanups.push(() => {
+            band.removeEventListener("pointerenter", onEnter);
+            band.removeEventListener("pointerleave", onLeave);
+          });
+        }
+
+        let settle: ReturnType<typeof setTimeout> | undefined;
         let lastY = window.scrollY;
-        unsubscribe = subscribeScroll((y) => {
+        const unsubscribe = subscribeScroll((y) => {
           const delta = Math.abs(y - lastY);
           lastY = y;
-          if (delta < 1 || isLiteMode() || !visibility.isActive) return;
+          if (hovered || delta < 1 || isLiteMode() || !visibility.isActive) return;
           setSpeed(1 + Math.min(delta / 8, 4));
           clearTimeout(settle);
-          settle = setTimeout(() => setSpeed(1), 160);
+          settle = setTimeout(() => setSpeed(hovered ? 0 : 1), 160);
+        });
+        cleanups.push(() => {
+          clearTimeout(settle);
+          unsubscribe();
         });
       }
 
       return () => {
-        clearTimeout(settle);
-        unsubscribe();
+        cleanups.forEach((fn) => fn());
         visibility.kill();
-        delete track.dataset.running;
+        mouth.dataset.frame = String(SHUT);
+        delete band.dataset.wiggle;
+        delete band.dataset.running;
       };
     });
 
@@ -89,23 +343,65 @@ const Marquee = () => {
   }, []);
 
   return (
-    <div ref={bandRef} className="relative overflow-hidden border-t border-border">
+    <div ref={bandRef} className="group/band relative overflow-hidden border-y border-border">
+      {/*
+       * The fixed label and the mouth. This cell carries the page ground and ends
+       * at the mouth's centre, with the front half of the mouth hanging over the
+       * track — so ghosts slide into the open mouth, and words slip behind the
+       * shut one, with no hard edge in front of the lips.
+       */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-y-0 left-0 z-10 hidden items-center gap-3 md:gap-5 bg-background pl-5 md:pl-8 xl:pl-12 group-data-[running=true]/band:flex"
+      >
+        <span className="label whitespace-nowrap font-pixel text-[13px] md:text-[13px] tracking-[0.04em] text-foreground">
+          Focus areas
+        </span>
+        <svg
+          ref={mouthRef}
+          data-frame={SHUT}
+          viewBox={`0 0 ${SPRITE} ${SPRITE}`}
+          shapeRendering="crispEdges"
+          className="chomper -mr-[20px] h-[39px] w-[39px] shrink-0 fill-accent"
+        >
+          {CHOMP_FRAMES.map((runs, f) => (
+            <g key={f}>
+              <PixelRuns runs={runs} />
+              <rect x={EYE.x} y={EYE.y} width={1} height={1} className="fill-background" />
+            </g>
+          ))}
+        </svg>
+      </div>
+
+      {/* Crumbs: a small reused pool, positioned and flung by GSAP. */}
+      {Array.from({ length: CRUMBS }, (_, i) => (
+        <span
+          key={i}
+          aria-hidden="true"
+          className="chomp-crumb pointer-events-none invisible absolute left-0 top-0 z-20 h-[3px] w-[3px] bg-muted-foreground opacity-0"
+        />
+      ))}
+
       <div
         ref={trackRef}
-        className="marquee-track group flex-wrap data-[running=true]:flex-nowrap data-[running=true]:will-change-transform"
+        // At rest (reduced motion) the track fills the band and wraps inside the page
+        // gutter; only a running track is sized to its content for the seamless loop.
+        className="marquee-track w-auto flex-wrap px-5 md:px-8 xl:px-12 group-data-[running=true]/band:w-max group-data-[running=true]/band:flex-nowrap group-data-[running=true]/band:px-0 group-data-[running=true]/band:will-change-transform"
       >
         {[0, 1].map((copy) => (
           <ul
             key={copy}
             aria-hidden={copy === 1 ? true : undefined}
-            className={`items-center flex-wrap group-data-[running=true]:flex-nowrap ${
-              copy === 1 ? "hidden group-data-[running=true]:flex" : "flex"
+            className={`items-center flex-wrap group-data-[running=true]/band:flex-nowrap ${
+              copy === 1 ? "hidden group-data-[running=true]/band:flex" : "flex"
             }`}
           >
-            {CAPABILITIES.map((item) => (
-              <li key={item} className="flex items-center gap-5 md:gap-7 pr-5 md:pr-7 py-4 md:py-5">
-                <span className="font-display text-lg md:text-2xl tracking-[-0.02em] whitespace-nowrap">{item}</span>
-                <span aria-hidden="true" className="w-1.5 h-1.5 rotate-45 bg-accent" />
+            {CAPABILITIES.map((item, i) => (
+              <li key={item} className="group/item flex items-center gap-7 md:gap-9 pr-7 md:pr-9 py-4 md:py-6">
+                <span className="whitespace-nowrap font-pixel text-lg md:text-2xl tracking-normal transition-colors duration-300 group-hover/item:text-accent-ink">
+                  {item}
+                </span>
+                <Ghost color={ghostColor(i)} />
               </li>
             ))}
           </ul>
