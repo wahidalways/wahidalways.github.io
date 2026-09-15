@@ -21,12 +21,13 @@ const PHRASES = [
   "requirements into shipped software",
 ];
 
-// Each field says something the rest of the hero does not.
+// Each field says something the rest of the hero does not. (The focus areas
+// are already in the body copy and the ticker, so they are not repeated here.)
 const META = [
   { term: "Role", value: "Technical Business Analyst" },
-  { term: "Focus", value: "HRIS · Payroll · Airline systems" },
+  { term: "Currently at", value: "US Bangla Airlines", note: "since Aug 2026" },
   { term: "Based in", value: "Dhaka, Bangladesh", note: "23.81° N, 90.41° E" },
-  { term: "Status", value: "Available for new opportunities", status: true },
+  { term: "Status", value: "Open to conversations", status: true },
 ];
 
 /*
@@ -64,7 +65,7 @@ const RotatingPhrase = () => {
   }, [reduced]);
 
   return (
-    <span ref={ref} className="relative block">
+    <span ref={ref} className="relative block xl:inline-block">
       <span className="sr-only">{PHRASES[0]}</span>
       <span aria-hidden="true" className="relative block">
         <AnimatePresence mode="wait" initial={false}>
@@ -176,7 +177,12 @@ const Hero = ({ ready }: { ready: boolean }) => {
 
   return (
     <section ref={rootRef} className="relative flex min-h-[100svh] flex-col overflow-hidden pt-16">
-      <div className="relative flex flex-1 flex-col">
+      {/*
+       * On phones the hero is too tall to fit with its ticker, so the content
+       * alone fills the first view and the ticker always starts at the fold —
+       * never a sliver peeking in, whatever the phone's height or copy length.
+       */}
+      <div className="relative flex flex-1 flex-col max-md:min-h-[calc(100svh-4rem)]">
         <div aria-hidden="true" className="hero-guides pointer-events-none absolute inset-0">
           <div className="shell h-full">
             <div className="column-guides h-full w-full border-x border-foreground/[0.055]" />
@@ -232,23 +238,17 @@ const Hero = ({ ready }: { ready: boolean }) => {
              */}
             <div className="col-span-5 sm:col-span-4 lg:col-span-3 lg:col-start-10 lg:row-start-1 lg:row-span-3 self-start lg:self-end">
               <div className="lg:ml-auto lg:max-w-[calc(52vh*0.8)]">
-              <Portrait />
-              {/* Where he is now — the one fact the rest of the hero does not state. */}
-              <dl className="hero-fade mt-5 hidden lg:grid grid-cols-2 gap-x-4 border-t border-border pt-3">
-                <div>
-                  <dt className="label">Currently at</dt>
-                  <dd className="mt-1.5 text-[13px] leading-snug text-foreground">US Bangla Airlines</dd>
-                </div>
-                <div>
-                  <dt className="label">Since</dt>
-                  <dd className="mt-1.5 text-[13px] leading-snug text-foreground">Aug 2026</dd>
-                </div>
-              </dl>
+                <Portrait />
               </div>
             </div>
 
-            <p className="hero-fade col-span-7 sm:col-span-8 lg:col-span-7 lg:row-start-2 self-center lg:self-start font-display text-xl sm:text-2xl lg:text-[clamp(1.35rem,3.4vh,2rem)] leading-[1.15] tracking-[-0.025em] min-h-[4.6em] sm:min-h-[2.3em]">
-              <span className="block">I turn</span>
+            {/*
+             * Two lines below xl, so a longer phrase can never re-wrap the text
+             * while it swaps. From xl there is room for the longest phrase on one
+             * line, so the sentence reads as one; the vw cap keeps it from wrapping.
+             */}
+            <p className="hero-fade col-span-7 sm:col-span-8 lg:col-span-7 xl:col-span-8 lg:row-start-2 self-center lg:self-start font-display text-xl sm:text-2xl lg:text-[clamp(1.35rem,3.4vh,2rem)] xl:text-[min(clamp(1.35rem,3.4vh,2rem),2.2vw)] leading-[1.15] tracking-[-0.025em] min-h-[4.6em] sm:min-h-[2.3em] xl:min-h-[1.15em] xl:whitespace-nowrap">
+              <span className="block xl:inline">I turn</span>{" "}
               <RotatingPhrase />
             </p>
 
