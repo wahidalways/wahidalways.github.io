@@ -208,8 +208,8 @@ const Marquee = () => {
           gsap.killTweensOf(el);
           gsap.set(el, {
             backgroundColor: color,
-            x: lipsX - 8,
-            y: midY + gsap.utils.random(-6, 6),
+            x: lipsX - 6,
+            y: midY + gsap.utils.random(-4, 4),
             rotate: 0,
             scale: gsap.utils.random([1, 1.34]),
             autoAlpha: 1,
@@ -219,13 +219,13 @@ const Marquee = () => {
           gsap
             .timeline()
             .to(el, {
-              x: `+=${gsap.utils.random(-4, 10)}`,
-              y: `+=${side * gsap.utils.random(9, 17)}`,
+              x: `+=${gsap.utils.random(-3, 8)}`,
+              y: `+=${side * gsap.utils.random(7, 13)}`,
               rotate: gsap.utils.random(-120, 120),
               duration: 0.18,
               ease: "power2.out",
             })
-            .to(el, { y: `+=${gsap.utils.random(14, 24)}`, autoAlpha: 0, duration: 0.38, ease: "power2.in" });
+            .to(el, { y: `+=${gsap.utils.random(10, 18)}`, autoAlpha: 0, duration: 0.38, ease: "power2.in" });
         }
       };
 
@@ -352,9 +352,9 @@ const Marquee = () => {
        */}
       <div
         aria-hidden="true"
-        className="absolute inset-y-0 left-0 z-10 hidden items-center gap-3 md:gap-5 bg-background pl-5 md:pl-8 xl:pl-12 group-data-[running=true]/band:flex"
+        className="absolute inset-y-0 left-0 z-10 hidden items-center gap-3 md:gap-4 bg-background pl-5 md:pl-8 xl:pl-12 group-data-[running=true]/band:flex"
       >
-        <span className="label whitespace-nowrap font-pixel text-[13px] md:text-[13px] tracking-[0.04em] text-foreground">
+        <span className="label whitespace-nowrap font-pixel text-[11px] md:text-[11px] tracking-[0.04em] text-foreground">
           Focus areas
         </span>
         <svg
@@ -362,7 +362,7 @@ const Marquee = () => {
           data-frame={SHUT}
           viewBox={`0 0 ${SPRITE} ${SPRITE}`}
           shapeRendering="crispEdges"
-          className="chomper -mr-[20px] h-[39px] w-[39px] shrink-0 fill-accent"
+          className="chomper -mr-[13px] h-[26px] w-[26px] shrink-0 fill-accent"
         >
           {CHOMP_FRAMES.map((runs, f) => (
             <g key={f}>
@@ -397,8 +397,8 @@ const Marquee = () => {
             }`}
           >
             {CAPABILITIES.map((item, i) => (
-              <li key={item} className="group/item flex items-center gap-7 md:gap-9 pr-7 md:pr-9 py-4 md:py-6">
-                <span className="whitespace-nowrap font-pixel text-lg md:text-2xl tracking-normal transition-colors duration-300 group-hover/item:text-accent-ink">
+              <li key={item} className="group/item flex items-center gap-6 md:gap-8 pr-6 md:pr-8 py-3.5 md:py-4">
+                <span className="whitespace-nowrap font-pixel text-[15px] md:text-lg tracking-normal transition-colors duration-300 group-hover/item:text-accent-ink">
                   {item}
                 </span>
                 <Ghost color={ghostColor(i)} />
