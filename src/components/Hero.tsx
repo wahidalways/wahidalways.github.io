@@ -213,7 +213,7 @@ const Hero = ({ ready }: { ready: boolean }) => {
            * the space between the meta row and the ticker, so the whole hero —
            * ticker included — fits the first view on short and tall screens alike.
            */}
-          <div className="hero-stack mt-10 md:mt-14 pb-14 md:pb-12 lg:my-auto lg:py-[clamp(1rem,3.5vh,3.5rem)] grid grid-cols-12 gap-x-5 md:gap-x-6 gap-y-8 md:gap-y-10 lg:gap-y-[clamp(1rem,3vh,2.5rem)]">
+          <div className="hero-stack mt-10 md:mt-10 pb-14 md:pb-12 lg:my-auto lg:py-[clamp(1rem,3.5vh,3.5rem)] grid grid-cols-12 gap-x-5 md:gap-x-6 gap-y-8 lg:gap-y-[clamp(1rem,3vh,2.5rem)]">
             <h1 className="hero-name display col-span-12 lg:col-span-8 lg:row-start-1 text-[12.5vw] md:text-[min(9vw,7vh)] lg:text-[min(6.6vw,11vh)] 2xl:text-[min(6.5rem,11vh)] leading-[0.9]">
               <span className="block">
                 <SplitText parts={["Md."]} />
@@ -237,9 +237,16 @@ const Hero = ({ ready }: { ready: boolean }) => {
              * photo. Its height is capped at about half the viewport.
              */}
             <div className="col-span-5 sm:col-span-4 lg:col-span-3 lg:col-start-10 lg:row-start-1 lg:row-span-3 self-start lg:self-end">
-              <div className="lg:ml-auto lg:max-w-[calc(52vh*0.8)]">
+              <figure className="lg:ml-auto lg:max-w-[calc(52vh*0.8)]">
                 <Portrait />
-              </div>
+                {/* A plate caption, as in a printed spread. It names the figure, not the role — that is in the meta row. */}
+                <figcaption className="hero-fade mt-3 flex items-baseline justify-between gap-3 font-mono text-[11px] leading-snug text-muted-foreground">
+                  <span>
+                    Fig. 01 — <span className="text-foreground">Portrait</span>
+                  </span>
+                  <span className="hidden sm:inline">2026</span>
+                </figcaption>
+              </figure>
             </div>
 
             {/*
