@@ -413,6 +413,13 @@ html.lenis body {
     flex-shrink: 0;
   }
 
+  /* Tablets: a wider card, so the two-column case body keeps a readable measure. */
+  @media (max-width: 1023px) {
+    .cases.is-horizontal .case-card {
+      width: 86vw;
+    }
+  }
+
   .status-dot {
     position: relative;
     display: inline-flex;

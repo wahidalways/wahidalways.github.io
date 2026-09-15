@@ -52,8 +52,9 @@ const projects: {
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-// Wide and tall enough that a pinned strip of cards is comfortable to read.
-const HORIZONTAL_QUERY = "(min-width: 1024px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)";
+// Wide and tall enough that a pinned strip of cards is comfortable to read —
+// tablets included, so they get the same case-file strip as a laptop.
+const HORIZONTAL_QUERY = "(min-width: 768px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)";
 
 /*
  * On a large screen with motion allowed, the section pins and the case files

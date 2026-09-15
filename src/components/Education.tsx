@@ -16,25 +16,26 @@ const Education = () => {
 
         <div
           aria-hidden="true"
-          className="hidden lg:grid grid-cols-12 gap-x-6 border-b border-foreground pb-3"
+          className="hidden md:grid grid-cols-12 gap-x-6 border-b border-foreground pb-3"
         >
-          <span className="label col-span-2">Period</span>
-          <span className="label col-span-6">Qualification</span>
+          {/* Up to 1280px the period gets a wider column, so a date range never wraps. */}
+          <span className="label md:col-span-3 xl:col-span-2">Period</span>
+          <span className="label md:col-span-5 xl:col-span-6">Qualification</span>
           <span className="label col-span-4">Institution</span>
         </div>
 
-        <ol className="border-t border-foreground lg:border-t-0">
+        <ol className="border-t border-foreground md:border-t-0">
           {education.map((edu) => (
             <li
               key={edu.degree}
               data-reveal
-              className="group grid grid-cols-1 lg:grid-cols-12 items-baseline gap-x-6 gap-y-3 border-b border-border py-7 md:py-9"
+              className="group grid grid-cols-1 md:grid-cols-12 items-baseline gap-x-6 gap-y-3 border-b border-border py-7 md:py-9"
             >
-              <p className="lg:col-span-2 font-mono text-[13px] text-foreground">{edu.year}</p>
-              <h3 className="lg:col-span-6 font-display text-2xl md:text-[2rem] leading-[1.1] tracking-[-0.03em] text-balance transition-transform duration-500 ease-out-expo lg:group-hover:translate-x-2">
+              <p className="md:col-span-3 xl:col-span-2 font-mono text-[13px] text-foreground">{edu.year}</p>
+              <h3 className="md:col-span-5 xl:col-span-6 font-display text-2xl lg:text-[2rem] leading-[1.1] tracking-[-0.03em] text-balance transition-transform duration-500 ease-out-expo md:group-hover:translate-x-2">
                 {edu.degree}
               </h3>
-              <p className="lg:col-span-4 text-[15px] text-muted-foreground">{edu.institution}</p>
+              <p className="md:col-span-4 text-[15px] text-muted-foreground">{edu.institution}</p>
             </li>
           ))}
         </ol>

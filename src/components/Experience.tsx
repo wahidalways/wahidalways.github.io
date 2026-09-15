@@ -77,7 +77,8 @@ const Experience = () => {
                 data-reveal
                 className="grid grid-cols-12 gap-x-6 gap-y-6 border-b border-border py-10 md:py-16"
               >
-                <div className="col-span-12 md:col-span-4 lg:col-span-3">
+                {/* Tablets share the section header's 3 / 9 grid; wide screens add a third column. */}
+                <div className="col-span-12 md:col-span-3">
                   <div className="md:sticky md:top-24 flex flex-wrap md:flex-col items-center md:items-start gap-x-4 gap-y-3">
                     <span aria-hidden="true" className="font-mono text-[12px] md:text-[11px] text-muted-foreground">
                       R.{pad(n)}
@@ -92,7 +93,7 @@ const Experience = () => {
                   </div>
                 </div>
 
-                <div className="col-span-12 md:col-span-8 lg:col-span-4">
+                <div className="col-span-12 md:col-span-9 lg:col-span-4">
                   <h3 className="display text-[2.1rem] sm:text-5xl lg:text-[3.25rem] leading-[0.95]">{exp.title}</h3>
                   <p className="mt-4 flex items-center gap-2 text-[15px] text-muted-foreground">
                     <Building2 aria-hidden="true" className="w-4 h-4 shrink-0" strokeWidth={1.5} />
@@ -100,7 +101,7 @@ const Experience = () => {
                   </p>
                 </div>
 
-                <ul className="col-span-12 md:col-start-5 md:col-span-8 lg:col-start-auto lg:col-span-5 space-y-4">
+                <ul className="col-span-12 md:col-start-4 md:col-span-9 lg:col-start-auto lg:col-span-5 space-y-4">
                   {exp.points.map((point, j) => (
                     <li
                       key={j}

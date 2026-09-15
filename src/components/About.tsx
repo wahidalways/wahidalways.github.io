@@ -53,7 +53,7 @@ const About = () => {
             <h3 className="label text-foreground">Core capabilities</h3>
             <span aria-hidden="true" className="label">C.01 — C.04</span>
           </div>
-          <ul className="grid sm:grid-cols-2 lg:grid-cols-4 border-t border-foreground/15">
+          <ul className="grid sm:grid-cols-2 md:grid-cols-4 border-t border-foreground/15">
             {highlights.map((item, i) => (
               <li
                 key={item.label}
@@ -61,8 +61,8 @@ const About = () => {
                 // At rest the signal marks each icon. On hover, paper takes a light tint of
                 // it — a full fill of a vivid signal shouts on a light page — while
                 // graphite takes the full fill.
-                className={`group relative flex min-h-[15rem] md:min-h-[18rem] flex-col justify-between gap-10 border-b border-border p-6 md:p-7 transition-colors duration-500 ease-out-expo hover:bg-accent/50 dark:hover:bg-accent dark:hover:text-accent-foreground
-                  ${i % 2 === 0 ? "sm:border-r" : ""} lg:border-r ${i === 3 ? "lg:border-r-0" : ""}`}
+                className={`group relative flex min-h-[15rem] md:min-h-[18rem] flex-col justify-between gap-10 border-b border-border p-6 md:p-5 lg:p-7 transition-colors duration-500 ease-out-expo hover:bg-accent/50 dark:hover:bg-accent dark:hover:text-accent-foreground
+                  ${i % 2 === 0 ? "sm:border-r" : ""} md:border-r ${i === 3 ? "md:border-r-0" : ""}`}
               >
                 <div className="flex items-start justify-between">
                   <item.icon
@@ -75,7 +75,7 @@ const About = () => {
                   </span>
                 </div>
                 <div>
-                  <h4 className="font-display text-xl md:text-2xl tracking-[-0.025em] leading-tight">{item.label}</h4>
+                  <h4 className="font-display text-xl md:text-lg lg:text-2xl tracking-[-0.025em] leading-tight">{item.label}</h4>
                   <p className="mt-3 text-sm leading-relaxed text-muted-foreground group-hover:text-foreground/80 dark:group-hover:text-accent-foreground/85 transition-colors duration-500 text-pretty">
                     {item.desc}
                   </p>

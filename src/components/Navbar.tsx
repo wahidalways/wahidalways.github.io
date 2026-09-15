@@ -142,7 +142,8 @@ const Navbar = () => {
             <Wordmark className="text-[1.5rem] md:text-[1.6rem]" />
           </a>
 
-          <ul className="hidden xl:flex items-center gap-1">
+          {/* The full index from 1024px; below 1280px it drops the numbers to fit. */}
+          <ul className="hidden lg:flex items-center gap-0.5 xl:gap-1">
             {navItems.map((item, i) => {
               const isActive = activeSection === item.href.slice(1);
               return (
@@ -151,13 +152,13 @@ const Navbar = () => {
                     href={item.href}
                     onClick={(e) => handleNav(e, item.href)}
                     aria-current={isActive ? "true" : undefined}
-                    className={`group relative flex items-baseline gap-1.5 px-3 py-2 text-[13px] transition-colors ${
+                    className={`group relative flex items-baseline gap-1.5 px-2 xl:px-3 py-2 text-[13px] transition-colors ${
                       isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
                     <span
                       aria-hidden="true"
-                      className={`font-mono text-[10px] transition-colors ${
+                      className={`hidden xl:inline font-mono text-[10px] transition-colors ${
                         isActive ? "text-accent-ink" : "text-muted-foreground/60 group-hover:text-foreground/60"
                       }`}
                     >
@@ -166,7 +167,7 @@ const Navbar = () => {
                     {item.label}
                     <span
                       aria-hidden="true"
-                      className={`absolute left-3 right-3 -bottom-px h-px bg-foreground origin-left transition-transform duration-500 ease-out-expo ${
+                      className={`absolute left-2 right-2 xl:left-3 xl:right-3 -bottom-px h-px bg-foreground origin-left transition-transform duration-500 ease-out-expo ${
                         isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
                       }`}
                     />
@@ -197,7 +198,7 @@ const Navbar = () => {
               ref={triggerRef}
               type="button"
               onClick={() => setMobileOpen((v) => !v)}
-              className={`${iconButton} xl:hidden`}
+              className={`${iconButton} lg:hidden`}
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
               aria-controls={mobileOpen ? menuId : undefined}
@@ -233,7 +234,7 @@ const Navbar = () => {
             animate={{ clipPath: "inset(0 0 0% 0)" }}
             exit={{ clipPath: "inset(0 0 100% 0)" }}
             transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
-            className="xl:hidden fixed inset-x-0 top-16 bottom-0 bg-background overflow-y-auto"
+            className="lg:hidden fixed inset-x-0 top-16 bottom-0 bg-background overflow-y-auto"
             data-lenis-prevent
           >
             <div className="shell flex min-h-full flex-col justify-between gap-10 py-8">

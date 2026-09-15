@@ -106,11 +106,11 @@ const Contact = () => {
         />
 
         <div className="grid grid-cols-12 gap-x-6 gap-y-16">
-          <div data-reveal className="col-span-12 lg:col-span-5">
+          <div data-reveal className="col-span-12 md:col-span-5">
             <p className="label">Email</p>
             <a
               href={`mailto:${EMAIL}`}
-              className="group mt-2 inline-block py-2 font-display text-[clamp(1.5rem,5.4vw,2.6rem)] lg:text-[clamp(1.5rem,2.6vw,2.6rem)] leading-tight tracking-[-0.035em] break-all"
+              className="group mt-2 inline-block py-2 font-display text-[clamp(1.5rem,5.4vw,2.6rem)] md:text-[clamp(1.25rem,2.6vw,2.6rem)] leading-tight tracking-[-0.035em] break-all"
             >
               <span className="link-draw">{EMAIL}</span>
             </a>
@@ -153,7 +153,7 @@ const Contact = () => {
             </dl>
           </div>
 
-          <form data-reveal onSubmit={handleSubmit} className="col-span-12 lg:col-start-7 lg:col-span-6">
+          <form data-reveal onSubmit={handleSubmit} className="col-span-12 md:col-start-7 md:col-span-6">
             <div className="flex items-center justify-between border-b border-foreground pb-3">
               <p className="label text-foreground">Project brief</p>
               <p className="label">All fields required</p>

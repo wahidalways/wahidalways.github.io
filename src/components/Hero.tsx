@@ -255,7 +255,12 @@ const Hero = ({ ready }: { ready: boolean }) => {
   }, [ready]);
 
   return (
-    <section ref={rootRef} className="relative flex md:min-h-[100svh] flex-col overflow-hidden pt-16">
+    /*
+     * From tablet up the hero fills the first view — but never taller than about
+     * two-thirds of its width, so a tall portrait tablet gets a composed hero
+     * instead of the same block floating in a screen of empty space.
+     */
+    <section ref={rootRef} className="relative flex md:min-h-[min(100svh,64vw)] flex-col overflow-hidden pt-16">
       {/*
        * On phones the hero is sized by its content, not the screen, so the
        * ticker follows the buttons at one steady distance on every phone height
@@ -275,8 +280,8 @@ const Hero = ({ ready }: { ready: boolean }) => {
            * the space between the header and the facts row, so the whole hero —
            * ticker included — fits the first view on short and tall screens alike.
            */}
-          <div className="hero-stack mt-10 md:mt-10 pb-8 md:pb-12 lg:my-auto lg:py-[clamp(1rem,3.5vh,3.5rem)] grid grid-cols-12 gap-x-5 md:gap-x-6 gap-y-8 lg:gap-y-[clamp(1rem,3vh,2.5rem)]">
-            <h1 className="hero-name display col-span-12 lg:col-span-8 lg:row-start-1 text-[12.5vw] md:text-[min(9vw,7vh)] lg:text-[min(6.6vw,11vh)] 2xl:text-[min(6.5rem,11vh)] leading-[0.9]">
+          <div className="hero-stack mt-10 pb-8 md:my-auto md:py-[clamp(1rem,3.5vh,3.5rem)] grid grid-cols-12 gap-x-5 md:gap-x-6 gap-y-8 md:gap-y-[clamp(1rem,3vh,2.5rem)]">
+            <h1 className="hero-name display col-span-12 md:col-span-8 md:row-start-1 text-[12.5vw] md:text-[min(8vw,11vh)] 2xl:text-[min(6.5rem,11vh)] leading-[0.9]">
               <span className="block">
                 <SplitText parts={["Md."]} />
               </span>
@@ -298,8 +303,8 @@ const Hero = ({ ready }: { ready: boolean }) => {
              * finish on one line instead of leaving an empty corner under the
              * photo. Its height is capped at about half the viewport.
              */}
-            <div className="col-span-5 sm:col-span-4 lg:col-span-3 lg:col-start-10 lg:row-start-1 lg:row-span-3 self-start lg:self-end">
-              <figure className="hero-figure lg:ml-auto lg:max-w-[calc(52vh*0.8)]">
+            <div className="col-span-5 sm:col-span-4 md:col-start-9 lg:col-span-3 lg:col-start-10 md:row-start-1 md:row-span-3 self-start md:self-end">
+              <figure className="hero-figure md:ml-auto md:max-w-[calc(52vh*0.8)]">
                 <Portrait />
                 {/* A plate caption, as in a printed spread. It names the figure, not the role — that is in the meta row. */}
                 <figcaption className="hero-fade mt-3 flex items-baseline justify-between gap-3 font-mono text-[12px] md:text-[11px] leading-snug text-muted-foreground">
@@ -316,15 +321,15 @@ const Hero = ({ ready }: { ready: boolean }) => {
              * while it swaps. From xl there is room for the longest phrase on one
              * line, so the sentence reads as one; the vw cap keeps it from wrapping.
              */}
-            <p className="hero-fade col-span-7 sm:col-span-8 lg:col-span-7 xl:col-span-8 lg:row-start-2 self-center lg:self-start font-display text-xl sm:text-2xl lg:text-[clamp(1.35rem,3.4vh,2rem)] xl:text-[min(clamp(1.35rem,3.4vh,2rem),2.2vw)] leading-[1.15] tracking-[-0.025em] min-h-[4.6em] sm:min-h-[2.3em] xl:min-h-[1.15em] xl:whitespace-nowrap">
+            <p className="hero-fade col-span-7 sm:col-span-8 lg:col-span-7 xl:col-span-8 md:row-start-2 self-center md:self-start font-display text-xl sm:text-2xl md:text-[clamp(1.35rem,min(3.4vh,3vw),2rem)] xl:text-[min(clamp(1.35rem,3.4vh,2rem),2.2vw)] leading-[1.15] tracking-[-0.025em] min-h-[4.6em] sm:min-h-[2.3em] xl:min-h-[1.15em] xl:whitespace-nowrap">
               <span className="block xl:inline">I turn</span>{" "}
               <RotatingPhrase />
             </p>
 
             {/* Narrow screens: the facts sit straight under the portrait and statement. */}
-            <MetaRow className="col-span-12 grid lg:hidden" />
+            <MetaRow className="col-span-12 grid md:hidden" />
 
-            <div className="col-span-12 sm:col-start-5 sm:col-span-8 lg:col-start-1 lg:col-span-6 lg:row-start-3 flex flex-col gap-6 md:gap-7 lg:gap-[clamp(1rem,2.6vh,1.75rem)]">
+            <div className="col-span-12 sm:col-start-5 sm:col-span-8 md:col-start-1 md:col-span-7 lg:col-span-6 md:row-start-3 flex flex-col gap-6 md:gap-[clamp(1rem,2.6vh,1.75rem)]">
               <p className="hero-fade max-w-lg text-[15px] md:text-base leading-relaxed text-muted-foreground text-pretty">
                 Requirements engineering and process design across HRIS, payroll and recruitment systems —
                 written so engineering can build it and the business can sign it off.
@@ -348,7 +353,7 @@ const Hero = ({ ready }: { ready: boolean }) => {
            * the name opens the page, and who, where and whether-available read as
            * its footnote. (Narrow screens show it under the portrait instead.)
            */}
-          <MetaRow className="hidden lg:grid lg:mb-[clamp(1.75rem,4.5vh,3.5rem)]" />
+          <MetaRow className="hidden md:grid md:mb-[clamp(1.75rem,4.5vh,3.5rem)]" />
         </div>
       </div>
 

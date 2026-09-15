@@ -19,14 +19,14 @@ const Stats = () => {
   return (
     <section aria-label="Career in numbers" className="band-ink bg-background text-foreground">
       <div className="shell">
-        <dl className="grid grid-cols-2 lg:grid-cols-4">
+        <dl className="grid grid-cols-2 md:grid-cols-4">
           {stats.map((stat, i) => (
             <div
               key={stat.label}
               className={`flex flex-col py-8 md:py-10 border-border
-                ${i % 2 === 0 ? "border-r pr-5 md:pr-8" : "pl-5 md:pl-8"}
-                ${i < 2 ? "border-b lg:border-b-0" : ""}
-                lg:px-8 lg:first:pl-0 lg:last:pr-0 ${i < 3 ? "lg:border-r" : "lg:border-r-0"}`}
+                ${i % 2 === 0 ? "border-r pr-5" : "pl-5"}
+                ${i < 2 ? "border-b md:border-b-0" : ""}
+                md:px-5 lg:px-8 md:first:pl-0 md:last:pr-0 ${i < 3 ? "md:border-r" : "md:border-r-0"}`}
             >
               {/* Two label lines reserved, so figures line up across a row even where one label wraps. */}
               <dt className="flex min-h-[27px] items-start justify-between gap-3">
