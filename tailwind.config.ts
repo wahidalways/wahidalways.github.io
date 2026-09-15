@@ -12,12 +12,14 @@ export default {
        * Switzer (Indian Type Foundry) — a Swiss neo-grotesk, set tight for
        * display and open for text. Fragment Mono — a Helvetica-derived mono,
        * so labels and IDs share the grotesk's skeleton instead of fighting it.
-       * Both are self-hosted from /public/fonts.
+       * Pixelify Sans — a pixel face kept to the arcade ticker under the hero,
+       * never used for reading copy. All are self-hosted from /public/fonts.
        */
       fontFamily: {
         sans: ["Switzer", "ui-sans-serif", "system-ui", "sans-serif"],
         display: ["Switzer", "ui-sans-serif", "system-ui", "sans-serif"],
         mono: ['"Fragment Mono"', "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+        pixel: ['"Pixelify Sans"', '"Fragment Mono"', "ui-monospace", "monospace"],
       },
       colors: {
         border: token("border"),
