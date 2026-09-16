@@ -176,7 +176,7 @@ html.lenis body {
 @layer components {
   /* The page grid. Every section aligns to this one measure. */
   .shell {
-    @apply mx-auto w-full max-w-shell px-5 md:px-8 xl:px-12;
+    @apply mx-auto w-full max-w-shell px-5 md:px-8 xl:px-12 2xl:max-w-shell-wide 2xl:px-16;
   }
 
   /* Mono metadata: section numbers, IDs, dates, field labels. 12px on phones, where 11px is hard to read. */
@@ -307,22 +307,6 @@ html.lenis body {
 
   .skip-link:focus-visible {
     transform: translate(-50%, 0);
-  }
-
-  /* Faint column guides — the grid the page is set on, shown once, in the hero. */
-  .column-guides {
-    background-image: linear-gradient(
-      to right,
-      hsl(var(--foreground) / 0.055) 1px,
-      transparent 1px
-    );
-    background-size: calc(100% / 12) 100%;
-  }
-
-  @media (max-width: 767px) {
-    .column-guides {
-      background-size: calc(100% / 4) 100%;
-    }
   }
 
   /* Crop marks on a figure, as on a print proof. */

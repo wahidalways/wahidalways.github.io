@@ -268,8 +268,12 @@ const Hero = ({ ready }: { ready: boolean }) => {
        */}
       <div className="relative flex flex-1 flex-col">
         <div aria-hidden="true" className="hero-guides pointer-events-none absolute inset-0">
-          <div className="shell h-full">
-            <div className="column-guides h-full w-full border-x border-foreground/[0.055]" />
+          {/* Mirrors hero-stack's own grid-cols-12 + gap-x, so the guide lines land
+              exactly on the real column edges instead of an unrelated equal split. */}
+          <div className="shell grid h-full grid-cols-12 gap-x-5 md:gap-x-6">
+            {Array.from({ length: 12 }, (_, i) => (
+              <div key={i} className="border-x border-foreground/[0.055]" />
+            ))}
           </div>
         </div>
 

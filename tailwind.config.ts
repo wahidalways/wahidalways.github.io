@@ -54,6 +54,7 @@ export default {
       },
       maxWidth: {
         shell: "1440px",
+        "shell-wide": "1680px",
       },
     },
   },

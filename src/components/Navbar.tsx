@@ -139,11 +139,11 @@ const Navbar = () => {
         <nav aria-label="Main" className="shell flex h-16 items-center justify-between gap-6">
           <a href="#" aria-label="Back to top" onClick={handleHome} className="-my-2.5 shrink-0 py-2.5">
             {/* Capitals stand taller than lowercase; sized so the monogram sits level with the nav. */}
-            <Wordmark className="text-[1.5rem] md:text-[1.6rem]" />
+            <Wordmark className="text-[1.5rem] md:text-[1.6rem] 2xl:text-[1.75rem]" />
           </a>
 
           {/* The full index from 1024px; below 1280px it drops the numbers to fit. */}
-          <ul className="hidden lg:flex items-center gap-0.5 xl:gap-1">
+          <ul className="hidden lg:flex items-center gap-0.5 xl:gap-1 2xl:gap-2">
             {navItems.map((item, i) => {
               const isActive = activeSection === item.href.slice(1);
               return (
@@ -152,13 +152,13 @@ const Navbar = () => {
                     href={item.href}
                     onClick={(e) => handleNav(e, item.href)}
                     aria-current={isActive ? "true" : undefined}
-                    className={`group relative flex items-baseline gap-1.5 px-2 xl:px-3 py-2 text-[13px] transition-colors ${
+                    className={`group relative flex items-baseline gap-1.5 px-2 xl:px-3 2xl:px-4 py-2 text-[13px] 2xl:text-sm transition-colors ${
                       isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
                     <span
                       aria-hidden="true"
-                      className={`hidden xl:inline font-mono text-[10px] transition-colors ${
+                      className={`hidden xl:inline font-mono text-[10px] 2xl:text-[11px] transition-colors ${
                         isActive ? "text-accent-ink" : "text-muted-foreground/60 group-hover:text-foreground/60"
                       }`}
                     >
@@ -167,7 +167,7 @@ const Navbar = () => {
                     {item.label}
                     <span
                       aria-hidden="true"
-                      className={`absolute left-2 right-2 xl:left-3 xl:right-3 -bottom-px h-px bg-foreground origin-left transition-transform duration-500 ease-out-expo ${
+                      className={`absolute left-2 right-2 xl:left-3 xl:right-3 2xl:left-4 2xl:right-4 -bottom-px h-px bg-foreground origin-left transition-transform duration-500 ease-out-expo ${
                         isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
                       }`}
                     />
@@ -177,7 +177,7 @@ const Navbar = () => {
             })}
           </ul>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 2xl:gap-3">
             <ThemeSwitcher />
             <button
               type="button"
