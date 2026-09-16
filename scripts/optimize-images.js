@@ -7,7 +7,7 @@
  *   - a re-encoded square portrait, still referenced by the JSON-LD
  *   - a 1200x630 Open Graph card
  *
- * `sharp` is deliberately NOT a dependency — the outputs are committed, so
+ * `sharp` is deliberately NOT a dependency: the outputs are committed, so
  * neither the build nor CI needs it. Run it only when the source photo changes:
  *
  *   npm install --no-save sharp
@@ -20,7 +20,7 @@ import { fileURLToPath } from "node:url";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 // The pristine photo lives outside public/ so it is never deployed and never
-// re-compressed by this script — running it twice produces identical output.
+// re-compressed by this script: running it twice produces identical output.
 const SOURCE = resolve(root, "assets/profile-source.jpg");
 
 let sharp;

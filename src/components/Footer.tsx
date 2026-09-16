@@ -74,7 +74,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* The mark, once more, at the scale of the page — proportions match Wordmark. */}
+      {/* The mark, once more, at the scale of the page: proportions match Wordmark. */}
       <div className="shell mt-16 md:mt-24">
         <p
           aria-hidden="true"
@@ -102,7 +102,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="footer-credit group -my-3 inline-flex items-center gap-1 py-3 text-foreground transition-colors hover:text-accent-ink"
             >
-              <span className="link-draw">wahidalways</span>
+              <span className="link-draw link-draw-static">wahidalways</span>
               <ArrowUpRight
                 aria-hidden="true"
                 className="h-3.5 w-3.5 transition-transform duration-500 ease-out-expo group-hover:-translate-y-0.5 group-hover:translate-x-0.5"

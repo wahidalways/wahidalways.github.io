@@ -2,7 +2,7 @@
  * The mark: MWN set in the display face at semibold, tracked in tight like a
  * stamped monogram, closed by a signal-colour square.
  *
- * The square is drawn rather than typed — a full stop's shape differs from
+ * The square is drawn rather than typed: a full stop's shape differs from
  * font to font, and this one has to be identical at every size. It is set a
  * little larger than a true full stop so it still reads at navigation size
  * next to capitals, and on hover it turns 45° into the same diamond that

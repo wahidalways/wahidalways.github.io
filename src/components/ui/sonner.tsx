@@ -7,8 +7,8 @@ type ToasterProps = React.ComponentProps<typeof Sonner>;
 const iconClass = "h-4 w-4";
 
 /*
- * Notifications as a plain inverted card — ink on the paper theme, paper on the
- * graphite one — with a small outline icon as the only colour. They appear
+ * Notifications as a plain inverted card (ink on the paper theme, paper on the
+ * graphite one) with a small outline icon as the only colour. They appear
  * top-centre so they never sit on the floating buttons in the bottom corners.
  */
 const Toaster = ({ ...props }: ToasterProps) => {

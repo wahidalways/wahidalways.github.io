@@ -15,7 +15,7 @@ import { isLowPowerDevice } from "./performance";
  *   data-speed    element with gentle scroll parallax (value in px)
  *
  * Everything is registered under prefers-reduced-motion: no-preference, so with
- * reduced motion — or if this never runs — the content simply sits in its
+ * reduced motion (or if this never runs) the content simply sits in its
  * final, readable state.
  */
 export function usePageMotion(scope: RefObject<HTMLElement>) {

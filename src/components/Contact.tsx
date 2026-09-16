@@ -6,7 +6,7 @@ import { SectionHeader } from "./ui/typography";
 const EMAIL = "nayemwahid05@gmail.com";
 
 /*
- * Set VITE_CONTACT_ENDPOINT to a form backend (Formspree, Web3Forms, Basin —
+ * Set VITE_CONTACT_ENDPOINT to a form backend (Formspree, Web3Forms, Basin,
  * anything that accepts a JSON POST) and the form submits in place. Leave it
  * unset and it falls back to handing the message to the visitor's mail client.
  */
@@ -78,7 +78,7 @@ const Contact = () => {
       if (!res.ok) throw new Error(`Request failed with ${res.status}`);
 
       form.reset();
-      toast.success("Message sent.", { description: "Thanks — I will get back to you shortly." });
+      toast.success("Message sent.", { description: "Thanks, I will get back to you shortly." });
     } catch {
       toast.error("That did not go through.", {
         description: `Please email ${EMAIL} directly and I will pick it up.`,
@@ -162,19 +162,19 @@ const Contact = () => {
             <div className="mt-8 space-y-9">
               <div>
                 <label htmlFor="name" className="label block">
-                  01 — Name
+                  01: Name
                 </label>
                 <input id="name" name="name" required autoComplete="name" className="field" placeholder="Your name" />
               </div>
               <div>
                 <label htmlFor="email" className="label block">
-                  02 — Email
+                  02: Email
                 </label>
                 <input id="email" name="email" type="email" required autoComplete="email" className="field" placeholder="your@email.com" />
               </div>
               <div>
                 <label htmlFor="message" className="label block">
-                  03 — Message
+                  03: Message
                 </label>
                 <textarea id="message" name="message" required rows={4} className="field resize-none" placeholder="Tell me about your project..." />
               </div>

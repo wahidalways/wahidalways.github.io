@@ -52,13 +52,13 @@ const projects: {
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-// Wide and tall enough that a pinned strip of cards is comfortable to read —
+// Wide and tall enough that a pinned strip of cards is comfortable to read,
 // tablets included, so they get the same case-file strip as a laptop.
 const HORIZONTAL_QUERY = "(min-width: 768px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)";
 
 /*
  * On a large screen with motion allowed, the section pins and the case files
- * travel sideways as you scroll — reading four studies becomes one continuous
+ * travel sideways as you scroll: reading four studies becomes one continuous
  * gesture instead of a wall of cards. Everywhere else it is a plain grid. The
  * horizontal layout is opt-in via a class GSAP adds, so a failed script leaves
  * the readable grid, never a strip of cards scrolled out of reach.

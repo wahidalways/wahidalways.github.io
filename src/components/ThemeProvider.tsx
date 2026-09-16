@@ -21,7 +21,7 @@ export const useTheme = () => useContext(ThemeContext);
 
 /*
  * Six curated signals, not a rainbow. Each carries four values: the fill, the
- * text colour that sits on that fill, and a text-safe variant for each ground —
+ * text colour that sits on that fill, and a text-safe variant for each ground:
  * a colour vivid enough to work as a fill almost never passes 4.5:1 as small
  * text on a light page.
  *
@@ -57,7 +57,7 @@ const safeSet = (key: string, value: string) => {
   try {
     localStorage.setItem(key, value);
   } catch {
-    /* storage blocked — the choice lasts for this page view only */
+    /* storage blocked: the choice lasts for this page view only */
   }
 };
 

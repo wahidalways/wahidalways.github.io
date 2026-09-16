@@ -4,7 +4,7 @@
  * The header, the back-to-top ring, the share button and the ticker each used
  * to attach their own scroll listener, and two of them also ran a Framer Motion
  * scroll tracker with a spring on top. On a weak CPU that is four handlers and
- * two physics steps per scroll event — and scroll events can fire several times
+ * two physics steps per scroll event, and scroll events can fire several times
  * per frame.
  *
  * Here the browser event only schedules a frame. The position is read once per

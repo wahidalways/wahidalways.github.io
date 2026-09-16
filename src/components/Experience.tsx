@@ -52,7 +52,7 @@ const experiences = [
 const pad = (n: number) => String(n).padStart(2, "0");
 
 /*
- * A career record in three columns — when, what, and the detail — with each
+ * A career record in three columns (when, what, and the detail) with each
  * responsibility numbered as a sub-clause of its role (4.1, 4.2 …). The date
  * column holds its place while a long role scrolls past on wide screens.
  */

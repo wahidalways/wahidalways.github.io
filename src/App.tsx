@@ -11,7 +11,7 @@ import Index from "./pages/Index";
  * LazyMotion + domAnimation drops framer-motion's drag and layout-projection
  * engines, which nothing on this page uses. `strict` makes the bare `motion.*`
  * component throw at development time, so a future edit cannot quietly pull the
- * full bundle back in — use `m.*` instead.
+ * full bundle back in: use `m.*` instead.
  */
 const App = () => (
   <ThemeProvider>

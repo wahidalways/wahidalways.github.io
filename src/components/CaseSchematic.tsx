@@ -2,7 +2,7 @@
  * One line drawing per case study. The page has no product screenshots to show,
  * so each project gets the diagram an analyst would sketch on a whiteboard in
  * the first workshop: a funnel, an org structure, a route, a journey. Same
- * viewBox, same stroke, same type — a set, not four illustrations.
+ * viewBox, same stroke, same type: a set, not four illustrations.
  */
 export type SchematicKind = "funnel" | "tree" | "route" | "journey";
 

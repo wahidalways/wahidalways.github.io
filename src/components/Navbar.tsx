@@ -127,7 +127,7 @@ const Navbar = () => {
       <div
         /*
          * A solid bar, not frosted glass. backdrop-filter re-blurs everything
-         * scrolling beneath the header on every frame — the most expensive
+         * scrolling beneath the header on every frame: the most expensive
          * effect the page had, and the first thing a weak GPU drops frames on.
          */
         className={`relative transition-[background-color,border-color] duration-300 border-b ${

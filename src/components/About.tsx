@@ -1,23 +1,11 @@
-import { Target, Users, FileText, TrendingUp } from "lucide-react";
 import { SectionHeader, ScrubText } from "./ui/typography";
 
-const highlights = [
-  { icon: Target, label: "Requirements Engineering", desc: "Gathering, analysing and translating business needs into actionable specifications" },
-  { icon: FileText, label: "Documentation", desc: "BRD, SRS, FRD, PRD, Change Requests & process flow diagrams" },
-  { icon: Users, label: "Stakeholder Management", desc: "Aligning development, QA, UI/UX and operations across Agile sprint cycles" },
-  { icon: TrendingUp, label: "Process Optimization", desc: "Gap and impact analysis to remove bottlenecks and drive operational efficiency" },
+// Moved out of the hero, which was carrying too much text for a first view.
+const facts = [
+  { term: "Currently at", value: "US Bangla Airlines", note: "since Aug 2026" },
+  { term: "Based in", value: "Dhaka, Bangladesh", note: "23.81° N, 90.41° E" },
+  { term: "Status", value: "Open to conversations", status: true },
 ];
-
-const domains = [
-  "HRIS",
-  "Payroll & Workforce Management",
-  "ATS",
-  "E-commerce (Cartup)",
-  "Food Delivery (Foodi) & Logistics",
-  "Healthcare & Medical Travel",
-];
-
-const pad = (n: number) => String(n).padStart(2, "0");
 
 const About = () => {
   return (
@@ -34,86 +22,28 @@ const About = () => {
             <ScrubText text="Technical Business Analyst with 2.5+ years of experience in requirements engineering, business analysis, and solution delivery." />
           </p>
 
-          <div className="col-span-12 md:col-start-4 md:col-span-9 mt-10 md:mt-14 grid md:grid-cols-2 gap-6 md:gap-10 text-base md:text-[17px] leading-relaxed text-muted-foreground text-pretty">
-            <p data-reveal>
-              I leverage AI-powered tools and techniques to enhance requirement analysis, documentation quality, and
-              process optimization.
-            </p>
-            <p data-reveal>
-              Skilled in stakeholder management, business process analysis, and creating functional documentation and
-              Change Requests — adept at translating business needs into clear, actionable solutions that drive
-              operational efficiency and business value.
-            </p>
-          </div>
-        </div>
+          <p
+            data-reveal
+            className="col-span-12 md:col-start-4 md:col-span-9 mt-10 md:mt-14 max-w-2xl text-base md:text-[17px] leading-relaxed text-muted-foreground text-pretty"
+          >
+            I leverage AI-powered tools to speed up requirement analysis and documentation, without losing the
+            precision a spec needs to go from discovery to stakeholder sign-off.
+          </p>
 
-        {/* Capabilities */}
-        <div className="mt-24 md:mt-36">
-          <div className="flex items-end justify-between gap-6 pb-5">
-            <h3 className="label text-foreground">Core capabilities</h3>
-            <span aria-hidden="true" className="label">C.01 — C.04</span>
-          </div>
-          <ul className="grid sm:grid-cols-2 md:grid-cols-4 border-t border-foreground/15">
-            {highlights.map((item, i) => (
-              <li
-                key={item.label}
-                data-reveal
-                // At rest the signal marks each icon. On hover, paper takes a light tint of
-                // it — a full fill of a vivid signal shouts on a light page — while
-                // graphite takes the full fill.
-                className={`group relative flex min-h-[15rem] md:min-h-[18rem] flex-col justify-between gap-10 border-b border-border p-6 md:p-5 lg:p-7 transition-colors duration-500 ease-out-expo hover:bg-accent/50 dark:hover:bg-accent dark:hover:text-accent-foreground
-                  ${i % 2 === 0 ? "sm:border-r" : ""} md:border-r ${i === 3 ? "md:border-r-0" : ""}`}
-              >
-                <div className="flex items-start justify-between">
-                  <item.icon
-                    aria-hidden="true"
-                    className="w-6 h-6 text-accent-ink transition-[transform,color] duration-500 ease-out-expo group-hover:scale-110 group-hover:text-foreground dark:group-hover:text-accent-foreground"
-                    strokeWidth={1.5}
-                  />
-                  <span aria-hidden="true" className="font-mono text-[12px] md:text-[11px] text-muted-foreground group-hover:text-foreground/70 dark:group-hover:text-accent-foreground/70">
-                    C.{pad(i + 1)}
+          <dl className="col-span-12 md:col-start-4 md:col-span-9 mt-10 md:mt-14 grid grid-cols-3 gap-x-6 gap-y-6 border-t border-foreground/15 pt-8">
+            {facts.map((item) => (
+              <div key={item.term} data-reveal>
+                <dt className="label text-muted-foreground">{item.term}</dt>
+                <dd className="mt-1.5 flex items-center gap-2 text-[15px] leading-snug text-foreground">
+                  {item.status && <span aria-hidden="true" className="status-dot shrink-0" />}
+                  <span>
+                    {item.value}
+                    {item.note && <span className="block font-mono text-[11px] text-muted-foreground mt-0.5">{item.note}</span>}
                   </span>
-                </div>
-                <div>
-                  <h4 className="font-display text-xl md:text-lg lg:text-2xl tracking-[-0.025em] leading-tight">{item.label}</h4>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground group-hover:text-foreground/80 dark:group-hover:text-accent-foreground/85 transition-colors duration-500 text-pretty">
-                    {item.desc}
-                  </p>
-                </div>
-              </li>
+                </dd>
+              </div>
             ))}
-          </ul>
-        </div>
-
-        {/* Domains */}
-        <div className="mt-20 md:mt-28 grid grid-cols-12 gap-x-6 gap-y-8">
-          <div className="col-span-12 md:col-span-3">
-            <h3 className="label text-foreground">Domain Expertise</h3>
-            <p className="mt-4 max-w-[16rem] text-sm leading-relaxed text-muted-foreground">
-              Sectors I have written requirements for, from discovery through sign-off.
-            </p>
-          </div>
-          {/* A compact two-column register: six sectors read at a glance instead of filling a screen. */}
-          <ul className="col-span-12 md:col-span-9 grid sm:grid-cols-2 gap-x-6 border-t border-foreground/15">
-            {domains.map((d, i) => (
-              <li
-                key={d}
-                data-reveal
-                className="group grid grid-cols-[2.5rem_1fr_auto] items-baseline border-b border-border py-4 md:py-5"
-              >
-                <span aria-hidden="true" className="font-mono text-[12px] md:text-[11px] text-muted-foreground">
-                  {pad(i + 1)}
-                </span>
-                <span className="font-display text-xl md:text-2xl leading-tight tracking-[-0.025em] transition-transform duration-500 ease-out-expo group-hover:translate-x-2">
-                  {d}
-                </span>
-                <span
-                  aria-hidden="true"
-                  className="w-2 h-2 rounded-full bg-accent scale-0 transition-transform duration-500 ease-out-expo group-hover:scale-100"
-                />
-              </li>
-            ))}
-          </ul>
+          </dl>
         </div>
       </div>
     </section>

@@ -10,7 +10,7 @@ const certifications = [
 
 /*
  * The two NASA results are the headline, so they get the room: large panels
- * led by the result itself — what was achieved — with the programme and year
+ * led by the result itself (what was achieved) with the programme and year
  * beneath. The two certificates follow as ruled entries.
  */
 const Certifications = () => {

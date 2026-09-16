@@ -58,13 +58,16 @@ const Skills = () => {
           index="02"
           eyebrow="Skills"
           title={["Skills &", { tone: "Expertise" }]}
-          lede="A working register of methods, tools and competencies — indexed the way I index requirements."
+          lede="A working register of methods, tools and competencies, indexed the way I index requirements."
         />
 
         <div className="grid md:grid-cols-3 gap-x-6 lg:gap-x-10 gap-y-16">
           {skillCategories.map((cat) => (
             <div key={cat.title} data-reveal>
-              <div className="flex items-start justify-between gap-4 border-b border-foreground pb-5">
+              {/* Reserved at two lines, so a wrapping title (Methodologies & Core
+                  Competencies) still closes its rule at the same height as the
+                  single-line ones, and every column's list starts level. */}
+              <div className="flex items-start justify-between gap-4 border-b border-foreground pb-5 min-h-[4.6rem] lg:min-h-[5.1rem]">
                 <div className="flex items-start gap-3">
                   <cat.icon aria-hidden="true" className="mt-1 w-5 h-5 shrink-0" strokeWidth={1.5} />
                   <h3 className="font-display text-2xl lg:text-[1.75rem] leading-[1.1] tracking-[-0.03em] text-balance">

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ========================================================================== */
-/* Type — self-hosted                                                          */
+/* Type: self-hosted                                                           */
 /*                                                                             */
 /* Switzer (Indian Type Foundry, ITF Free Font License) and Fragment Mono      */
 /* (SIL OFL). Served from /fonts so no third-party request sits in front of    */
@@ -55,7 +55,7 @@
 /* ========================================================================== */
 /* Tokens                                                                      */
 /*                                                                             */
-/* Two grounds — Paper and Graphite — one signal colour. The signal is set by  */
+/* Two grounds (Paper and Graphite), one signal colour. The signal is set by   */
 /* ThemeProvider (and mirrored in index.html's boot script) as four values:    */
 /* the fill, the text that sits on the fill, and a text-safe variant for each  */
 /* ground, because a colour that works as a fill rarely passes 4.5:1 as text.  */
@@ -239,6 +239,11 @@ html.lenis body {
     background-size: 100% 1px;
   }
 
+  /* Drawn in permanently, for the one credit link that should already read as marked. */
+  .link-draw-static {
+    background-size: 100% 1px;
+  }
+
   .btn {
     @apply relative inline-flex items-center justify-center gap-2.5 overflow-hidden rounded-full font-medium;
     @apply h-12 px-6 text-sm transition-colors duration-300;
@@ -249,7 +254,7 @@ html.lenis body {
     @apply bg-accent text-accent-foreground;
   }
 
-  /* Fill that rises from below on hover — the ink replaces the signal. */
+  /* Fill that rises from below on hover: the ink replaces the signal. */
   .btn-accent::before {
     content: "";
     position: absolute;
@@ -383,7 +388,7 @@ html.lenis body {
   /*
    * Case studies are a readable grid by default. Only when GSAP confirms a
    * desktop viewport with motion allowed does the track become a horizontal
-   * strip — so if scripting fails, nothing ends up scrolled out of reach.
+   * strip, so if scripting fails, nothing ends up scrolled out of reach.
    */
   .cases.is-horizontal .cases-track {
     display: flex;
@@ -420,7 +425,7 @@ html.lenis body {
     border-radius: inherit;
     background: inherit;
     /* A few pulses to draw the eye, then still. An endless loop kept the page
-       producing new frames — and style work — forever, even while idle. */
+       producing new frames (and style work) forever, even while idle. */
     animation: status-ping 2.2s cubic-bezier(0, 0, 0.2, 1) 5;
   }
 }
@@ -474,7 +479,7 @@ html.lenis body {
 /*
  * Notifications (see src/components/ui/sonner.tsx): an inverted card, so it
  * reads clearly over any section, with colour only on the small icon. Icon
- * tones are set per ground — lighter on the ink card, deeper on the paper one.
+ * tones are set per ground: lighter on the ink card, deeper on the paper one.
  */
 /* sonner sets a system font stack on its container; use the site's type instead. */
 .toaster[data-sonner-toaster] {

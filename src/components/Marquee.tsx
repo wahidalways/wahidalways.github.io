@@ -3,7 +3,7 @@ import { gsap, ScrollTrigger, MOTION_OK, ensureGsap, useIsoLayoutEffect } from "
 import { subscribeScroll } from "@/lib/scroll-store";
 import { isLiteMode, isLowPowerDevice } from "@/lib/performance";
 
-// Domains and deliverables, not tools — what the work covers, at a glance.
+// Domains and deliverables, not tools: what the work covers, at a glance.
 const CAPABILITIES = [
   "HRIS",
   "Payroll",
@@ -44,7 +44,7 @@ const PixelRuns = ({ runs, className }: { runs: Run[]; className?: string }) => 
 );
 
 /*
- * The chomper: a 13×13 pixel mouth. Three frames — open, half, shut — differ
+ * The chomper: a 13×13 pixel mouth. Three frames (open, half, shut) differ
  * only in the wedge cut out of the right side. The eye is painted in the page
  * ground rather than cut out, because the track passes behind this half.
  */
@@ -74,7 +74,7 @@ const SHUT = 2;
  * light page.
  */
 const GHOST_COLORS = ["#dc2626", "#db2777", "#0891b2", "#ea580c"];
-// Cycle the four, but never let the last ghost match the first — they sit side
+// Cycle the four, but never let the last ghost match the first: they sit side
 // by side where the loop wraps.
 const ghostColor = (i: number) => {
   const c = i % GHOST_COLORS.length;
@@ -121,7 +121,7 @@ const CHEW_RATE = 7;
 const WIGGLE_RATE = 5;
 // How far ahead (px) the mouth opens for an arriving ghost.
 const ANTICIPATE = 14;
-const CRUMBS = 8;
+const CRUMBS = 12;
 
 /*
  * A ruled band with a fixed label on the left and the capabilities running
@@ -134,7 +134,7 @@ const CRUMBS = 8;
  * Nothing else has a clock of its own. On each loop update the mouth works out,
  * from cached ghost offsets and the track's current position, whether a ghost
  * is arriving (open), inside the lips (chewing) or not there (shut), and the
- * ghosts' skirts swap on the same loop time — so all of it keeps pace with the
+ * ghosts' skirts swap on the same loop time, so all of it keeps pace with the
  * band through scroll speed-ups and hover stops. Each bite spits a couple of
  * pixel crumbs from a small reused pool.
  *
@@ -214,25 +214,37 @@ const Marquee = () => {
             scale: gsap.utils.random([1, 1.34]),
             autoAlpha: 1,
           });
-          // Burst up or down out of the lips, then drop away.
+          // Burst up or down out of the lips, then drop away, wider and springier
+          // than a stray crumb has any right to be: that is what sells the bite.
           const side = k === 0 ? -1 : 1;
           gsap
             .timeline()
             .to(el, {
-              x: `+=${gsap.utils.random(-3, 8)}`,
-              y: `+=${side * gsap.utils.random(7, 13)}`,
-              rotate: gsap.utils.random(-120, 120),
-              duration: 0.18,
-              ease: "power2.out",
+              x: `+=${gsap.utils.random(-5, 11)}`,
+              y: `+=${side * gsap.utils.random(9, 16)}`,
+              rotate: gsap.utils.random(-160, 160),
+              duration: 0.2,
+              ease: "back.out(2)",
             })
-            .to(el, { y: `+=${gsap.utils.random(10, 18)}`, autoAlpha: 0, duration: 0.38, ease: "power2.in" });
+            .to(el, { y: `+=${gsap.utils.random(12, 22)}`, autoAlpha: 0, duration: 0.4, ease: "power2.in" });
         }
+      };
+
+      // --- A one-shot squash, reused for both the mouth's chomp and a ghost's gulp. ---
+      const punch = (el: Element, scaleX: number, scaleY: number, duration: number) => {
+        gsap.killTweensOf(el);
+        gsap.fromTo(
+          el,
+          { scale: 1 },
+          { scaleX, scaleY, duration, ease: "power2.out", yoyo: true, repeat: 1, transformOrigin: "50% 50%" },
+        );
       };
 
       // --- The mouth and the ghosts, kept in time with the band ------------------------
       let frame = -1;
       let bite = -1;
       let wiggle = -1;
+      let eatingIndex = -1;
       const setFrame = (next: number) => {
         if (next === frame) return;
         frame = next;
@@ -250,15 +262,26 @@ const Marquee = () => {
 
         const shift = trackBase + ((gsap.getProperty(track, "xPercent") as number) / 100) * trackWidth;
         let eating: string | null = null;
+        let eatingAt = -1;
         let arriving = false;
-        for (const g of ghosts) {
+        for (let idx = 0; idx < ghosts.length; idx++) {
+          const g = ghosts[idx];
           const left = g.l + shift;
           const right = g.r + shift;
           if (left < lipsX && right > swallowX) {
             eating = g.color;
+            eatingAt = idx;
             break;
           }
           if (left >= lipsX && left < lipsX + ANTICIPATE) arriving = true;
+        }
+
+        // The instant a ghost first overlaps the lips, it gets one quick squash,
+        // as if the mouth had actually closed on it, right before it disappears
+        // behind the label panel.
+        if (eatingAt !== eatingIndex) {
+          eatingIndex = eatingAt;
+          if (eatingAt >= 0 && decorative) punch(ghostEls[eatingAt], 0.5, 1.4, 0.09);
         }
 
         if (eating !== null) {
@@ -266,6 +289,7 @@ const Marquee = () => {
           setFrame(b === 0 ? OPEN : HALF);
           if (b !== bite) {
             bite = b;
+            if (b === 0 && decorative) punch(mouth, 1.18, 0.85, 0.08);
             if (b === 1 && decorative) spit(eating);
           }
         } else {
@@ -295,7 +319,7 @@ const Marquee = () => {
           },
         });
 
-        // Hovering eases the band — and the chase — to a stop so an item can be read.
+        // Hovering eases the band (and the chase) to a stop so an item can be read.
         let hovered = false;
         if (window.matchMedia("(pointer: fine)").matches) {
           const onEnter = () => {
@@ -347,7 +371,7 @@ const Marquee = () => {
       {/*
        * The fixed label and the mouth. This cell carries the page ground and ends
        * at the mouth's centre, with the front half of the mouth hanging over the
-       * track — so ghosts slide into the open mouth, and words slip behind the
+       * track, so ghosts slide into the open mouth, and words slip behind the
        * shut one, with no hard edge in front of the lips.
        */}
       <div

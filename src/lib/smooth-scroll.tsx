@@ -32,7 +32,7 @@ export function scrollToTarget(target: string | HTMLElement | number) {
 
 /**
  * Lenis wired into GSAP's ticker, so ScrollTrigger reads the same scroll
- * position Lenis renders on the same frame — two separate rAF loops drift and
+ * position Lenis renders on the same frame: two separate rAF loops drift and
  * pinned sections visibly jitter.
  *
  * Not started under reduced motion (inertial scrolling is itself motion), nor

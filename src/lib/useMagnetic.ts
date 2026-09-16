@@ -3,7 +3,7 @@ import { gsap, prefersReducedMotion } from "./gsap";
 
 /**
  * Pulls an element a short way toward the cursor and springs it back on leave.
- * Fine pointers only — on touch there is no hover to respond to — and never
+ * Fine pointers only (on touch there is no hover to respond to) and never
  * under reduced motion. The pull is capped by `strength`; past a few pixels it
  * stops reading as responsive and starts reading as a hit-testing bug.
  */

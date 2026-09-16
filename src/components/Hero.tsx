@@ -22,15 +22,6 @@ const PHRASES = [
   "requirements into shipped software",
 ];
 
-// Each field says something the rest of the hero does not. (The focus areas
-// are already in the body copy and the ticker, so they are not repeated here.)
-const META = [
-  { term: "Role", value: "Technical Business Analyst" },
-  { term: "Currently at", value: "US Bangla Airlines", note: "since Aug 2026" },
-  { term: "Based in", value: "Dhaka, Bangladesh", note: "23.81° N, 90.41° E" },
-  { term: "Status", value: "Open to conversations", status: true },
-];
-
 /*
  * Screen readers get one settled sentence; the swapping copy is hidden from
  * them, since a phrase replacing itself every three seconds would interrupt
@@ -43,7 +34,7 @@ const RotatingPhrase = () => {
 
   const ref = useRef<HTMLSpanElement>(null);
 
-  // Only cycles while the phrase is on screen and the tab is visible — no
+  // Only cycles while the phrase is on screen and the tab is visible: no
   // re-renders and no animation work for a line nobody is looking at.
   useEffect(() => {
     if (reduced) return;
@@ -130,38 +121,10 @@ const Portrait = () => {
 };
 
 /*
- * The facts row. It sits in a different place per layout — under the portrait
- * on narrow screens, at the foot of the hero on wide ones — so it is rendered in
- * both places and the caller passes the display classes that show only one.
- */
-const MetaRow = ({ className }: { className: string }) => (
-  <dl className={`hero-meta-row grid-cols-2 md:grid-cols-4 gap-x-5 md:gap-x-6 gap-y-4 ${className}`}>
-    {META.map((item) => (
-      <div key={item.term} className="hero-meta group relative pt-3">
-        {/* The card's rule, drawn in on load; a darker one sweeps over it on hover. */}
-        <span aria-hidden="true" className="hero-meta-rule absolute inset-x-0 top-0 h-px origin-left bg-border" />
-        <span
-          aria-hidden="true"
-          className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-foreground transition-transform duration-700 ease-out-expo group-hover:scale-x-100"
-        />
-        <dt className="label transition-colors duration-300 group-hover:text-foreground">{item.term}</dt>
-        <dd className="mt-1.5 flex items-center gap-2 text-[13px] leading-snug text-foreground">
-          {item.status && <span aria-hidden="true" className="status-dot shrink-0" />}
-          <span>
-            {item.value}
-            {item.note && <span className="hidden xl:inline font-mono text-[11px] text-muted-foreground"> · {item.note}</span>}
-          </span>
-        </dd>
-      </div>
-    ))}
-  </dl>
-);
-
-/*
  * Composition, wide screens: the name and the argument stacked down the left;
  * the photograph set into the last three columns, top-aligned with the name so
  * the two read as one block. Narrow screens: name, then photograph and
- * statement side by side, then the body — the photo never fills the screen.
+ * statement side by side, then the body: the photo never fills the screen.
  */
 const Hero = ({ ready }: { ready: boolean }) => {
   const rootRef = useRef<HTMLElement>(null);
@@ -181,10 +144,6 @@ const Hero = ({ ready }: { ready: boolean }) => {
       const tl = gsap.timeline({ paused: true, defaults: { ease: EASE } });
 
       tl.from(q(".hero-guides"), { autoAlpha: 0, duration: 1.6 }, 0)
-        // The facts row sits at the foot of the hero, so it arrives after the name:
-        // each card's hairline draws in, then its text settles beneath it.
-        .from(q(".hero-meta-rule"), { scaleX: 0, duration: 1.2, stagger: 0.09 }, 0.7)
-        .from(q(".hero-meta dt, .hero-meta dd"), { autoAlpha: 0, y: 12, duration: 0.9, stagger: 0.045 }, 0.85)
         .from(q(".hero-name .split-word"), { yPercent: 118, duration: 1.35, stagger: 0.08 }, 0.1)
         // The closing square lands last, with a small overshoot.
         .from(q(".hero-mark"), { scale: 0, rotate: -90, duration: 0.8, ease: "back.out(2.4)" }, 0.95)
@@ -256,7 +215,7 @@ const Hero = ({ ready }: { ready: boolean }) => {
 
   return (
     /*
-     * From tablet up the hero fills the first view — but never taller than about
+     * From tablet up the hero fills the first view, but never taller than about
      * two-thirds of its width, so a tall portrait tablet gets a composed hero
      * instead of the same block floating in a screen of empty space.
      */
@@ -281,8 +240,8 @@ const Hero = ({ ready }: { ready: boolean }) => {
           {/*
            * Wide screens size this block by the viewport's height as well as its
            * width (type, gaps and photo all use vh-capped values) and centre it in
-           * the space between the header and the facts row, so the whole hero —
-           * ticker included — fits the first view on short and tall screens alike.
+           * the space between the header and the facts row, so the whole hero
+           * (ticker included) fits the first view on short and tall screens alike.
            */}
           <div className="hero-stack mt-10 pb-8 md:my-auto md:py-[clamp(1rem,3.5vh,3.5rem)] grid grid-cols-12 gap-x-5 md:gap-x-6 gap-y-8 md:gap-y-[clamp(1rem,3vh,2.5rem)]">
             <h1 className="hero-name display col-span-12 md:col-span-8 md:row-start-1 text-[12.5vw] md:text-[min(8vw,11vh)] 2xl:text-[min(6.5rem,11vh)] leading-[0.9]">
@@ -310,10 +269,10 @@ const Hero = ({ ready }: { ready: boolean }) => {
             <div className="col-span-5 sm:col-span-4 md:col-start-9 lg:col-span-3 lg:col-start-10 md:row-start-1 md:row-span-3 self-start md:self-end">
               <figure className="hero-figure md:ml-auto md:max-w-[calc(52vh*0.8)]">
                 <Portrait />
-                {/* A plate caption, as in a printed spread. It names the figure, not the role — that is in the meta row. */}
+                {/* A plate caption, as in a printed spread. It names the figure, not the role; that is in the meta row. */}
                 <figcaption className="hero-fade mt-3 flex items-baseline justify-between gap-3 font-mono text-[12px] md:text-[11px] leading-snug text-muted-foreground">
                   <span>
-                    Fig. 01 — <span className="text-foreground">Portrait</span>
+                    Fig. 01: <span className="text-foreground">Portrait</span>
                   </span>
                   <span className="hidden sm:inline">2026</span>
                 </figcaption>
@@ -330,12 +289,9 @@ const Hero = ({ ready }: { ready: boolean }) => {
               <RotatingPhrase />
             </p>
 
-            {/* Narrow screens: the facts sit straight under the portrait and statement. */}
-            <MetaRow className="col-span-12 grid md:hidden" />
-
             <div className="col-span-12 sm:col-start-5 sm:col-span-8 md:col-start-1 md:col-span-7 lg:col-span-6 md:row-start-3 flex flex-col gap-6 md:gap-[clamp(1rem,2.6vh,1.75rem)]">
               <p className="hero-fade max-w-lg text-[15px] md:text-base leading-relaxed text-muted-foreground text-pretty">
-                Requirements engineering and process design across HRIS, payroll and recruitment systems —
+                Requirements engineering and process design across HRIS, payroll and recruitment systems,
                 written so engineering can build it and the business can sign it off.
               </p>
 
@@ -351,13 +307,6 @@ const Hero = ({ ready }: { ready: boolean }) => {
               </div>
             </div>
           </div>
-
-          {/*
-           * Wide screens: the facts row closes the hero, just above the ticker —
-           * the name opens the page, and who, where and whether-available read as
-           * its footnote. (Narrow screens show it under the portrait instead.)
-           */}
-          <MetaRow className="hidden md:grid md:mb-[clamp(1.75rem,4.5vh,3.5rem)]" />
         </div>
       </div>
 

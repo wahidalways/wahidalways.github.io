@@ -2,7 +2,7 @@ import { Fragment, type ReactNode } from "react";
 
 /**
  * A heading fragment: plain words, or words set in the quieter second tone.
- * Two tones of one typeface carry the emphasis — no second family is needed.
+ * Two tones of one typeface carry the emphasis: no second family is needed.
  */
 export type Part = string | { tone: string };
 

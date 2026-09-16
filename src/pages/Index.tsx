@@ -19,8 +19,8 @@ import FloatingShare from "@/components/FloatingShare";
 
 /*
  * Sections are imported eagerly. Lazy-loading them saved a few kilobytes but
- * made the page's height change after first layout, and every ScrollTrigger —
- * the pinned case studies above all — measures positions against that height.
+ * made the page's height change after first layout, and every ScrollTrigger
+ * (the pinned case studies above all) measures positions against that height.
  */
 const Index = () => {
   // Resolved once before the first render, so a returning visitor never sees a

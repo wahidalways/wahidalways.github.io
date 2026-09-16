@@ -3,7 +3,7 @@
  *
  * The signal is a static hint known before anything renders: very few CPU
  * cores, very little memory, or the visitor has Data Saver switched on. On such
- * a device the page runs in "lite" mode — native scrolling instead of Lenis and
+ * a device the page runs in "lite" mode: native scrolling instead of Lenis and
  * no continuous, purely decorative scroll effects.
  *
  * A runtime switch based on measured frame pacing was tried and removed: under

@@ -9,7 +9,7 @@ const EXIT_AT = 850;
 const COMPLETE_AT = 1250;
 
 /**
- * First visit of the session only, and never under reduced motion — a purely
+ * First visit of the session only, and never under reduced motion: a purely
  * decorative delay is exactly what that setting exists to suppress.
  */
 export const shouldShowPreloader = () => {
@@ -36,7 +36,7 @@ const Preloader = ({ onComplete }: { onComplete: () => void }) => {
     try {
       sessionStorage.setItem(SEEN_KEY, "1");
     } catch {
-      /* storage blocked — nothing to record, the splash simply runs again */
+      /* storage blocked: nothing to record, the splash simply runs again */
     }
 
     let raf = 0;
@@ -74,12 +74,12 @@ const Preloader = ({ onComplete }: { onComplete: () => void }) => {
           aria-hidden="true"
           exit={{ y: "-100%" }}
           transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
-          // Follows the visitor's ground — the boot script in index.html has
+          // Follows the visitor's ground: the boot script in index.html has
           // already set it, so the splash never flashes the wrong theme.
           className="fixed inset-0 z-[9999] flex flex-col justify-between bg-background text-foreground"
         >
           <div className="shell flex items-start justify-between pt-6">
-            <span className="label text-foreground">MWN — Portfolio</span>
+            <span className="label text-foreground">MWN: Portfolio</span>
             <span className="label hidden sm:block">Technical Business Analyst</span>
           </div>
 

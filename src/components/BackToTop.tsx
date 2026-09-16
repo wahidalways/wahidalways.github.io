@@ -8,7 +8,7 @@ import { subscribeScroll } from "@/lib/scroll-store";
  * page is read.
  *
  * The button stays mounted and fades with CSS, and the ring's offset is written
- * straight to the element from the shared scroll reader — so scrolling costs
+ * straight to the element from the shared scroll reader, so scrolling costs
  * one style write per frame here, not a React render or a motion-value update.
  */
 const BackToTop = () => {
