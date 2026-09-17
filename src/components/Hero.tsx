@@ -215,21 +215,17 @@ const Hero = ({ ready }: { ready: boolean }) => {
 
   return (
     /*
-     * From tablet up the hero fills the first view, but never taller than about
-     * two-thirds of its width, so a tall portrait tablet gets a composed hero
-     * instead of the same block floating in a screen of empty space.
+     * The hero fills the first view on every screen, tablet up never taller than
+     * about two-thirds of its width (so a tall portrait tablet gets a composed
+     * hero instead of the same block floating in empty space), and on phones
+     * capped at exactly one screen so the ticker is visible without scrolling.
      */
-    <section ref={rootRef} className="relative flex md:min-h-[min(100svh,64vw)] flex-col overflow-hidden pt-16">
-      {/*
-       * On phones the hero is sized by its content, not the screen, so the
-       * ticker follows the buttons at one steady distance on every phone height
-       * instead of being pushed down to the fold with a gap that grows.
-       */}
+    <section ref={rootRef} className="relative flex min-h-[100svh] sm:min-h-[min(100svh,64vw)] flex-col overflow-hidden pt-16">
       <div className="relative flex flex-1 flex-col">
         <div aria-hidden="true" className="hero-guides pointer-events-none absolute inset-0">
           {/* Mirrors hero-stack's own grid-cols-12 + gap-x, so the guide lines land
               exactly on the real column edges instead of an unrelated equal split. */}
-          <div className="shell grid h-full grid-cols-12 gap-x-5 md:gap-x-6">
+          <div className="shell grid h-full grid-cols-12 gap-x-5 sm:gap-x-6">
             {Array.from({ length: 12 }, (_, i) => (
               <div key={i} className="border-x border-foreground/[0.055]" />
             ))}
@@ -243,8 +239,8 @@ const Hero = ({ ready }: { ready: boolean }) => {
            * the space between the header and the facts row, so the whole hero
            * (ticker included) fits the first view on short and tall screens alike.
            */}
-          <div className="hero-stack mt-10 pb-8 md:my-auto md:py-[clamp(1rem,3.5vh,3.5rem)] grid grid-cols-12 gap-x-5 md:gap-x-6 gap-y-8 md:gap-y-[clamp(1rem,3vh,2.5rem)]">
-            <h1 className="hero-name display col-span-12 md:col-span-8 md:row-start-1 text-[12.5vw] md:text-[min(8vw,11vh)] 2xl:text-[min(6.5rem,11vh)] leading-[0.9]">
+          <div className="hero-stack my-auto py-[clamp(0.25rem,3svh,2rem)] grid grid-cols-12 gap-x-5 sm:gap-x-6 gap-y-[clamp(0.5rem,2.5svh,1.5rem)] sm:gap-y-[clamp(1rem,3vh,2.5rem)]">
+            <h1 className="hero-name display col-span-12 sm:col-span-8 sm:row-start-1 text-[min(11.5vw,8.5svh)] sm:text-[min(8vw,11vh)] 2xl:text-[min(6.5rem,11vh)] leading-[0.9]">
               <span className="block">
                 <SplitText parts={["Md."]} />
               </span>
@@ -266,15 +262,15 @@ const Hero = ({ ready }: { ready: boolean }) => {
              * finish on one line instead of leaving an empty corner under the
              * photo. Its height is capped at about half the viewport.
              */}
-            <div className="col-span-5 sm:col-span-4 md:col-start-9 lg:col-span-3 lg:col-start-10 md:row-start-1 md:row-span-3 self-start md:self-end">
-              <figure className="hero-figure md:ml-auto md:max-w-[calc(52vh*0.8)]">
+            <div className="col-span-6 sm:col-span-4 sm:col-start-9 lg:col-span-3 lg:col-start-10 sm:row-start-1 sm:row-span-3 self-start sm:self-end">
+              <figure className="hero-figure max-w-[calc(34svh*0.8)] sm:ml-auto sm:max-w-[calc(52vh*0.8)]">
                 <Portrait />
                 {/* A plate caption, as in a printed spread. It names the figure, not the role; that is in the meta row. */}
-                <figcaption className="hero-fade mt-3 flex items-baseline justify-between gap-3 font-mono text-[12px] md:text-[11px] leading-snug text-muted-foreground">
+                <figcaption className="hero-fade mt-1.5 sm:mt-3 flex items-baseline justify-between gap-3 whitespace-nowrap font-mono text-[12px] md:text-[11px] leading-snug text-muted-foreground">
                   <span>
                     Fig. 01: <span className="text-foreground">Portrait</span>
                   </span>
-                  <span className="hidden sm:inline">2026</span>
+                  <span>2026</span>
                 </figcaption>
               </figure>
             </div>
@@ -284,13 +280,13 @@ const Hero = ({ ready }: { ready: boolean }) => {
              * while it swaps. From xl there is room for the longest phrase on one
              * line, so the sentence reads as one; the vw cap keeps it from wrapping.
              */}
-            <p className="hero-fade col-span-7 sm:col-span-8 lg:col-span-7 xl:col-span-8 md:row-start-2 self-center md:self-start font-display text-xl sm:text-2xl md:text-[clamp(1.35rem,min(3.4vh,3vw),2rem)] xl:text-[min(clamp(1.35rem,3.4vh,2rem),2.2vw)] leading-[1.15] tracking-[-0.025em] min-h-[4.6em] sm:min-h-[2.3em] xl:min-h-[1.15em] xl:whitespace-nowrap">
+            <p className="hero-fade col-span-6 sm:col-span-8 lg:col-span-7 xl:col-span-8 sm:row-start-2 self-start font-display text-lg sm:text-[clamp(1.35rem,min(3.4vh,3vw),2rem)] xl:text-[min(clamp(1.35rem,3.4vh,2rem),2.2vw)] leading-[1.15] tracking-[-0.025em] min-h-[5.75em] sm:min-h-[2.3em] xl:min-h-[1.15em] xl:whitespace-nowrap">
               <span className="block xl:inline">I turn</span>{" "}
               <RotatingPhrase />
             </p>
 
-            <div className="col-span-12 sm:col-start-5 sm:col-span-8 md:col-start-1 md:col-span-7 lg:col-span-6 md:row-start-3 flex flex-col gap-6 md:gap-[clamp(1rem,2.6vh,1.75rem)]">
-              <p className="hero-fade max-w-lg text-[15px] md:text-base leading-relaxed text-muted-foreground text-pretty">
+            <div className="col-span-12 sm:col-start-1 sm:col-span-7 lg:col-span-6 sm:row-start-3 flex flex-col gap-[clamp(1rem,2svh,1.5rem)] sm:gap-[clamp(1rem,2.6vh,1.75rem)]">
+              <p className="hero-fade max-w-lg text-[15px] md:text-base leading-[1.45] sm:leading-relaxed text-muted-foreground text-pretty">
                 Requirements engineering and process design across HRIS, payroll and recruitment systems,
                 written so engineering can build it and the business can sign it off.
               </p>

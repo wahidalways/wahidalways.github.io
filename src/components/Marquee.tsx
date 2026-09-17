@@ -367,7 +367,12 @@ const Marquee = () => {
   }, []);
 
   return (
-    <div ref={bandRef} className="group/band relative overflow-hidden border-y border-border">
+    <div
+      ref={bandRef}
+      // Only the trailing edge needs a fade: the leading edge is already covered by
+      // the opaque "Focus areas" label, so masking it too would just dim that label.
+      className="group/band relative overflow-hidden border-y border-border [mask-image:linear-gradient(to_right,black_calc(100%-40px),transparent)] [-webkit-mask-image:linear-gradient(to_right,black_calc(100%-40px),transparent)]"
+    >
       {/*
        * The fixed label and the mouth. This cell carries the page ground and ends
        * at the mouth's centre, with the front half of the mouth hanging over the
@@ -421,7 +426,7 @@ const Marquee = () => {
             }`}
           >
             {CAPABILITIES.map((item, i) => (
-              <li key={item} className="group/item flex items-center gap-6 md:gap-8 pr-6 md:pr-8 py-3.5 md:py-4">
+              <li key={item} className="group/item flex items-center gap-6 md:gap-8 pr-6 md:pr-8 py-2.5 md:py-4">
                 <span className="whitespace-nowrap font-pixel text-[15px] md:text-lg tracking-normal transition-colors duration-300 group-hover/item:text-accent-ink">
                   {item}
                 </span>
