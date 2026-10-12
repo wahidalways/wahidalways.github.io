@@ -123,6 +123,12 @@ const WIGGLE_RATE = 5;
 const ANTICIPATE = 14;
 const CRUMBS = 12;
 
+// Classic Pac-Man ghost-combo scoring: points double for each ghost eaten back
+// to back, and the combo resets once the gap since the last bite gets stale.
+const COMBO_POINTS = [200, 400, 800, 1600];
+const COMBO_TIMEOUT = 3.5;
+const POPUPS = 3;
+
 /*
  * A ruled band with a fixed label on the left and the capabilities running
  * into it. Between the words run pixel ghosts, and a pixel mouth at the label
@@ -152,6 +158,7 @@ const Marquee = () => {
   const bandRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const mouthRef = useRef<SVGSVGElement>(null);
+  const scoreRef = useRef<HTMLSpanElement>(null);
 
   useIsoLayoutEffect(() => {
     const band = bandRef.current;
@@ -230,6 +237,32 @@ const Marquee = () => {
         }
       };
 
+      // --- Score: a ghost-combo counter, exactly like the arcade original ---------
+      const popupEls = gsap.utils.toArray<HTMLElement>(".score-popup", band);
+      let nextPopup = 0;
+      let score = 0;
+      let combo = 0;
+      let lastEatTime = -Infinity;
+      const bumpScore = (time: number) => {
+        combo = time - lastEatTime > COMBO_TIMEOUT ? 0 : combo;
+        lastEatTime = time;
+        const points = COMBO_POINTS[Math.min(combo, COMBO_POINTS.length - 1)];
+        combo++;
+        score += points;
+        if (scoreRef.current) scoreRef.current.textContent = String(score).padStart(6, "0");
+        return points;
+      };
+      // A "+200" pops up from the mouth and drifts off, in the ghost's own colour.
+      const popScore = (points: number, color: string) => {
+        const el = popupEls[nextPopup++ % popupEls.length];
+        if (!el) return;
+        gsap.killTweensOf(el);
+        el.textContent = `+${points}`;
+        gsap.set(el, { x: lipsX - 8, y: midY - 4, color, autoAlpha: 1, scale: 0.8 });
+        gsap.to(el, { y: "-=20", scale: 1, duration: 0.15, ease: "back.out(2)" });
+        gsap.to(el, { autoAlpha: 0, duration: 0.4, delay: 0.35, ease: "power1.in" });
+      };
+
       // --- A one-shot squash, reused for both the mouth's chomp and a ghost's gulp. ---
       const punch = (el: Element, scaleX: number, scaleY: number, duration: number) => {
         gsap.killTweensOf(el);
@@ -278,10 +311,27 @@ const Marquee = () => {
 
         // The instant a ghost first overlaps the lips, it gets one quick squash,
         // as if the mouth had actually closed on it, right before it disappears
-        // behind the label panel.
+        // behind the label panel. The score keeps counting even off-screen or on
+        // weak hardware; only the punch and the floating "+points" are decorative.
         if (eatingAt !== eatingIndex) {
           eatingIndex = eatingAt;
-          if (eatingAt >= 0 && decorative) punch(ghostEls[eatingAt], 0.5, 1.4, 0.09);
+          if (eatingAt >= 0) {
+            const points = bumpScore(time);
+            if (decorative) {
+              punch(ghostEls[eatingAt], 0.5, 1.4, 0.09);
+              popScore(points, ghosts[eatingAt].color);
+            }
+          }
+        }
+
+        // A small idle bob so the chase feels alive between bites, not just a
+        // strip of text sliding past. The ghost being eaten sits still for its
+        // squash instead of fighting it.
+        if (decorative) {
+          ghostEls.forEach((el, idx) => {
+            if (idx === eatingAt) return;
+            gsap.set(el, { y: Math.sin(time * 2.2 + idx * 0.7) * 2 });
+          });
         }
 
         if (eating !== null) {
@@ -358,6 +408,7 @@ const Marquee = () => {
         cleanups.forEach((fn) => fn());
         visibility.kill();
         mouth.dataset.frame = String(SHUT);
+        gsap.set(ghostEls, { y: 0 });
         delete band.dataset.wiggle;
         delete band.dataset.running;
       };
@@ -383,9 +434,15 @@ const Marquee = () => {
         aria-hidden="true"
         className="absolute inset-y-0 left-0 z-10 hidden items-center gap-3 md:gap-4 bg-background pl-5 md:pl-8 xl:pl-12 group-data-[running=true]/band:flex"
       >
-        <span className="label whitespace-nowrap font-pixel text-[11px] md:text-[11px] tracking-[0.04em] text-foreground">
-          Focus areas
-        </span>
+        <div className="flex flex-col gap-1 leading-none">
+          <span className="label whitespace-nowrap font-pixel text-[11px] md:text-[11px] tracking-[0.04em] text-foreground">
+            Focus areas
+          </span>
+          {/* A running score, exactly like the arcade original: it climbs as the mouth clears ghosts. */}
+          <span className="whitespace-nowrap font-mono text-[10px] tracking-[0.04em] text-muted-foreground tabular-nums">
+            SCORE <span ref={scoreRef}>000000</span>
+          </span>
+        </div>
         <svg
           ref={mouthRef}
           data-frame={SHUT}
@@ -408,6 +465,15 @@ const Marquee = () => {
           key={i}
           aria-hidden="true"
           className="chomp-crumb pointer-events-none invisible absolute left-0 top-0 z-20 h-[3px] w-[3px] bg-muted-foreground opacity-0"
+        />
+      ))}
+
+      {/* "+200" popups: a small reused pool, one per ghost swallowed. */}
+      {Array.from({ length: POPUPS }, (_, i) => (
+        <span
+          key={i}
+          aria-hidden="true"
+          className="score-popup pointer-events-none invisible absolute left-0 top-0 z-20 font-pixel text-[11px] opacity-0"
         />
       ))}
 
