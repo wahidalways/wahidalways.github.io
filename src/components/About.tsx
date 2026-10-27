@@ -11,7 +11,7 @@ const About = () => {
   return (
     <section id="about" className="relative">
       <div className="shell pt-20 md:pt-28 pb-20 md:pb-28">
-        <SectionHeader index="01" eyebrow="About Me" title={["Professional", { tone: "Summary" }]} />
+        <SectionHeader eyebrow="About Me" title={["Professional", { tone: "Summary" }]} />
 
         {/* The summary: its opening sentence as the statement, the rest as body. */}
         <div className="grid grid-cols-12 gap-x-6">
@@ -30,7 +30,7 @@ const About = () => {
             precision a spec needs to go from discovery to stakeholder sign-off.
           </p>
 
-          <dl className="col-span-12 md:col-start-4 md:col-span-9 mt-10 md:mt-14 grid grid-cols-3 gap-x-6 gap-y-6 border-t border-foreground/15 pt-8">
+          <dl className="col-span-12 md:col-start-4 md:col-span-9 mt-10 md:mt-14 grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-6 border-t border-foreground/15 pt-8">
             {facts.map((item) => (
               <div key={item.term} data-reveal>
                 <dt className="label text-muted-foreground">{item.term}</dt>

@@ -28,7 +28,7 @@ const Testimonials = () => {
   return (
     <section id="testimonials" className="band-ink relative bg-background text-foreground">
       <div className="shell pt-20 md:pt-28 pb-20 md:pb-28">
-        <SectionHeader index="07" eyebrow="Testimonials" title={["What People", { tone: "Say" }]} />
+        <SectionHeader eyebrow="Testimonials" title={["What People", { tone: "Say" }]} />
 
         <div className="grid md:grid-cols-3 border-t border-foreground/15">
           {testimonials.map((item, i) => (

@@ -49,11 +49,8 @@ const experiences = [
   },
 ];
 
-const pad = (n: number) => String(n).padStart(2, "0");
-
 /*
- * A career record in three columns (when, what, and the detail) with each
- * responsibility numbered as a sub-clause of its role (4.1, 4.2 …). The date
+ * A career record in three columns: when, what, and the detail. The date
  * column holds its place while a long role scrolls past on wide screens.
  */
 const Experience = () => {
@@ -61,7 +58,6 @@ const Experience = () => {
     <section id="experience" className="relative">
       <div className="shell pt-20 md:pt-28 pb-20 md:pb-28">
         <SectionHeader
-          index="03"
           eyebrow="Career"
           title={["Work", { tone: "Experience" }]}
           lede="Four analyst roles, each one closer to the systems a business actually runs on."
@@ -69,7 +65,6 @@ const Experience = () => {
 
         <ol className="border-t border-foreground/15">
           {experiences.map((exp, i) => {
-            const n = experiences.length - i;
             const current = i === 0;
             return (
               <li
@@ -80,9 +75,6 @@ const Experience = () => {
                 {/* Tablets share the section header's 3 / 9 grid; wide screens add a third column. */}
                 <div className="col-span-12 md:col-span-3">
                   <div className="md:sticky md:top-24 flex flex-wrap md:flex-col items-center md:items-start gap-x-4 gap-y-3">
-                    <span aria-hidden="true" className="font-mono text-[12px] md:text-[11px] text-muted-foreground">
-                      R.{pad(n)}
-                    </span>
                     <p className="font-mono text-[13px] text-foreground">{exp.duration}</p>
                     {current && (
                       <span className="inline-flex items-center gap-2 rounded-full border border-foreground/15 px-2.5 py-1 label text-foreground">
@@ -102,15 +94,9 @@ const Experience = () => {
                 </div>
 
                 <ul className="col-span-12 md:col-start-4 md:col-span-9 lg:col-start-auto lg:col-span-5 space-y-4">
-                  {exp.points.map((point, j) => (
-                    <li
-                      key={j}
-                      className="grid grid-cols-[2.5rem_1fr] gap-2 text-[15px] leading-relaxed text-muted-foreground text-pretty"
-                    >
-                      <span aria-hidden="true" className="font-mono text-[12px] md:text-[11px] text-foreground/70 pt-[5px]">
-                        {n}.{j + 1}
-                      </span>
-                      <span>{point}</span>
+                  {exp.points.map((point) => (
+                    <li key={point} className="text-[15px] leading-relaxed text-muted-foreground text-pretty">
+                      {point}
                     </li>
                   ))}
                 </ul>

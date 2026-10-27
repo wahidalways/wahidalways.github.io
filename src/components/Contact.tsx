@@ -99,7 +99,6 @@ const Contact = () => {
     <section id="contact" className="relative">
       <div className="shell pt-20 md:pt-28 pb-20 md:pb-28">
         <SectionHeader
-          index="08"
           eyebrow="Contact"
           title={["Let's", { tone: "Connect" }]}
           lede="Interested in collaborating or have a project in mind? I'd love to hear from you."

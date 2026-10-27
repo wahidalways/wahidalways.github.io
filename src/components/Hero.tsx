@@ -265,13 +265,6 @@ const Hero = ({ ready }: { ready: boolean }) => {
             <div className="col-span-6 sm:col-span-4 sm:col-start-9 lg:col-span-3 lg:col-start-10 sm:row-start-1 sm:row-span-3 self-start sm:self-end">
               <figure className="hero-figure max-w-[calc(34svh*0.8)] sm:ml-auto sm:max-w-[calc(52vh*0.8)]">
                 <Portrait />
-                {/* A plate caption, as in a printed spread. It names the figure, not the role; that is in the meta row. */}
-                <figcaption className="hero-fade mt-1.5 sm:mt-3 flex items-baseline justify-between gap-3 whitespace-nowrap font-mono text-[12px] md:text-[11px] leading-snug text-muted-foreground">
-                  <span>
-                    Fig. 01: <span className="text-foreground">Portrait</span>
-                  </span>
-                  <span>2026</span>
-                </figcaption>
               </figure>
             </div>
 

@@ -12,7 +12,7 @@ const Education = () => {
   return (
     <section id="education" className="relative">
       <div className="shell pt-20 md:pt-28 pb-20 md:pb-28">
-        <SectionHeader index="05" eyebrow="Education" title={["Academic", { tone: "Background" }]} />
+        <SectionHeader eyebrow="Education" title={["Academic", { tone: "Background" }]} />
 
         <div
           aria-hidden="true"

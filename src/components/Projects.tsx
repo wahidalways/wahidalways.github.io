@@ -50,7 +50,6 @@ const projects: {
   },
 ];
 
-const pad = (n: number) => String(n).padStart(2, "0");
 
 // Wide and tall enough that a pinned strip of cards is comfortable to read,
 // tablets included, so they get the same case-file strip as a laptop.
@@ -104,7 +103,7 @@ const Projects = () => {
             const idx = Math.min(projects.length, Math.floor(self.progress * projects.length) + 1);
             if (idx !== shownIndex && counterRef.current) {
               shownIndex = idx;
-              counterRef.current.textContent = pad(idx);
+              counterRef.current.textContent = String(idx);
             }
             if (barRef.current) barRef.current.style.transform = `scaleX(${self.progress})`;
           },
@@ -122,7 +121,6 @@ const Projects = () => {
     <section id="projects" ref={sectionRef} className="cases band-ink relative bg-background text-foreground overflow-x-clip">
       <div className="shell pt-20 md:pt-28">
         <SectionHeader
-          index="04"
           eyebrow="Portfolio"
           title={["Featured", { tone: "Projects" }]}
           lede="Four case files. Each one starts with a problem statement and ends with what changed."
@@ -134,7 +132,7 @@ const Projects = () => {
         <div className="shell w-full">
           <div className="cases-progress mb-6 items-center gap-6">
             <span className="label text-foreground whitespace-nowrap">
-              Case <span ref={counterRef}>01</span> / {pad(projects.length)}
+              Case <span ref={counterRef}>1</span> of {projects.length}
             </span>
             <span aria-hidden="true" className="relative h-px flex-1 bg-border overflow-hidden">
               <span ref={barRef} className="absolute inset-0 origin-left bg-accent" style={{ transform: "scaleX(0)" }} />
@@ -144,15 +142,14 @@ const Projects = () => {
 
           <div className="cases-viewport">
             <div ref={trackRef} className="cases-track grid lg:grid-cols-2 gap-5 md:gap-6">
-              {projects.map((project, i) => (
+              {projects.map((project) => (
                 <article
                   key={project.title}
                   data-reveal
                   className="case-card group relative flex flex-col overflow-hidden rounded-[10px] border border-border bg-card"
                 >
-                  <div className="flex items-center justify-between gap-4 border-b border-border px-5 md:px-7 py-3.5">
-                    <span className="label text-foreground">CF-{pad(i + 1)}</span>
-                    <span className="label text-right">{project.subtitle}</span>
+                  <div className="border-b border-border px-5 md:px-7 py-3.5">
+                    <span className="label">{project.subtitle}</span>
                   </div>
 
                   <div className="case-body grid flex-1 gap-8 md:gap-10 p-5 md:p-7">

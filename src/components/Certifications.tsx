@@ -20,7 +20,7 @@ const Certifications = () => {
   return (
     <section id="certifications" className="relative">
       <div className="shell pt-20 md:pt-28 pb-20 md:pb-28">
-        <SectionHeader index="06" eyebrow="Recognition" title={["Certifications &", { tone: "Awards" }]} />
+        <SectionHeader eyebrow="Recognition" title={["Certifications &", { tone: "Awards" }]} />
 
         <div className="grid md:grid-cols-2 gap-5 md:gap-6">
           {featured.map((cert) => (

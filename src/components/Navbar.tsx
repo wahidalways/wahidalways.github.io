@@ -20,8 +20,6 @@ const navItems = [
   { label: "Contact", href: "#contact" },
 ];
 
-const pad = (n: number) => String(n).padStart(2, "0");
-
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -142,9 +140,8 @@ const Navbar = () => {
             <Wordmark className="text-[1.5rem] md:text-[1.6rem] 2xl:text-[1.75rem]" />
           </a>
 
-          {/* The full index from 1024px; below 1280px it drops the numbers to fit. */}
           <ul className="hidden lg:flex items-center gap-0.5 xl:gap-1 2xl:gap-2">
-            {navItems.map((item, i) => {
+            {navItems.map((item) => {
               const isActive = activeSection === item.href.slice(1);
               return (
                 <li key={item.href}>
@@ -156,14 +153,6 @@ const Navbar = () => {
                       isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    <span
-                      aria-hidden="true"
-                      className={`hidden xl:inline font-mono text-[10px] 2xl:text-[11px] transition-colors ${
-                        isActive ? "text-accent-ink" : "text-muted-foreground/60 group-hover:text-foreground/60"
-                      }`}
-                    >
-                      {pad(i + 1)}
-                    </span>
                     {item.label}
                     <span
                       aria-hidden="true"
@@ -269,15 +258,13 @@ const Navbar = () => {
                           >
                             {item.label}
                           </span>
-                          <span aria-hidden="true" className="flex items-center gap-2 font-mono text-xs">
-                            {pad(i + 1)}
-                            {/* The wordmark's closing square, marking where the reader is. */}
-                            <span
-                              className={`block w-1.5 h-1.5 bg-current transition-opacity duration-300 ${
-                                isActive ? "opacity-100" : "opacity-0"
-                              }`}
-                            />
-                          </span>
+                          {/* The wordmark's closing square, marking where the reader is. */}
+                          <span
+                            aria-hidden="true"
+                            className={`block w-1.5 h-1.5 bg-current transition-opacity duration-300 ${
+                              isActive ? "opacity-100" : "opacity-0"
+                            }`}
+                          />
                         </a>
                       </m.li>
                     );
